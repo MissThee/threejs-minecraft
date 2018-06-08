@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html style="height: 100%; min-height: 100%; max-height: 100%;">
+
+<head>
+  <meta charset="utf-8"/>
+  <script type="text/javascript" src="js/three.js"></script>
+  <script type="text/javascript" src="js/faces.js"></script>
+  <script type="text/javascript" src="js/Stats.js"></script>
+  <script type="text/javascript" src="js/cubes.js"></script>
+  <script type="text/javascript" src="js/colors.js"></script>
+  <script type="text/javascript" src="js/OrbitControls.js"></script>
+  <script type="text/javascript" src="js/sides.js"></script>
+  <script type="text/javascript" src="js/Tween.js"></script>
+  <script type="text/javascript" src="js/facerotate.js"></script>
+  <script>
+    var renderer, camera, scene;
+    var width, height, aspect;
+    var geometry, mesh;
+    var stat;
+    var light;
+    var controller;
+    var raycaster, mouse;
+    var deltax, deltay;
+    var meshes = [];
+    var transform = false;
+    var selectedfirst, selectedlast;
+    var facefirst, facelast;
+    var result = [];
+    var rotateStart = false;
+    var startTime, rtime;
+
+    function onWindowResize() {
+      aspect = window.innerWidth / window.innerHeight;
+      camera.aspect = aspect;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+
+    function init() {
+      stat = new Stats();
+      stat.domElement.style.position = "absolute";
+      stat.domElement.style.left = "0px";
+      stat.domElement.style.top = "0px";
+      document.body.style.margin = 0;
+      document.body.appendChild(stat.domElement);
+
+      width = window.innerWidth;
+      height = window.innerHeight;
+      aspect = width / height;
+
+      renderer = new THREE.WebGLRenderer({antialias: true});
+      renderer.setSize(width, height);
+      renderer.setClearColor(0xffffff);
+
+      document.body.appendChild(renderer.domElement);
+
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(45, aspect, 1, 1000);
+      camera.position.set(10, 6, 10);
+      scene.add(camera);
+
+      light = new THREE.AmbientLight(0xfefefe);
+      scene.add(light);
+
+      controller = new THREE.OrbitControls(camera, renderer.domElement);
+      controller.target = new THREE.Vector3(0, 0, 0);
+
+
+      raycaster = new THREE.Raycaster();
+      mouse = new THREE.Vector2();
+
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        opacity: 0,
+        transparent: true
+      }));
+      plane.position.set(3.01, 0, 0);
+      plane.rotation.y = Math.PI / 2;
+      plane.name = "frontX";
+      scene.add(plane);
+
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(6.01, 6.01), new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        opacity: 0,
+        transparent: true
+      }));
+      plane.position.set(-3.01, 0, 0);
+      plane.rotation.y = -Math.PI / 2;
+      plane.name = "backX";
+      scene.add(plane);
+
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(6.01, 6.01), new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        opacity: 0,
+        transparent: true
+      }));
+      plane.position.set(0, 0, 3.01);
+      plane.name = "frontZ";
+      scene.add(plane);
+
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(6.01, 6.01), new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        opacity: 0,
+        transparent: true
+      }));
+      plane.position.set(0, 0, -3.01);
+      plane.rotation.y = Math.PI;
+      plane.name = "backZ";
+      scene.add(plane);
+
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(6.01, 6.01), new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        opacity: 0,
+        transparent: true
+      }));
+      plane.position.set(0, 3.01, 0);
+      plane.rotation.x = -Math.PI / 2;
+      plane.name = "frontY";
+      scene.add(plane);
+
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(6.01, 6.01), new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        opacity: 0,
+        transparent: true
+      }));
+      plane.position.set(0, -3.01, 0);
+      plane.rotation.x = Math.PI / 2;
+      plane.name = "backY";
+      scene.add(plane);
+
+      geometry = new THREE.CubeGeometry(2, 2, 2, 1, 1, 1);
+
+      meshes.push(cubes(2, 2, 2, geometry, Goldenrod, Black, DeepSkyBlue, Black, White, Black));
+      meshes.push(cubes(2, 0, 2, geometry, Goldenrod, Black, Black, Black, White, Black));
+      meshes.push(cubes(2, -2, 2, geometry, Goldenrod, Black, Black, Firebrick, White, Black));
+      meshes.push(cubes(0, 2, 2, geometry, Black, Black, DeepSkyBlue, Black, White, Black));
+      meshes.push(cubes(0, 0, 2, geometry, Black, Black, Black, Black, White, Black));
+      meshes.push(cubes(0, -2, 2, geometry, Black, Black, Black, Firebrick, White, Black));
+      meshes.push(cubes(-2, 2, 2, geometry, Black, Yellow, DeepSkyBlue, Black, White, Black));
+      meshes.push(cubes(-2, 0, 2, geometry, Black, Yellow, Black, Black, White, Black));
+      meshes.push(cubes(-2, -2, 2, geometry, Black, Yellow, Black, Firebrick, White, Black));
+
+      meshes.push(cubes(2, 2, 0, geometry, Goldenrod, Black, DeepSkyBlue, Black, Black, Black));
+      meshes.push(cubes(2, 0, 0, geometry, Goldenrod, Black, Black, Black, Black, Black));
+      meshes.push(cubes(2, -2, 0, geometry, Goldenrod, Black, Black, Firebrick, Black, Black));
+      meshes.push(cubes(0, 2, 0, geometry, Black, Black, DeepSkyBlue, Black, Black, Black));
+      meshes.push(cubes(0, 0, 0, geometry, Black, Black, Black, Black, Black, Black));
+      meshes.push(cubes(0, -2, 0, geometry, Black, Black, Black, Firebrick, Black, Black));
+      meshes.push(cubes(-2, 2, 0, geometry, Black, Yellow, DeepSkyBlue, Black, Black, Black));
+      meshes.push(cubes(-2, 0, 0, geometry, Black, Yellow, Black, Black, Black, Black));
+      meshes.push(cubes(-2, -2, 0, geometry, Black, Yellow, Black, Firebrick, Black, Black));
+
+      meshes.push(cubes(2, 2, -2, geometry, Goldenrod, Black, DeepSkyBlue, Black, Black, LimeGreen));
+      meshes.push(cubes(2, 0, -2, geometry, Goldenrod, Black, Black, Black, Black, LimeGreen));
+      meshes.push(cubes(2, -2, -2, geometry, Goldenrod, Black, Black, Firebrick, Black, LimeGreen));
+      meshes.push(cubes(0, 2, -2, geometry, Black, Black, DeepSkyBlue, Black, Black, LimeGreen));
+      meshes.push(cubes(0, 0, -2, geometry, Black, Black, Black, Black, Black, LimeGreen));
+      meshes.push(cubes(0, -2, -2, geometry, Black, Black, Black, Firebrick, Black, LimeGreen));
+      meshes.push(cubes(-2, 2, -2, geometry, Black, Yellow, DeepSkyBlue, Black, Black, LimeGreen));
+      meshes.push(cubes(-2, 0, -2, geometry, Black, Yellow, Black, Black, Black, LimeGreen));
+      meshes.push(cubes(-2, -2, -2, geometry, Black, Yellow, Black, Firebrick, Black, LimeGreen));
+
+      for (var i = 0; i < meshes.length; i++) {
+        meshes[i].name = i;
+        scene.add(meshes[i]);
+      }
+
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+      renderer.render(scene, camera);
+
+      document.addEventListener("mousedown", onDocumentMouseDown, false);
+      document.addEventListener("touchstart", onDocumentTouchStart, false);
+      document.addEventListener("mouseup", onDocumentMouseUp, false);
+      document.addEventListener("touchend", onDocumentTouchEnd, false);
+      window.addEventListener("resize", onWindowResize, false);
+
+    }
+
+    function onDocumentTouchStart(event) {
+
+      event.preventDefault();
+
+      event.clientX = event.touches[0].clientX;
+      event.clientY = event.touches[0].clientY;
+      onDocumentMouseDown(event);
+
+    }
+
+    function onDocumentMouseDown(event) {
+      event.preventDefault();
+
+      mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+      mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+
+      var intersects = raycaster.intersectObjects(scene.children);
+      if (intersects.length > 0) {
+        //console.log(intersects);
+        selectedfirst = intersects[1].object;
+        facefirst = intersects[0].object;
+        //console.log(facefirst.normal);
+        transform = true;
+        controller.enabled = false;
+
+      }
+    }
+
+    function onDocumentMouseUp(event) {
+      event.preventDefault();
+
+      mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+      mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      var intersects = raycaster.intersectObjects(scene.children);
+      if (transform) {
+        if (intersects.length > 0) {
+          selectedlast = intersects[1].object;
+          facelast = intersects[0].object;
+          if (selectedlast != selectedfirst) {
+            result = faceselection(selectedfirst, facefirst, selectedlast, facelast, meshes);
+
+            startTime = 0;
+            rtime = 30;
+            rotateStart = true;
+          }
+        }
+        controller.enabled = true;
+        transform = false;
+      }
+    }
+
+    function onDocumentTouchEnd(event) {
+      event.preventDefault();
+      event.clientX = event.changedTouches[0].clientX;
+      event.clientY = event.changedTouches[0].clientY;
+      onDocumentMouseUp(event);
+    }
+
+    function draw() {
+      stat.begin();
+
+      if (rotateStart) {
+        facerotate(result, rotateNormal, rtime);
+        startTime++;
+        if (startTime == rtime) {
+
+          rotateStart = false;
+          for (var i in result) {
+            result[i].position.round();
+
+          }
+          result = [];
+        }
+      }
+
+      //TWEEN.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(draw);
+      stat.end();
+    }
+
+    function start() {
+      init();
+      draw();
+    }
+  </script>
+</head>
+
+<body onload="start();" style="overflow-y: hidden;">
+
+</body>
+
+</html>

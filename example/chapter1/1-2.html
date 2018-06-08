@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style>
+    canvas {
+      width: 100%;
+      height: 100%
+    }
+  </style>
+  <script src="js/three.js"></script>
+</head>
+<body>
+<script>
+  //场景
+  var scene = new THREE.Scene();
+  // 相机
+  var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  //渲染器
+  var renderer = new THREE.WebGLRenderer();
+  // 设置渲染器的大小为窗口的内宽度，也就是内容区的宽度
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  document.body.appendChild(renderer.domElement);
+
+  var geometry = new THREE.CubeGeometry(1, 1, 1);
+  var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+  var cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+  camera.position.z = 5;
+
+  function render() {
+    requestAnimationFrame(render);
+    cube.rotation.x += 0.1;
+    cube.rotation.y += 0.1;
+    // render( scene, camera, renderTarget, forceClear )
+    // scene：前面定义的场景
+    // camera：前面定义的相机
+    // renderTarget：渲染的目标，默认是渲染到前面定义的render变量中
+    // forceClear：每次绘制之前都将画布的内容给清除，即使自动清除标志autoClear为false，也会清除。
+    renderer.render(scene, camera);
+  }
+
+  render();
+</script>
+</body>
+</html>

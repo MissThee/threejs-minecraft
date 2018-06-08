@@ -1,0 +1,66 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            margin: 0px;
+            background-color: #000000;
+            overflow: hidden;
+        }
+		#canvas-frame{width:1000px; height:800px;}
+    </style>
+</head>
+<body>
+<div id="canvas-frame"></div>
+<script src="../js/three.js"></script>
+
+<script>
+
+    var camera, scene, renderer;
+    var mesh;
+	var width,height;
+
+    init();
+    animate();
+
+    function init() {
+
+        renderer = new THREE.WebGLRenderer();
+		width = document.getElementById('canvas-frame').clientWidth;
+        height = document.getElementById('canvas-frame').clientHeight;
+        renderer.setSize(width, height);
+        document.getElementById('canvas-frame').appendChild( renderer.domElement );
+        //
+        camera = new THREE.PerspectiveCamera( 70, width / height, 1, 1000 );
+        camera.position.z = 250;
+        scene = new THREE.Scene();
+
+		var geometry = new THREE.CubeGeometry(150, 150, 150);
+
+        var material = new THREE.MeshBasicMaterial({wireframe:true,color: 0x000000});
+        mesh = new THREE.Mesh( geometry,material );
+        scene.add( mesh );
+        //
+        window.addEventListener( 'resize', onWindowResize, false );
+    }
+
+    function onWindowResize() {
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize( width, height );
+    }
+
+    function animate() {
+		mesh.rotation.y -= 0.01;
+		mesh.rotation.x -= 0.01;
+        requestAnimationFrame( animate );
+        renderer.render( scene, camera );
+    }
+
+</script>
+
+</body>
+</html>

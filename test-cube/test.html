@@ -42,6 +42,7 @@
 <body>
 <div id="canvas-frame" class="canvas-frame"></div>
 <script>
+
     (function threeJsSupportCheck() {
         if (!Detector.webgl) {
             Detector.addGetWebGLMessage();
@@ -57,7 +58,9 @@
 
     function initScene() {
         scene = new THREE.Scene();
+        scene.name = 'SCENE';
     }
+
 
     // 光源*
     function initLight() {
@@ -66,7 +69,7 @@
         // let light2 = new THREE.PointLight(0xffffff, 0.4);//点光
         // light2.position.set(0, 100, 0);
         // scene.add(light2);
-        let light3 = new THREE.DirectionalLight(0xffffff, 0.4);//平行光
+        let light3 = new THREE.DirectionalLight(0x3333ff, 0.4);//平行光
         light3.position.set(0, 1, 0);
         scene.add(light3);
     }
@@ -77,6 +80,7 @@
 
     function initCamera() {
         camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1e10);
+        camera.name = "CAMERA";
         //使用TrackballControls不能设置相机位置
         camera.position.x = 30;
         camera.position.y = 30;
@@ -94,7 +98,6 @@
         controls.enableDamping = true;
         //动态阻尼系数 就是鼠标拖拽旋转灵敏度
         controls.dampingFactor = 1.5;
-
     }
 
     // 渲染器*
@@ -104,6 +107,7 @@
         renderer = new THREE.WebGLRenderer({
             antialias: true
         });
+        renderer.name = 'RENDERER';
         renderer.setSize(width, height);
         document.getElementById('canvas-frame').appendChild(renderer.domElement);
         renderer.setClearColor(0xFFFFFF, 1.0);
@@ -120,49 +124,7 @@
         document.getElementById('canvas-frame').appendChild(stats.domElement);
     }
 
-    let dragObjects = [];
-
-    //添加运动
-    function initTween(obj) {
-        //声明运动方式
-        let tween1 = new TWEEN.Tween(obj.position)
-            .to({x: 0, y: 5, rotation: 359}, 1500)
-            .easing(TWEEN.Easing.Elastic.InOut);
-        let tween2 = new TWEEN.Tween(obj.position)
-            .to({x: 3, y: 0, rotation: 0}, 1500)
-            .easing(TWEEN.Easing.Elastic.InOut);
-        let tween3 = new TWEEN.Tween(obj.position)
-            .to({x: 0, y: 0, rotation: 0}, 1500)
-            .easing(TWEEN.Easing.Elastic.InOut);
-        //运动链式次序
-        tween1.chain(tween2);
-        tween2.chain(tween3);
-        tween3.chain(tween1);
-        //执行
-        tween1.start();
-        // .to( { x: -4}, 3000 ).repeat( Infinity ).start();
-    }
-
-    //添加运动
-    function initTween1(obj) {
-        let tween1 = new TWEEN.Tween(obj.position)
-            .to({x: 10, y: 5, z: 3, rotation: 359}, 5500)
-            .easing(TWEEN.Easing.Elastic.InOut)
-        let tween2 = new TWEEN.Tween(obj.position)
-            .to({x: 3, y: 10, z: 3, rotation: 0}, 5500)
-            .easing(TWEEN.Easing.Elastic.InOut)
-        let tween3 = new TWEEN.Tween(obj.position)
-            .to({x: 0, y: 10, z: 3, rotation: 0}, 5500)
-            .easing(TWEEN.Easing.Elastic.InOut)
-        tween1.chain(tween2);
-        tween2.chain(tween3);
-        tween3.chain(tween1);
-        tween1.start();
-
-        // .to( { x: -4}, 3000 ).repeat( Infinity ).start();
-    }
-
-    //添加面素材
+    //面素材
     function face(rgbaColor) {
         let canvas = document.createElement('canvas');
         canvas.width = 256;
@@ -184,74 +146,22 @@
         return canvas;
     }
 
-    //以下为物体添加代码---------------------------------------------------------------
-    let cube;
+    //使渲染器与相机随窗口大小改变适应。自适应窗口大小
+    window.onresize = function () {
+        //更新相机视角比例
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    };
 
-    function addCubeBasic() {
-        let cubeGeometry = new THREE.CubeGeometry(1, 1, 1);
-        let color = [Goldenrod, Firebrick, DeepSkyBlue, LimeGreen, White, Yellow];
-        for (let i = 0; i < cubeGeometry.faces.length;) {
-            let faceColor = color[i / 2];
-
-            cubeGeometry.faces[i].color.set(faceColor);//cube没面被分为两个三角形，共12个face，1、2为一面，3、4为一面，以此类推
-            cubeGeometry.faces[++i].color.set(faceColor);
-            i++;
-        }
-
-        let material = new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors,});//材质不受光源影响
-        cube = new THREE.Mesh(cubeGeometry, material);
-        scene.add(cube);
-    }
-
-    function cubeBasicAction() {
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-    }
-
-    function createSimpleCube(len, x, y, z) {
-        let simpleCube;
-        len = len || 5;
-        x = x || 0;
-        y = y || 0;
-        z = z || 0;
-        let materials = [];
-        let cubeGeometry = new THREE.CubeGeometry(len, len, len);
-        let color = [Goldenrod, Firebrick, DeepSkyBlue, LimeGreen, White, Yellow];
-        for (let i = 0; i < 6; i++) {
-            let texture = new THREE.Texture(face(color[i]));
-            texture.needsUpdate = true;
-            materials.push(new THREE.MeshLambertMaterial({map: texture}));
-        }
-        simpleCube = new THREE.Mesh(cubeGeometry, materials);
-        simpleCube.position.x = x - len / 2;
-        simpleCube.position.y = y - len / 2;
-        simpleCube.position.z = z - len / 2;
-        return simpleCube
-    }
-
-    function addMagicCube(len, size, x, y, z) {
-        len = len || 5;
-        size = size || 3
-        x = x || 0;
-        y = y || 0;
-        z = z || 0;
-        let simpleCubes = []
-        let fixedSize = size / 2;
-        for (let i = -fixedSize; i < fixedSize; i++) {
-            for (let j = -fixedSize; j < fixedSize; j++) {
-                for (let k = -fixedSize; k < fixedSize; k++) {
-                    scene.add(createSimpleCube(len, x - len * i, y - len * j, z - len * k))
-                }
-            }
-        }
-    }
-
-
+</script>
+<script>
+    //--------------------------------------点击事件--------------------------------------start
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
 
+    //获取点击的对象
     function getClickedObject(event) {
-        let objects = [];
         //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -259,100 +169,52 @@
         raycaster.setFromCamera(mouse, camera);
         // 获取raycaster直线和所有模型相交的数组集合
         return raycaster.intersectObjects(scene.children);
-        // console.log(intersects);
-        // for (var i = 0; i < intersects.length; i++) {
-        //   // intersects[ i ].object.material.color.set( 0xff0000 );
-        // }
     }
 
+    //点击对象颜色，点击的对象
+    let colorTemp = null;
+    let objectTemp = null;
+    let downKeyNum = 0;
 
-    // function onMouseClick(event) {
-    //   let objects = getClickedObject(event);
-    //   if (objects.length > 0) {
-    //     objects[0].object.material.color.set(0xff0000);
-    //   }
-    //   // for ( var i = 0; i < intersects.length; i++ ) {
-    //   //   intersects[ i ].object.material.color.set( 0xff0000 );
-    //   // }
-    // }
-    //
-    // window.addEventListener('click', onMouseClick, false);
-    let colorTemp = "";
-    let objectTemp = "";
-
+    //按键按下事件
     function mouseDown(event) {
         let objects = getClickedObject(event);
-        if (objects.length > 0) {
+        downKeyNum++;
+        if (objects.length > 0 && objectTemp === null && colorTemp === null) {
             colorTemp = objects[0].object.material.color.getHex();
             objectTemp = objects[0];
             objectTemp.object.material.color.set(0xff0000);
         }
     }
 
-    function mouseUp(event) {
-        let objects = getClickedObject(event);
-        if (objects.length > 0) {
+    //按键抬起事件
+    function mouseUp() {
+        downKeyNum--;
+        if (downKeyNum === 0) {
             objectTemp.object.material.color.set(colorTemp);
+            objectTemp = null;
+            colorTemp = null;
         }
     }
 
+    //监听事件
     window.addEventListener('mousedown', mouseDown, false);
     window.addEventListener('mouseup', mouseUp, false);
 
-    let cube2;
-
-    function addCubeLambert() {
-        let cubeGeometry = new THREE.CubeGeometry(1, 1, 1);
-        let material = new THREE.MeshLambertMaterial({color: 0xa2f4e2});//有光照效果，暗淡不发光
-        cube2 = new THREE.Mesh(cubeGeometry, material);
-        cube2.position.x = 2;
-        scene.add(cube2);
+    //给对象设置拖动动作
+    function setDragFunction(obj) {
+        let dragControls = new THREE.DragControls([obj], camera, renderer.domElement);
+        dragControls.addEventListener('dragstart', function (event) {
+            controls.enabled = false;
+        });
+        dragControls.addEventListener('dragend', function (event) {
+            controls.enabled = true;
+        });
     }
 
-    function cubeLambertAction() {
-        cube2.rotation.x += 0.01;
-        cube2.rotation.y += 0.01;
-    }
-
-    let cube3;
-
-    function addCubePhong() {
-        let cubeGeometry = new THREE.CubeGeometry(1, 1, 1);
-        let material = new THREE.MeshPhongMaterial({color: 0xff0000});//有光照效果，金属类明亮的物体
-        cube3 = new THREE.Mesh(cubeGeometry, material);
-        cube3.position.x = 2;
-        cube3.position.z = 5;
-        scene.add(cube3);
-    }
-
-    function cubePhongAction() {
-        cube3.rotation.x += 0.01;
-        cube3.rotation.y += 0.01;
-    }
-
-    let cube4;
-    let texture4;
-
-    function addCube4() {
-        let cubeGeometry = new THREE.CubeGeometry(10, 10, 10);
-        texture4 = new THREE.Texture(canvas);//材质
-
-        let material = new THREE.MeshBasicMaterial({map: texture4});
-
-        cube4 = new THREE.Mesh(cubeGeometry, material);
-        cube4.position.x = 16;
-        cube4.position.z = -16;
-        scene.add(cube4);
-
-    }
-
-    function cube4Action() {
-        texture4.needsUpdate = true;
-        cube4.rotation.x += 0.001;
-        cube4.rotation.y += 0.001;
-        cube4.rotation.z += 0.001;
-    }
-
+    //--------------------------------------点击事件--------------------------------------end
+</script>
+<script>
     function addLine(x1, y1, z1, x2, y2, z2, color) {
         x1 = x1 || 0;
         y1 = y1 || 0;
@@ -370,17 +232,6 @@
         let line = new THREE.LineSegments(geometry, material, THREE.LinePieces);
         //  return line;
         scene.add(line);
-    }
-
-    function setDragFunction() {
-        dragObjects.push(cube4);
-        var dragControls = new THREE.DragControls(dragObjects, camera, renderer.domElement);
-        dragControls.addEventListener('dragstart', function (event) {
-            controls.enabled = false;
-        });
-        dragControls.addEventListener('dragend', function (event) {
-            controls.enabled = true;
-        });
     }
 
     // 网格
@@ -409,69 +260,260 @@
         }
     }
 
-    //增加几何形状
-    function addGeometry1() {
-        let geometry = new THREE.PlaneGeometry(10, 6, 1, 1);
-        geometry.vertices[0].uv = new THREE.Vector2(0, 0);
-        geometry.vertices[1].uv = new THREE.Vector2(1, 0);
-        geometry.vertices[2].uv = new THREE.Vector2(2, 2);
-        geometry.vertices[3].uv = new THREE.Vector2(0, 2);
-
-        // let texture = THREE.ImageUtils.loadTexture("img/1.gif");
-        // let texture = new THREE.TextureLoader().load("img/1.gif");
-
-        let texture = THREE.TextureLoader.prototype.load("img/1.gif");
-        let material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
-
-        let mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-        mesh.rotation.x = -0.5 * Math.PI;
-        mesh.position.z = -10
-    }
-
     // 初始化基本控件
     initScene();//舞台*
     initCamera();//相机*
     initRenderer();//渲染器*
     initLight();//光源*
     initStats();//监控控件
-    addLine(0, 0, 0, 10, 0, 0, 0xff0000)
-    addLine(0, 0, 0, 0, 10, 0, 0x00ff00)
-    addLine(0, 0, 0, 0, 0, 10, 0x0000ff)
+    addLine(0, 0, 0, 10, 0, 0, 0xff0000);//中心坐标线，X轴，红
+    addLine(0, 0, 0, 0, 10, 0, 0x00ff00);//中心坐标线，Y轴，绿
+    addLine(0, 0, 0, 0, 0, 10, 0x0000ff);//中心坐标线，Z轴，蓝
     addLines();
+</script>
+<script>
+    //动作代码---------------
+    //运动
+    // function actionTween(obj) {
+    //     //声明运动方式
+    //     let tween1 = new TWEEN.Tween(obj.position)
+    //         .to({x: 0, y: 5, rotation: 359}, 1500)
+    //         .easing(TWEEN.Easing.Elastic.InOut);
+    //     let tween2 = new TWEEN.Tween(obj.position)
+    //         .to({x: 3, y: 0, rotation: 0}, 1500)
+    //         .easing(TWEEN.Easing.Elastic.InOut);
+    //     let tween3 = new TWEEN.Tween(obj.position)
+    //         .to({x: 0, y: 0, rotation: 0}, 1500)
+    //         .easing(TWEEN.Easing.Elastic.InOut);
+    //     //运动链式次序
+    //     tween1.chain(tween2);
+    //     tween2.chain(tween3);
+    //     tween3.chain(tween1);
+    //     //执行
+    //     tween1.start();
+    //     // .to( { x: -4}, 3000 ).repeat( Infinity ).start();
+    // }
 
-
-    addMagicCube();
-    addCubeBasic();
-    addCubeLambert();
-    addCubePhong();
-
-    // initTween(cube);
-    initTween1(cube2);
-    addGeometry1();
-    addCube4();
-    setDragFunction();
-    //循环渲染动作
-    (function render() {
-        requestAnimationFrame(render);
-        // cubeBasicAction();
-        cubeLambertAction();
-        cubePhongAction();
-        cube4Action();
-        stats.update();
-        TWEEN.update();
-        controls.update();
-        renderer.render(scene, camera);
-    })();
-
-    //使渲染器与相机随窗口大小改变适应。自适应窗口大小
-    window.onresize = function () {
-        console.log(window.innerWidth / window.innerHeight)
-        //更新相机视角比例
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+    //运动
+    function actionMove(obj, actions) {
+        let x = obj.position.x;
+        let y = obj.position.y;
+        let z = obj.position.z;
+        let firstTween;
+        let oldTween;
+        for (let i in actions) {
+            actions[i].properties.x = x + actions[i].properties.x;
+            actions[i].properties.y = y + actions[i].properties.y;
+            actions[i].properties.z = z + actions[i].properties.z;
+            let newTween = new TWEEN.Tween(obj.position)
+                .to(actions[i].properties, actions[i].duration || 1000)
+                .easing(actions[i].easing)
+            if (oldTween !== undefined) {
+                oldTween.chain(newTween);
+            }
+            if (i === '0') {
+                firstTween = newTween;
+            }
+            oldTween = newTween;
+        }
+        oldTween.chain(firstTween)
+        return firstTween;
+        // .to( { x: -4}, 3000 ).repeat( Infinity ).start();
     }
+
+    let actions1 = [
+        {
+            properties: {
+                x: 5, y: 0, z: 0
+            },
+            easing: TWEEN.Easing.Cubic.In
+        }, {
+            properties: {
+                x: 0, y: 5, z: 0
+            },
+            easing: TWEEN.Easing.Exponential.InOut
+        }, {
+            properties: {
+                x: 0, y: 0, z: 5
+            },
+            easing: TWEEN.Easing.Elastic.Out
+        }
+    ];
+
+    //旋转
+    function actionRotate(obj, x, y, z) {
+        if (Array.isArray(obj)) {
+            for (let i in obj) {
+                obj[i].rotation.x += x || 0;
+                obj[i].rotation.y += y || 0;
+                obj[i].rotation.z += z || 0;
+            }
+        } else {
+            obj.geometry.needsUpdate = true;
+            // texture4.needsUpdate=true;
+            obj.rotation.x += x || 0;
+            obj.rotation.y += y || 0;
+            obj.rotation.z += z || 0;
+        }
+    }
+
+    //旋转
+    function actionRotateXYZ(obj, xyz) {
+        actionRotate(obj, xyz || 0.01, xyz || 0.01, xyz || 0.01)
+    }
+
+</script>
+<script>
+    //-----------以下为物体添加代码---------------------------------------------------------------
+
+    function buildSimpleCubeForRubiksCube(len, x, y, z) {
+        let simpleCube;
+        len = len || 5;
+        x = x || 0;
+        y = y || 0;
+        z = z || 0;
+        let materials = [];
+        let cubeGeometry = new THREE.CubeGeometry(len, len, len);
+        let color = [Goldenrod, Firebrick, DeepSkyBlue, LimeGreen, White, Yellow];
+        for (let i = 0; i < 6; i++) {
+            let texture = new THREE.Texture(face(color[i]));
+            texture.needsUpdate = true;
+            materials.push(new THREE.MeshLambertMaterial({map: texture}));
+        }
+        simpleCube = new THREE.Mesh(cubeGeometry, materials);
+        simpleCube.position.x = x - len / 2;
+        simpleCube.position.y = y - len / 2;
+        simpleCube.position.z = z - len / 2;
+        return simpleCube
+    }
+
+    function addRubiksCube(size, len, x, y, z) {
+        size = size || 3;//阶数
+        len = len || 5;//每个方块的边长
+        x = x || 0;//放置位置，整个魔方中心为准
+        y = y || 0;
+        z = z || 0;
+        let fixedSize = size / 2;
+        for (let i = -fixedSize; i < fixedSize; i++) {
+            for (let j = -fixedSize; j < fixedSize; j++) {
+                for (let k = -fixedSize; k < fixedSize; k++) {
+                    scene.add(buildSimpleCubeForRubiksCube(len, x - len * i, y - len * j, z - len * k))
+                }
+            }
+        }
+    }
+
+    //无光照效果，有颜色
+    function createCubeBasic(name) {
+        let cubeGeometry = new THREE.CubeGeometry(1, 1, 1);
+        let color = [Goldenrod, Firebrick, DeepSkyBlue, LimeGreen, White, Yellow];
+        for (let i = 0; i < cubeGeometry.faces.length;) {
+            let faceColor = color[i / 2];
+            cubeGeometry.faces[i].color.set(faceColor);//cube没面被分为两个三角形，共12个face，1、2为一面，3、4为一面，以此类推
+            cubeGeometry.faces[++i].color.set(faceColor);
+            i++;
+        }
+        let material = new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors,});
+        let cube = new THREE.Mesh(cubeGeometry, material);
+        cube.name = name;
+        scene.add(cube);
+        return cube;
+    }
+
+    //有光照效果，暗淡颜色
+    function createCubeLambert(name) {
+        let cubeGeometry = new THREE.CubeGeometry(1, 1, 1);
+        let material = new THREE.MeshLambertMaterial({color: 0xa2f4e2});
+        let cube = new THREE.Mesh(cubeGeometry, material);
+        cube.name = name;
+        scene.add(cube);
+        return cube;
+    }
+
+    //有光照效果，金属类明亮颜色
+    function createCubePhong(name) {
+        let cubeGeometry = new THREE.CubeGeometry(1, 1, 1);
+        let material = new THREE.MeshPhongMaterial({color: 0xff0000});
+        let cube = new THREE.Mesh(cubeGeometry, material);
+        cube.name = name;
+        scene.add(cube);
+        return cube;
+    }
+
+    //钟表材质方块。动态材质
+    function createCubeWithTexture(name) {
+        let cubeGeometry = new THREE.CubeGeometry(10, 10, 10);
+        let texture = new THREE.Texture(canvas);//材质
+
+        let material = new THREE.MeshBasicMaterial({map: texture});
+
+        let cube = new THREE.Mesh(cubeGeometry, material);
+        cube.name = name;
+        scene.add(cube);
+
+        return cube;
+    }
+
+    //增加几何形状
+    function createGeometry(name) {
+        let geometry = new THREE.PlaneGeometry(10, 6, 1, 1);
+        geometry.vertices[0].uv = new THREE.Vector2(0, 0);
+        geometry.vertices[1].uv = new THREE.Vector2(1, 0);
+        geometry.vertices[2].uv = new THREE.Vector2(2, 2);
+        geometry.vertices[3].uv = new THREE.Vector2(0, 2);
+
+        let texture = THREE.TextureLoader.prototype.load("img/1.gif");
+        let material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
+
+        let mesh = new THREE.Mesh(geometry, material);
+        mesh.name = name;
+        mesh.rotation.x = -0.5 * Math.PI;
+        scene.add(mesh);
+        return mesh;
+    }
+
+    addRubiksCube(3);
+    {
+        let geometry = createGeometry("geometry");
+        geometry.position.x = -20;
+        geometry.position.y = 0;
+        geometry.position.z = -20;
+        let cubeLambert = createCubeLambert('cubeLambert');
+        cubeLambert.position.x = -10;
+        cubeLambert.position.y = 0;
+        cubeLambert.position.z = 20;
+        actionMove(cubeLambert, actions1).start();
+        let cubeBasic = createCubeBasic("cubeBasic");
+        cubeBasic.position.x = -20;
+        cubeBasic.position.y = 0;
+        cubeBasic.position.z = 20;
+        let cubePhong = createCubePhong('cubePhong');
+        cubePhong.position.x = -30;
+        cubePhong.position.y = 0;
+        cubePhong.position.z = 20;
+        let cubeTime = createCubeWithTexture('cubeTime');  //scene.getObjectByName('cubeTime');
+        cubeTime.position.x = 0;
+        cubeTime.position.y = 0;
+        cubeTime.position.z = -30;
+        setDragFunction(cubeTime);
+
+        function autoRefresh() {
+            actionRotateXYZ([cubeBasic, cubeLambert, cubePhong]);
+            cubeTime.material.map.needsUpdate = true;//材质刷新
+        }
+    }
+
+</script>
+<script>
+    window.onload = function () { //循环渲染动作
+        (function render() {
+            requestAnimationFrame(render);
+            autoRefresh();
+            stats.update();
+            TWEEN.update();
+            renderer.render(scene, camera);
+        })();
+    };
 
 </script>
 </body>

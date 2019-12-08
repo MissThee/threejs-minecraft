@@ -2,199 +2,63 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1e9087ba-d48e-4b9a-9693-d8f999e7521e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/threejs-test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/threejs-test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test-cube/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/test-cube/test.html" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/.tmp/" />
-    <ignored path="$PROJECT_DIR$/temp/" />
-    <ignored path="$PROJECT_DIR$/tmp/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="1481818815">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.open.time.1" value="1" />
-          <entry key="project.opened" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="html" value="3" />
-          <entry key="js" value="6" />
-          <entry key="ts" value="2" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="HTML" value="3" />
-          <entry key="JavaScript" value="6" />
-          <entry key="TypeScript" value="2" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="html" value="4146" />
-          <entry key="js" value="26" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="HTML" value="4146" />
-          <entry key="JavaScript" value="26" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test-cube/test.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="184" column="35" lean-forward="true" selection-start-line="184" selection-start-column="35" selection-end-line="184" selection-end-column="35" />
-              <folding>
-                <element signature="n#script#0;n#body#0;n#html#0;n#!!top" />
-                <element signature="e#2619#2881#0" />
-                <element signature="e#4678#5313#0" />
-                <element signature="e#5518#5775#0" />
-                <element signature="n#script#2;n#body#0;n#html#0;n#!!top" />
-                <element signature="e#7971#9039#0" />
-                <element signature="e#10547#10607#0" />
-                <element signature="e#9769#10220#0" />
-                <element signature="e#10261#10333#0" />
-                <element signature="e#7003#7477#0" />
-                <element signature="e#9265#9530#0" />
-                <element signature="e#13535#14145#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test-cube/js/three.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12063">
-              <caret line="12131" column="49" lean-forward="true" selection-start-line="12131" selection-start-column="49" selection-end-line="12131" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test-cube/utils/clock.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="564">
-              <caret line="141" column="46" selection-start-line="141" selection-start-column="46" selection-end-line="141" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>createSimpleCube</find>
-      <find>cube4Action</find>
-      <find>addCube4</find>
-      <find>createCube4</find>
-      <find>cube4</find>
-      <find>texture4</find>
-      <find>stats</find>
-      <find>cube.</find>
-      <find>cubePhongAction</find>
-      <find>cubeLambertAction</find>
-      <find>addCubeBasic</find>
-      <find>timeCube</find>
-      <find>cube_basic</find>
-      <find>cube</find>
-      <find>cube.basic</find>
-      <find>cubeLambert</find>
-      <find>setDragFunction</find>
-      <find>renderer</find>
-      <find>render</find>
-      <find>console.log</find>
-      <find>position.</find>
-      <find>autoRefresh</find>
-      <find>cubeBasic</find>
-      <find>dragstart</find>
-      <find>colorTemp</find>
-      <find>MeshBasicMaterial</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>RubiksCube</replace>
-      <replace>cube_time</replace>
-      <replace>cubeTime</replace>
-    </replaceStrings>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/test-cube/utils/clock.js" />
-        <option value="$PROJECT_DIR$/test-cube/test.html" />
-      </list>
-    </option>
-  </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
-  </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="58" />
-    <option name="y" value="67" />
-    <option name="width" value="1675" />
-    <option name="height" value="920" />
-  </component>
+  <component name="ProjectId" id="1UgW76PEi0RtmeNfHPOIAtVJJBO" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="threejs-test" type="b2602c69:ProjectViewProjectNode" />
-              <item name="threejs-test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="threejs-test" type="b2602c69:ProjectViewProjectNode" />
-              <item name="threejs-test" type="462c0819:PsiDirectoryNode" />
-              <item name="test-cube" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/test-cube/img/blocks" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="P:\threejs-test" />
+      <recent name="P:\threejs-test\test-cube" />
+      <recent name="P:\threejs-test\test-cube\img" />
+    </key>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -209,97 +73,21 @@
       <option name="presentableId" value="Default" />
       <updated>1535777914897</updated>
       <workItem from="1535777916367" duration="25690000" />
+      <workItem from="1575778549415" duration="38692000" />
     </task>
     <servers />
-  </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25690000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="306" y="101" width="1675" height="920" extended-state="0" />
-    <editor active="true" />
-    <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1869273" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test/test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="38" column="50" lean-forward="true" selection-start-line="38" selection-start-column="50" selection-end-line="38" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="17089" column="17" selection-start-line="17089" selection-start-column="17" selection-end-line="17089" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test-cube/utils/color.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="4" selection-start-column="4" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test-cube/utils/clock.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="564">
-          <caret line="141" column="46" selection-start-line="141" selection-start-column="46" selection-end-line="141" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test-cube/js/three.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12063">
-          <caret line="12131" column="49" lean-forward="true" selection-start-line="12131" selection-start-column="49" selection-end-line="12131" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test-cube/test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="184" column="35" lean-forward="true" selection-start-line="184" selection-start-column="35" selection-end-line="184" selection-end-column="35" />
-          <folding>
-            <element signature="n#script#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="e#2619#2881#0" />
-            <element signature="e#4678#5313#0" />
-            <element signature="e#5518#5775#0" />
-            <element signature="n#script#2;n#body#0;n#html#0;n#!!top" />
-            <element signature="e#7971#9039#0" />
-            <element signature="e#10547#10607#0" />
-            <element signature="e#9769#10220#0" />
-            <element signature="e#10261#10333#0" />
-            <element signature="e#7003#7477#0" />
-            <element signature="e#9265#9530#0" />
-            <element signature="e#13535#14145#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+  <component name="WindowStateProjectService">
+    <state x="463" y="117" key="FileChooserDialogImpl" timestamp="1575794895557">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="463" y="117" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1575794895557" />
+    <state x="431" y="167" key="run.anything.popup" timestamp="1575814566431">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="431" y="167" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1575814566431" />
   </component>
 </project>

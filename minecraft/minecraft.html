@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: 100%;
+            width: 100%;
+        }
+
+        .canvas-frame {
+            height: 100%;
+            min-height: 400px;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            background-color: #EEEEEE;
+        }
+    </style>
+    <script src="js/three.js?t=1"></script>
+    <!--浏览器支持检测-->
+    <script src="utils/Detector.js"></script>
+    <!--监控控件-->
+    <script src="utils/stats.js"></script>
+    <!--运动-->
+    <script src="utils/tween.js"></script>
+    <!--鼠标控制摄像机-->
+    <script src="utils/OrbitControls.js"></script>
+
+    <!--拖拽对象-->
+    <script src="utils/DragControls.js"></script>
+    <script src="js/Cube/CubeFactory.js"></script>
+</head>
+<body>
+<div id="canvas-frame" class="canvas-frame"></div>
+<script>
+
+    (function threeJsSupportCheck() {
+        if (!Detector.webgl) {
+            Detector.addGetWebGLMessage();
+        }
+    })();
+
+    function getShowWidth() {
+        return Math.max(window.innerWidth, 225)
+    }
+
+    function getShowHeight() {
+        return Math.max(window.innerHeight, 400)
+    }
+
+    let width = getShowWidth();
+    let height = getShowHeight();
+
+    // 舞台*
+    let scene;
+
+    function initScene() {
+        scene = new THREE.Scene();
+        scene.name = 'SCENE';
+    }
+
+    // 光源*
+    let lightCurrentIntensity = 1;
+    let light1;
+    let light2;
+    let light3;
+
+    let lightHighIntensity = 1;
+    let lightLowIntensity = 0.4;
+
+    function getAmbientLightIntensity() {
+        return Math.min(Math.max(lightLowIntensity, lightCurrentIntensity), lightHighIntensity) * 3 / 4;
+    }
+
+    function getPointLightIntensity() {
+        return Math.min(Math.max(0, lightCurrentIntensity / 5), 0.2);
+    }
+
+    function getDirectionalLightIntensity() {
+        return Math.min(Math.max(lightLowIntensity, lightCurrentIntensity), lightHighIntensity) / 4;
+    }
+
+    function initLight() {
+        // 这4种可以产生阴影：DirectionalLight、PointLight、RectAreaLight、SpotLight。
+        //现只会SpotLight，PointLight可以在有其他平行环境光时，制造比较清晰的阴影
+        // 光，会影响MeshLambertMaterial和MeshPhongMaterial材质
+        light1 = new THREE.AmbientLight(0xffffff, getAmbientLightIntensity());//环境光。让物体变亮
+        scene.add(light1);
+        light2 = new THREE.PointLight(0xffffff, getPointLightIntensity());//点光。此处仅造阴影用，值大了会让方块变色严重
+        light2.position.set(50, 100, 50);
+        light2.castShadow = true;
+        //设置阴影分辨率
+        light2.shadow.mapSize.width = 1024*4;
+        light2.shadow.mapSize.height = 1024*4;
+        scene.add(light2);
+        light3 = new THREE.DirectionalLight(0xffffff, getDirectionalLightIntensity());//平行光。制造明暗面，并不使方块变色严重
+        light3.position.set(50, 50, 50);
+        scene.add(light3);
+    }
+
+    let circle = {
+        radius: 50,
+        centerPoint: {
+            x: 0, y: 0
+        },
+        degree: 0,
+    };
+
+    function getSunPosition() {
+        let x = circle.centerPoint.x + Math.cos(Math.PI * 2 / 360 * circle.degree) * circle.radius;
+        let y = circle.centerPoint.y + Math.sin(Math.PI * 2 / 360 * circle.degree) * circle.radius;
+        return {x, y}
+    }
+
+    // 相机*
+    let camera;
+    let controls;
+
+    function initCamera() {
+        camera = new THREE.PerspectiveCamera(45, getShowWidth() / getShowHeight(), 0.01, 1e10);
+        camera.name = "CAMERA";
+        //使用TrackballControls不能设置相机位置
+        camera.position.x = 20;
+        camera.position.y = 20;
+        camera.position.z = -5;
+
+        //会使坐标系中此向量在屏幕中，显示为竖直向上
+        // camera.up.x = 0;
+        // camera.up.y = 1;
+        // camera.up.z = 0;
+        camera.lookAt(0, 0, 0);
+        controls = new THREE.OrbitControls(camera);
+        // 如果使用animate方法时，将此函数删除
+        //controls.addEventListener( 'change', render ,false);
+        // 使动画循环使用时阻尼或自转 意思是否有惯性
+        controls.enableDamping = true;
+        //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+        controls.dampingFactor = 1.5;
+    }
+
+    // 渲染器*
+    let renderer;
+
+    function initRenderer() {
+        renderer = new THREE.WebGLRenderer({
+            antialias: true
+        });
+        renderer.name = 'RENDERER';
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.setSize(getShowWidth(), getShowHeight());
+        document.getElementById('canvas-frame').appendChild(renderer.domElement);
+        renderer.setClearColor(0xFFFFFF, 1.0);//背景颜色
+    }
+
+    // 查看信息小控件
+    let stats;
+
+    function initStats() {
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        document.getElementById('canvas-frame').appendChild(stats.domElement);
+    }
+
+
+    //使渲染器与相机随窗口大小改变适应。自适应窗口大小
+    window.onresize = function () {
+        //更新相机视角比例
+        camera.aspect = getShowWidth() / getShowHeight();
+        camera.updateProjectionMatrix();
+        renderer.setSize(getShowWidth(), getShowHeight());
+    };
+
+</script>
+<script>
+    //--------------------------------------点击事件--------------------------------------start
+    let raycaster = new THREE.Raycaster();
+    let mouse = new THREE.Vector2();
+
+    //获取点击的对象
+    function getClickedObject(event) {
+        //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
+        raycaster.setFromCamera(mouse, camera);
+        // 获取raycaster直线和所有模型相交的数组集合
+        return raycaster.intersectObjects(scene.children);
+    }
+
+    //监听事件
+    window.addEventListener('mousedown', function (event) {
+        let objects = getClickedObject(event);
+        if (objects.length > 0) {
+            let obj = objects[0].object;
+            console.log("点击的对象：" + obj.name);
+        }
+    }, false);
+
+    //给对象设置拖动事件
+    function setDragFunction(obj) {
+        let dragControls = new THREE.DragControls([obj], camera, renderer.domElement);
+        dragControls.addEventListener('dragstart', function () {
+            controls.enabled = false;
+        }, false);
+        dragControls.addEventListener('dragend', function () {
+            controls.enabled = true;
+        }, false);
+    }
+
+    //--------------------------------------点击事件--------------------------------------end
+</script>
+<script>
+    // 初始化基本控件
+    initScene();//舞台*
+    initCamera();//相机*
+    initRenderer();//渲染器*
+    initLight();//光源*
+    initStats();//监控控件
+</script>
+<script>
+    //--------------------------------------动作代码------------------------------------------
+    //运动
+    function actionMove(obj, actions) {
+        let x = obj.position.x;
+        let y = obj.position.y;
+        let z = obj.position.z;
+        let firstTween;
+        let oldTween;
+        for (let i in actions) {
+            actions[i].properties.x = x + actions[i].properties.x;
+            actions[i].properties.y = y + actions[i].properties.y;
+            actions[i].properties.z = z + actions[i].properties.z;
+            let newTween = new TWEEN.Tween(obj.position)
+                .to(actions[i].properties, actions[i].duration || 1000)
+                .easing(actions[i].easing)
+            if (oldTween !== undefined) {
+                oldTween.chain(newTween);
+            }
+            if (i === '0') {
+                firstTween = newTween;
+            }
+            oldTween = newTween;
+        }
+        oldTween.chain(firstTween)
+        return firstTween;
+        // .to( { x: -4}, 3000 ).repeat( Infinity ).start();
+    }
+
+    let actions1 = [
+        {
+            properties: {
+                x: 5, y: 0, z: 0
+            },
+            easing: TWEEN.Easing.Cubic.In
+        }, {
+            properties: {
+                x: 0, y: 5, z: 0
+            },
+            easing: TWEEN.Easing.Exponential.InOut
+        }, {
+            properties: {
+                x: 0, y: 0, z: 5
+            },
+            easing: TWEEN.Easing.Elastic.Out
+        }
+    ];
+
+    //旋转
+    function actionRotate(obj, x, y, z) {
+        if (Array.isArray(obj)) {
+            for (let e of obj) {
+                e.rotation.x += x || 0;
+                e.rotation.y += y || 0;
+                e.rotation.z += z || 0;
+            }
+        } else {
+            obj.geometry.needsUpdate = true;
+            // texture4.needsUpdate=true;
+            obj.rotation.x += x || 0;
+            obj.rotation.y += y || 0;
+            obj.rotation.z += z || 0;
+        }
+    }
+
+    //旋转(三方向同速)
+    function actionRotateXYZ(obj, xyz) {
+        actionRotate(obj, xyz || 0.01, xyz || 0.01, xyz || 0.01)
+    }
+
+</script>
+<script>
+    //-----------以下为物体添加代码---------------------------------------------------------------
+    function addLine(x1, y1, z1, x2, y2, z2, color) {
+        x1 = x1 || 0;
+        y1 = y1 || 0;
+        z1 = z1 || 0;
+        x2 = x2 || 0;
+        y2 = y2 || 0;
+        z2 = z2 || 0;
+        color = color || 0xff0000;
+        let startPoint = new THREE.Vector3(x1, y1, z1);
+        let endPoint = new THREE.Vector3(x2, y2, z2);
+        let geometry = new THREE.Geometry();
+        geometry.vertices.push(startPoint);
+        geometry.vertices.push(endPoint);
+        let material = new THREE.MeshBasicMaterial({color: color});
+        let line = new THREE.LineSegments(geometry, material, THREE.LinePieces);
+        //  return line;
+        scene.add(line);
+    }
+
+    //坐标线
+    addLine(0, 0, 0, 10, 0, 0, 0xff0000);//中心坐标线，X轴，红
+    addLine(0, 0, 0, 0, 10, 0, 0x00ff00);//中心坐标线，Y轴，绿
+    addLine(0, 0, 0, 0, 0, 10, 0x0000ff);//中心坐标线，Z轴，蓝
+
+    // 网格线
+    (function () {
+        const gridSize = 100;
+        const lineWidth = 4;
+        for (let i = 0; i <= gridSize * 2 / lineWidth; i++) {
+
+            let geometry = new THREE.Geometry();
+            geometry.vertices.push(new THREE.Vector3(-gridSize, 0, 0));
+            geometry.vertices.push(new THREE.Vector3(gridSize, 0, 0));
+
+            let lineX = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: 0xcccccc, opacity: 0.2}));
+            lineX.position.z = (i * lineWidth) - gridSize;
+            scene.add(lineX);
+
+            let lineY = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: 0xcccccc, opacity: 0.2}));
+            lineY.position.x = (i * lineWidth) - gridSize;
+            lineY.rotation.y = 90 * Math.PI / 180;   //  旋转90度
+            scene.add(lineY);
+
+            // let lineZ = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: 0x0000ff, opacity: 0.5}));
+            // lineZ.position.x = (i * 4)-gridSize/2 ;
+            // lineZ.rotation.z = 90 * Math.PI / 180;   //  旋转90度
+            // scene.add(lineZ);
+        }
+    })();
+
+    //平台底板
+    (function addBasePlane() {
+        let geometry = new THREE.PlaneGeometry(200, 200, 1, 1);
+        let material = new THREE.MeshLambertMaterial({color: 0xffffff});
+        let basePlaneMesh = new THREE.Mesh(geometry, material);
+        basePlaneMesh.rotation.x = -0.5 * Math.PI;
+        basePlaneMesh.position.y = -0.001;
+        basePlaneMesh.receiveShadow = true;
+        scene.add(basePlaneMesh);
+        return basePlaneMesh;
+    })();
+
+    //增加天空盒
+    (function () {
+        let backgroundType = 1;
+        let textureCube = new THREE.CubeTextureLoader().load([
+            'img/1.png',
+            'img/2.png',
+            'img/3.png',
+            'img/4.png',
+            'img/5.png',
+            'img/6.png'
+        ]);
+        if (backgroundType === 1) {//使用场景背景添加
+            scene.background = new THREE.Color(0x87CEEB);
+        } else if (backgroundType === 2) {
+            scene.background = textureCube
+        } else {//使用盒子添加
+            //着色器
+            let cubeShader = THREE.ShaderLib["cube"];
+            cubeShader.uniforms["tCube"].value = textureCube;
+            let material = new THREE.ShaderMaterial({
+                fragmentShader: cubeShader.fragmentShader,  //定义自己的片元着色器
+                vertexShader: cubeShader.vertexShader,  //定义自己的顶点着色器
+                uniforms: cubeShader.uniforms,  //给着色器传入uniform变量的值
+                depthWrite: false,  //决定这个材质是否影响WebGL的深度缓存
+                side: THREE.BackSide,  //侧面：反面
+            });
+            //创建方盒子
+            let cubeWithPic = new THREE.Mesh(new THREE.CubeGeometry(1000000, 1000000, 1000000), material);
+            scene.add(cubeWithPic);
+        }
+    })();
+
+
+    let lightValueChangeDirection = true;
+
+    function changeLight() {
+        light1.intensity = getAmbientLightIntensity();
+        light2.intensity = getPointLightIntensity();
+        light3.intensity = getDirectionalLightIntensity();
+        if (lightValueChangeDirection) {
+            if (lightCurrentIntensity >= lightLowIntensity - (lightHighIntensity - lightLowIntensity)) {
+                lightCurrentIntensity -= 0.002;
+            } else {
+                lightValueChangeDirection = false;
+            }
+        } else {
+            if (lightCurrentIntensity <= lightHighIntensity + (lightHighIntensity - lightLowIntensity)) {
+                lightCurrentIntensity += 0.002;
+            } else {
+                if (lightCurrentIntensity > 1.5) {
+                    lightValueChangeDirection = true;
+                }
+            }
+        }
+    }
+
+
+    function autoRefresh() {
+        changeLight();
+    }
+
+    class CubeFactory {
+        constructor(cubeType, customCubeImages) {
+            this.cubeType = cubeType;
+            this.customCubeImages = customCubeImages;
+        }
+
+        _images = [];//实际使用的贴图
+        _materials = [];
+        customCubeImages = [];//自定义贴图，仅在cubeType为“custom”时生效
+        _cubeSize = 1;//方块边长，默认1
+        cubeType;//预设的几种方块类型
+
+        //预设方块信息
+        static DefaultCubeInfo = {
+            GrassDirt: {
+                images: [
+                    'img/blocks/grass_side.png',
+                    'img/blocks/grass_side.png',
+                    'img/blocks/grass_top_green.png',
+                    'img/blocks/dirt.png',
+                    'img/blocks/grass_side.png',
+                    'img/blocks/grass_side.png',],
+                material: {}
+            },
+            Cloud: {
+                images: [
+                    'img/blocks/grass_side.png',
+                    'img/blocks/grass_side.png',
+                    'img/blocks/grass_top_green.png',
+                    'img/blocks/dirt.png',
+                    'img/blocks/grass_side.png',
+                    'img/blocks/grass_side.png',],
+                material: {
+                    transparent: true,//透明
+                    opacity: 0.2,//透明度
+                }
+            }
+        };
+
+        //初始化images
+        initImages() {
+            if (this._images && this._images.length !== 0) {
+                return;
+            }
+            if (this.cubeType === "Custom") {
+                this._images = this.customCubeImages;
+            } else if (CubeFactory.DefaultCubeInfo[this.cubeType]) {
+                this._images = CubeFactory.DefaultCubeInfo[this.cubeType].images;
+            } else {
+                throw "unknown cubeType";
+            }
+        };
+
+        //初始化材质
+        initMaterials() {
+            if (this._materials && this._materials.length !== 0) {
+                return;
+            }
+            let textureLoader = new THREE.TextureLoader();
+            for (let i = 0; i < 6; ++i) {
+                let texture = textureLoader.load(this._images[i]);
+                texture.generateMipmaps = false;
+                texture.magFilter = THREE.NearestFilter;
+                texture.minFilter = THREE.NearestFilter;
+                let extraOptions = {};
+                if (CubeFactory.DefaultCubeInfo[this.cubeType]) {
+                    extraOptions = CubeFactory.DefaultCubeInfo[this.cubeType].material;
+                }
+                this._materials.push(new THREE.MeshLambertMaterial({
+                    map: texture,
+                    overdraw: false,
+                    fog: false,//当前材质是否受到全局雾化效果器影响
+                    ...extraOptions
+                }));
+            }
+        };
+
+        //构造方块
+        buildCube(x, y, z) {
+            x = x || 0;
+            y = y || 0;
+            z = z || 0;
+            let cube = new THREE.Mesh(new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize), this._materials);
+            cube.receiveShadow = cube.castShadow = true;
+            cube.position.x = x + this._cubeSize / 2;
+            cube.position.y = y + this._cubeSize / 2;
+            cube.position.z = z + this._cubeSize / 2;
+            cube.name = "GrassCube(" + x + "," + y + "," + z + ")";
+            return cube;
+        }
+
+        create(x, y, z) {
+            this.initImages();
+            this.initMaterials();
+            return this.buildCube(x, y, z);
+        }
+    }
+
+    //草地块
+    function addGrassCube(x, y, z) {
+        let cubeSize = 1;
+        let images = [
+            'img/blocks/grass_side.png',
+            'img/blocks/grass_side.png',
+            'img/blocks/grass_top_green.png',
+            'img/blocks/dirt.png',
+            'img/blocks/grass_side.png',
+            'img/blocks/grass_side.png',];
+        let materials = [];
+        let textureLoader = new THREE.TextureLoader();
+        for (let i = 0; i < 6; ++i) {
+            let texture = textureLoader.load(images[i]);
+            texture.generateMipmaps = false;
+            texture.magFilter = THREE.NearestFilter;
+            texture.minFilter = THREE.NearestFilter;
+            materials.push(new THREE.MeshLambertMaterial({
+                map: texture,
+                overdraw: true,
+                fog: false,//当前材质是否收到全局雾化效果器影响
+                // transparent:true,//透明
+                // opacity:0.2,//透明度
+            }));
+        }
+        let cube = new THREE.Mesh(new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize), materials);
+        cube.receiveShadow = cube.castShadow = true;
+        cube.position.x = x + cubeSize / 2;
+        cube.position.y = y + cubeSize / 2;
+        cube.position.z = z + cubeSize / 2;
+        cube.name = "GrassCube(" + x + "," + y + "," + z + ")";
+        scene.add(cube);
+    }
+
+    (function addGrassCubes() {
+        let letterPositionInfo = {
+            A: [
+                [2, 0, 0],
+                [3, 0, 0],
+                [4, 0, 0],
+                [5, 0, 0],
+                [6, 0, 0],
+                [1, 0, -1],
+                [4, 0, -1],
+                [0, 0, -2],
+                [4, 0, -2],
+                [1, 0, -3],
+                [4, 0, -3],
+                [2, 0, -4],
+                [3, 0, -4],
+                [4, 0, -4],
+                [5, 0, -4],
+                [6, 0, -4],
+            ],
+            B: [
+                [0, 0, 0],
+                [1, 0, 0],
+                [2, 0, 0],
+                [3, 0, 0],
+                [4, 0, 0],
+                [5, 0, 0],
+                [6, 0, 0],
+                [0, 0, -1],
+                [3, 0, -1],
+                [6, 0, -1],
+                [0, 0, -2],
+                [3, 0, -2],
+                [6, 0, -2],
+                [0, 0, -3],
+                [3, 0, -3],
+                [6, 0, -3],
+                [1, 0, -4],
+                [2, 0, -4],
+                [4, 0, -4],
+                [5, 0, -4],
+            ],
+            E: [
+                [0, 0, 0],
+                [1, 0, 0],
+                [2, 0, 0],
+                [3, 0, 0],
+                [4, 0, 0],
+                [5, 0, 0],
+                [6, 0, 0],
+                [0, 0, -1],
+                [3, 0, -1],
+                [6, 0, -1],
+                [0, 0, -2],
+                [3, 0, -2],
+                [6, 0, -2],
+                [0, 0, -3],
+                [3, 0, -3],
+                [6, 0, -3],
+                [0, 0, -4],
+                [6, 0, -4],
+            ],
+            G: [
+                [1, 0, 0],
+                [2, 0, 0],
+                [3, 0, 0],
+                [4, 0, 0],
+                [5, 0, 0],
+                [0, 0, -1],
+                [6, 0, -1],
+                [0, 0, -2],
+                [6, 0, -2],
+                [0, 0, -3],
+                [4, 0, -3],
+                [6, 0, -3],
+                [1, 0, -4],
+                [4, 0, -4],
+                [5, 0, -4],
+            ],
+            I: [
+                [0, 0, -1],
+                [6, 0, -1],
+                [0, 0, -2],
+                [1, 0, -2],
+                [2, 0, -2],
+                [3, 0, -2],
+                [4, 0, -2],
+                [5, 0, -2],
+                [6, 0, -2],
+                [0, 0, -3],
+                [6, 0, -3],
+            ],
+            M: [
+                [0, 0, 0],
+                [1, 0, 0],
+                [2, 0, 0],
+                [3, 0, 0],
+                [4, 0, 0],
+                [5, 0, 0],
+                [6, 0, 0],
+                [2, 0, -1],
+                [3, 0, -2],
+                [2, 0, -3],
+                [0, 0, -4],
+                [1, 0, -4],
+                [2, 0, -4],
+                [3, 0, -4],
+                [4, 0, -4],
+                [5, 0, -4],
+                [6, 0, -4],
+            ],
+            N: [
+                [0, 0, 0],
+                [1, 0, 0],
+                [2, 0, 0],
+                [3, 0, 0],
+                [4, 0, 0],
+                [5, 0, 0],
+                [6, 0, 0],
+                [2, 0, -1],
+                [3, 0, -2],
+                [4, 0, -3],
+                [0, 0, -4],
+                [1, 0, -4],
+                [2, 0, -4],
+                [3, 0, -4],
+                [4, 0, -4],
+                [5, 0, -4],
+                [6, 0, -4],
+            ],
+            T: [
+                [0, 0, 0],
+                [0, 0, -1],
+                [0, 0, -2],
+                [1, 0, -2],
+                [2, 0, -2],
+                [3, 0, -2],
+                [4, 0, -2],
+                [5, 0, -2],
+                [6, 0, -2],
+                [0, 0, -3],
+                [0, 0, -4],
+            ]
+        };
+        let cubeFactory = new CubeFactory("GrassDirt");
+        let word = "BEGIN";
+        let moveZ = 0;
+        for (let letter of word) {
+            for (let grassCubePositionInfo of letterPositionInfo[letter]) {
+                let cube = cubeFactory.create(grassCubePositionInfo[0], grassCubePositionInfo[1], grassCubePositionInfo[2] + moveZ);
+                scene.add(cube);
+            }
+            moveZ -=6;
+        }
+
+    })();
+
+</script>
+<script>
+    window.onload = function () { //循环渲染动作
+        (function render() {
+            requestAnimationFrame(render);
+            stats.update();
+            TWEEN.update();
+            renderer.render(scene, camera);
+            autoRefresh();
+        })();
+    };
+
+</script>
+</body>
+</html>

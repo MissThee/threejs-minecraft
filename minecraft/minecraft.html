@@ -24,8 +24,43 @@
             cursor: pointer;
             background-color: #EEEEEE;
         }
+
+        #blocker {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #instructions {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            display: -webkit-box;
+            display: -moz-box;
+            display: box;
+
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            box-pack: center;
+
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            box-align: center;
+
+            color: #ffffff;
+            text-align: center;
+
+            cursor: pointer;
+
+        }
     </style>
-    <script src="js/three.js?t=1"></script>
+    <script src="utils/three.js?t=2"></script>
     <!--浏览器支持检测-->
     <script src="utils/Detector.js"></script>
     <!--监控控件-->
@@ -34,12 +69,25 @@
     <script src="utils/tween.js"></script>
     <!--鼠标控制摄像机-->
     <script src="utils/OrbitControls.js"></script>
+    <script src="utils/FirstPersonControls.js"></script>
+
+    <script src="utils/PointerLockControls.js"></script>
+    <script src="utils/Control.js"></script>
 
     <!--拖拽对象-->
     <script src="utils/DragControls.js"></script>
-    <script src="js/Cube/CubeFactory.js"></script>
+
 </head>
 <body>
+<div id="blocker">
+
+    <div id="instructions">
+        <span style="font-size:40px">Click to play</span>
+        <br/>
+        (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+    </div>
+
+</div>
 <div id="canvas-frame" class="canvas-frame"></div>
 <script>
 
@@ -99,8 +147,8 @@
         light2.position.set(50, 100, 50);
         light2.castShadow = true;
         //设置阴影分辨率
-        light2.shadow.mapSize.width = 1024*4;
-        light2.shadow.mapSize.height = 1024*4;
+        light2.shadow.mapSize.width = 1024 * 4;
+        light2.shadow.mapSize.height = 1024 * 4;
         scene.add(light2);
         light3 = new THREE.DirectionalLight(0xffffff, getDirectionalLightIntensity());//平行光。制造明暗面，并不使方块变色严重
         light3.position.set(50, 50, 50);
@@ -123,7 +171,6 @@
 
     // 相机*
     let camera;
-    let controls;
 
     function initCamera() {
         camera = new THREE.PerspectiveCamera(45, getShowWidth() / getShowHeight(), 0.01, 1e10);
@@ -137,14 +184,8 @@
         // camera.up.x = 0;
         // camera.up.y = 1;
         // camera.up.z = 0;
-        camera.lookAt(0, 0, 0);
-        controls = new THREE.OrbitControls(camera);
-        // 如果使用animate方法时，将此函数删除
-        //controls.addEventListener( 'change', render ,false);
-        // 使动画循环使用时阻尼或自转 意思是否有惯性
-        controls.enableDamping = true;
-        //动态阻尼系数 就是鼠标拖拽旋转灵敏度
-        controls.dampingFactor = 1.5;
+        // camera.lookAt(0, 0, 0);
+
     }
 
     // 渲染器*
@@ -162,6 +203,47 @@
         renderer.setClearColor(0xFFFFFF, 1.0);//背景颜色
     }
 
+    // 相机控制器
+    let controls;
+    let controlsType = "Custom";
+
+
+    function initControls() {
+        switch (controlsType) {
+            case "OrbitControls":
+                controls = new THREE.OrbitControls(camera);
+                // 如果使用animate方法时，将此函数删除
+                //controls.addEventListener( 'change', render ,false);
+                // 使动画循环使用时阻尼或自转 意思是否有惯性
+                controls.enableDamping = true;
+                //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+                controls.dampingFactor = 1.5;
+                break;
+            case "FirstPersonControls":
+                controls = new THREE.FirstPersonControls(camera, renderer.domElement);
+                /* 属性参数默认 */
+                controls.enabled = true;
+                controls.lookSpeed = 0.1; //鼠标移动查看的速度
+                controls.movementSpeed = 20; //相机移动速度
+                controls.noFly = true;
+                controls.constrainVertical = true; //约束垂直
+                controls.verticalMin = 1.0;
+                controls.verticalMax = 2.0;
+                controls.lon = 0; //进入初始视角x轴的角度
+                controls.lat = 0; //初始视角进入后y轴的角度
+                break;
+            case "Custom":
+                let box = new THREE.Mesh(
+                    new THREE.BoxBufferGeometry(1000, 10, 1000, 2, 2, 2),
+                    new THREE.MeshPhongMaterial({color: 0xcccccc})
+                );
+                box.position.y=-10.01
+                scene.add(box);
+                controls = Control.getInstance().init(camera, scene, box);
+                break;
+        }
+    }
+
     // 查看信息小控件
     let stats;
 
@@ -172,7 +254,6 @@
         stats.domElement.style.top = '0px';
         document.getElementById('canvas-frame').appendChild(stats.domElement);
     }
-
 
     //使渲染器与相机随窗口大小改变适应。自适应窗口大小
     window.onresize = function () {
@@ -228,6 +309,7 @@
     initRenderer();//渲染器*
     initLight();//光源*
     initStats();//监控控件
+    initControls();//控制器
 </script>
 <script>
     //--------------------------------------动作代码------------------------------------------
@@ -361,12 +443,12 @@
         basePlaneMesh.position.y = -0.001;
         basePlaneMesh.receiveShadow = true;
         scene.add(basePlaneMesh);
-        return basePlaneMesh;
+
     })();
 
     //增加天空盒
     (function () {
-        let backgroundType = 1;
+        let backgroundType = 3;
         let textureCube = new THREE.CubeTextureLoader().load([
             'img/1.png',
             'img/2.png',
@@ -495,7 +577,6 @@
                 }
                 this._materials.push(new THREE.MeshLambertMaterial({
                     map: texture,
-                    overdraw: false,
                     fog: false,//当前材质是否受到全局雾化效果器影响
                     ...extraOptions
                 }));
@@ -542,7 +623,6 @@
             texture.minFilter = THREE.NearestFilter;
             materials.push(new THREE.MeshLambertMaterial({
                 map: texture,
-                overdraw: true,
                 fog: false,//当前材质是否收到全局雾化效果器影响
                 // transparent:true,//透明
                 // opacity:0.2,//透明度
@@ -709,22 +789,23 @@
                 let cube = cubeFactory.create(grassCubePositionInfo[0], grassCubePositionInfo[1], grassCubePositionInfo[2] + moveZ);
                 scene.add(cube);
             }
-            moveZ -=6;
+            moveZ -= 6;
         }
 
     })();
 
 </script>
 <script>
-    window.onload = function () { //循环渲染动作
-        (function render() {
-            requestAnimationFrame(render);
-            stats.update();
-            TWEEN.update();
-            renderer.render(scene, camera);
-            autoRefresh();
-        })();
-    };
+    let clock = new THREE.Clock();
+
+    (function render() {
+        requestAnimationFrame(render);
+        stats.update();
+        TWEEN.update();
+        controls.update(clock.getDelta());
+        renderer.render(scene, camera);
+        autoRefresh();
+    })();
 
 </script>
 </body>

@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1e9087ba-d48e-4b9a-9693-d8f999e7521e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/threejs-test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/threejs-test.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minecraft/utils/three.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-cube/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/test-cube/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/js/Cube/CubeFactory.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/js/three.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/minecraft.html" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft/minecraft.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +34,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test-cube/img/blocks" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../three.js-master" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -45,9 +47,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="P:\threejs-test\minecraft\utils" />
+      <recent name="P:\threejs-test\test-cube\img\blocks" />
       <recent name="P:\threejs-test" />
       <recent name="P:\threejs-test\test-cube" />
       <recent name="P:\threejs-test\test-cube\img" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="P:\threejs-test\minecraft\utils" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -73,7 +80,9 @@
       <option name="presentableId" value="Default" />
       <updated>1535777914897</updated>
       <workItem from="1535777916367" duration="25690000" />
-      <workItem from="1575778549415" duration="38692000" />
+      <workItem from="1575778549415" duration="39326000" />
+      <workItem from="1575889185996" duration="6526000" />
+      <workItem from="1575901707595" duration="11933000" />
     </task>
     <servers />
   </component>
@@ -81,10 +90,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="463" y="117" key="FileChooserDialogImpl" timestamp="1575794895557">
+    <state x="463" y="117" key="FileChooserDialogImpl" timestamp="1575913109954">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="117" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1575794895557" />
+    <state x="463" y="117" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1575913109954" />
     <state x="431" y="167" key="run.anything.popup" timestamp="1575814566431">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

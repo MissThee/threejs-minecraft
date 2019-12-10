@@ -60,42 +60,29 @@
 
         }
     </style>
-    <script src="utils/three.js?t=2"></script>
-    <!--浏览器支持检测-->
-    <script src="utils/Detector.js"></script>
-    <!--监控控件-->
-    <script src="utils/stats.js"></script>
-    <!--运动-->
-    <script src="utils/tween.js"></script>
-    <!--鼠标控制摄像机-->
-    <script src="utils/OrbitControls.js"></script>
-    <script src="utils/FirstPersonControls.js"></script>
-
-    <script src="utils/PointerLockControls.js"></script>
-    <script src="utils/Control.js"></script>
-
-    <!--拖拽对象-->
-    <script src="utils/DragControls.js"></script>
 
 </head>
 <body>
 <div id="blocker">
-
     <div id="instructions">
         <span style="font-size:40px">Click to play</span>
         <br/>
         (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
     </div>
-
 </div>
 <div id="canvas-frame" class="canvas-frame"></div>
-<script>
+<script type="module">
+    import * as THREE from './base/three.module.js'
+    import * as OrbitControls from './jsm/controls/OrbitControls.js'
+    import * as DragControls from './jsm/controls/DragControls.js'
+    import Control from "./utils/Control.js";
+    import {WEBGL} from "./jsm/WebGL.js";
+    import Stats from "./jsm/libs/stats.module.js";
+    import {TWEEN} from "./jsm/libs/tween.module.min.js";
 
-    (function threeJsSupportCheck() {
-        if (!Detector.webgl) {
-            Detector.addGetWebGLMessage();
-        }
-    })();
+    if (WEBGL.isWebGLAvailable() === false) {
+        document.body.appendChild(WEBGL.getWebGLErrorMessage());
+    }
 
     function getShowWidth() {
         return Math.max(window.innerWidth, 225)
@@ -155,20 +142,6 @@
         scene.add(light3);
     }
 
-    let circle = {
-        radius: 50,
-        centerPoint: {
-            x: 0, y: 0
-        },
-        degree: 0,
-    };
-
-    function getSunPosition() {
-        let x = circle.centerPoint.x + Math.cos(Math.PI * 2 / 360 * circle.degree) * circle.radius;
-        let y = circle.centerPoint.y + Math.sin(Math.PI * 2 / 360 * circle.degree) * circle.radius;
-        return {x, y}
-    }
-
     // 相机*
     let camera;
 
@@ -206,8 +179,7 @@
     // 相机控制器
     let controls;
     let controlsType = "Custom";
-
-
+    let objects=[];
     function initControls() {
         switch (controlsType) {
             case "OrbitControls":
@@ -219,27 +191,8 @@
                 //动态阻尼系数 就是鼠标拖拽旋转灵敏度
                 controls.dampingFactor = 1.5;
                 break;
-            case "FirstPersonControls":
-                controls = new THREE.FirstPersonControls(camera, renderer.domElement);
-                /* 属性参数默认 */
-                controls.enabled = true;
-                controls.lookSpeed = 0.1; //鼠标移动查看的速度
-                controls.movementSpeed = 20; //相机移动速度
-                controls.noFly = true;
-                controls.constrainVertical = true; //约束垂直
-                controls.verticalMin = 1.0;
-                controls.verticalMax = 2.0;
-                controls.lon = 0; //进入初始视角x轴的角度
-                controls.lat = 0; //初始视角进入后y轴的角度
-                break;
             case "Custom":
-                let box = new THREE.Mesh(
-                    new THREE.BoxBufferGeometry(1000, 10, 1000, 2, 2, 2),
-                    new THREE.MeshPhongMaterial({color: 0xcccccc})
-                );
-                box.position.y=-10.01
-                scene.add(box);
-                controls = Control.getInstance().init(camera, scene, box);
+                controls = new Control(camera, scene, objects);
                 break;
         }
     }
@@ -263,8 +216,6 @@
         renderer.setSize(getShowWidth(), getShowHeight());
     };
 
-</script>
-<script>
     //--------------------------------------点击事件--------------------------------------start
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
@@ -291,7 +242,7 @@
 
     //给对象设置拖动事件
     function setDragFunction(obj) {
-        let dragControls = new THREE.DragControls([obj], camera, renderer.domElement);
+        let dragControls = new DragControls([obj], camera, renderer.domElement);
         dragControls.addEventListener('dragstart', function () {
             controls.enabled = false;
         }, false);
@@ -301,8 +252,6 @@
     }
 
     //--------------------------------------点击事件--------------------------------------end
-</script>
-<script>
     // 初始化基本控件
     initScene();//舞台*
     initCamera();//相机*
@@ -310,8 +259,6 @@
     initLight();//光源*
     initStats();//监控控件
     initControls();//控制器
-</script>
-<script>
     //--------------------------------------动作代码------------------------------------------
     //运动
     function actionMove(obj, actions) {
@@ -381,8 +328,6 @@
         actionRotate(obj, xyz || 0.01, xyz || 0.01, xyz || 0.01)
     }
 
-</script>
-<script>
     //-----------以下为物体添加代码---------------------------------------------------------------
     function addLine(x1, y1, z1, x2, y2, z2, color) {
         x1 = x1 || 0;
@@ -788,21 +733,28 @@
             for (let grassCubePositionInfo of letterPositionInfo[letter]) {
                 let cube = cubeFactory.create(grassCubePositionInfo[0], grassCubePositionInfo[1], grassCubePositionInfo[2] + moveZ);
                 scene.add(cube);
+                objects.push(cube);
             }
             moveZ -= 6;
         }
-
+        {
+        let box = new THREE.Mesh(
+            new THREE.CubeGeometry(40, 1, 40),
+            new THREE.MeshPhongMaterial({color: 0xcccccc})
+        );
+            box.receiveShadow = box.castShadow = true;
+        box.position.y = 9;
+        scene.add(box);
+        objects.push(box)
+        }
     })();
 
-</script>
-<script>
-    let clock = new THREE.Clock();
 
     (function render() {
         requestAnimationFrame(render);
         stats.update();
         TWEEN.update();
-        controls.update(clock.getDelta());
+        controls.update();
         renderer.render(scene, camera);
         autoRefresh();
     })();

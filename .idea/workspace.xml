@@ -2,11 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1e9087ba-d48e-4b9a-9693-d8f999e7521e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/minecraft/utils/three.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/js/Cube/CubeFactory.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/js/three.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/minecraft/minecraft.html" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft/minecraft.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/Control.js" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft/utils/Control.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/Detector.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/DragControls.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/FirstPersonControls.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/OrbitControls.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/PointerLockControls.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/stats.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/three.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/three.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/tween.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +41,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../three.js-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/minecraft" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -44,17 +51,18 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="P:\threejs-test\minecraft\utils" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="P:\threejs-test\minecraft" />
+      <recent name="P:\threejs-test\minecraft\base" />
       <recent name="P:\threejs-test\minecraft\utils" />
       <recent name="P:\threejs-test\test-cube\img\blocks" />
       <recent name="P:\threejs-test" />
-      <recent name="P:\threejs-test\test-cube" />
-      <recent name="P:\threejs-test\test-cube\img" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="P:\threejs-test\minecraft\utils" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -83,6 +91,7 @@
       <workItem from="1575778549415" duration="39326000" />
       <workItem from="1575889185996" duration="6526000" />
       <workItem from="1575901707595" duration="11933000" />
+      <workItem from="1575982984620" duration="16383000" />
     </task>
     <servers />
   </component>
@@ -94,6 +103,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="117" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1575913109954" />
+    <state x="359" y="102" width="647" height="524" key="find.popup" timestamp="1575992935780">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="359" y="102" width="647" height="524" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1575992935780" />
     <state x="431" y="167" key="run.anything.popup" timestamp="1575814566431">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

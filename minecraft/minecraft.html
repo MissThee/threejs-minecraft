@@ -29,7 +29,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.4);
         }
 
         #instructions {
@@ -73,7 +73,7 @@
 <div id="canvas-frame" class="canvas-frame"></div>
 <script type="module">
     import * as THREE from './base/three.module.js'
-    import * as OrbitControls from './jsm/controls/OrbitControls.js'
+    import {OrbitControls} from './jsm/controls/OrbitControls.js'
     import * as DragControls from './jsm/controls/DragControls.js'
     import Control from "./utils/Control.js";
     import {WEBGL} from "./jsm/WebGL.js";
@@ -101,23 +101,19 @@
     function initScene() {
         scene = new THREE.Scene();
         scene.name = 'SCENE';
+        // scene.fog = new THREE.FogExp2( 0xffffff, 0.02 );//雾效果
     }
 
     // 光源*
     let lightCurrentIntensity = 1;
-    let light1;
-    let light2;
-    let light3;
+    let lightAmbient;
+    let lightDirectional;
 
     let lightHighIntensity = 1;
     let lightLowIntensity = 0.4;
 
     function getAmbientLightIntensity() {
         return Math.min(Math.max(lightLowIntensity, lightCurrentIntensity), lightHighIntensity) * 3 / 4;
-    }
-
-    function getPointLightIntensity() {
-        return Math.min(Math.max(0, lightCurrentIntensity / 5), 0.2);
     }
 
     function getDirectionalLightIntensity() {
@@ -128,64 +124,76 @@
         // 这4种可以产生阴影：DirectionalLight、PointLight、RectAreaLight、SpotLight。
         //现只会SpotLight，PointLight可以在有其他平行环境光时，制造比较清晰的阴影
         // 光，会影响MeshLambertMaterial和MeshPhongMaterial材质
-        light1 = new THREE.AmbientLight(0xffffff, getAmbientLightIntensity());//环境光。让物体变亮
-        scene.add(light1);
-        light2 = new THREE.PointLight(0xffffff, getPointLightIntensity());//点光。此处仅造阴影用，值大了会让方块变色严重
-        light2.position.set(50, 100, 50);
-        light2.castShadow = true;
-        //设置阴影分辨率
-        light2.shadow.mapSize.width = 1024 * 4;
-        light2.shadow.mapSize.height = 1024 * 4;
-        scene.add(light2);
-        light3 = new THREE.DirectionalLight(0xffffff, getDirectionalLightIntensity());//平行光。制造明暗面，并不使方块变色严重
-        light3.position.set(50, 50, 50);
-        scene.add(light3);
+        lightAmbient = new THREE.AmbientLight(0xffffff, getAmbientLightIntensity());//环境光。让物体变亮
+        scene.add(lightAmbient);
+
+        lightDirectional = new THREE.DirectionalLight(0xffffff, getDirectionalLightIntensity());//平行光。制造明暗面，并不使方块变色严重
+        lightDirectional.position.set(-100, 100, -100);
+        lightDirectional.castShadow = true;
+        lightDirectional.shadow.camera.near = 0; //产生阴影的最近距离
+        lightDirectional.shadow.camera.far = 300; //产生阴影的最远距离
+        lightDirectional.shadow.camera.left = -50; //产生阴影距离位置的最左边位置
+        lightDirectional.shadow.camera.right = 50; //最右边
+        lightDirectional.shadow.camera.top = 50; //最上边
+        lightDirectional.shadow.camera.bottom = -50; //最下面
+        //这两个值决定使用多少像素生成阴影 默认512
+        lightDirectional.shadow.mapSize.height = 1024 * 4;
+        lightDirectional.shadow.mapSize.width = 1024 * 4;
+        scene.add(lightDirectional);
     }
 
     // 相机*
     let camera;
 
     function initCamera() {
-        camera = new THREE.PerspectiveCamera(45, getShowWidth() / getShowHeight(), 0.01, 1e10);
+        camera = new THREE.PerspectiveCamera(45, getShowWidth() / getShowHeight(), 0.01, 100);//最远1e10
         camera.name = "CAMERA";
-        //使用TrackballControls不能设置相机位置
-        camera.position.x = 20;
-        camera.position.y = 20;
-        camera.position.z = -5;
-
-        //会使坐标系中此向量在屏幕中，显示为竖直向上
-        // camera.up.x = 0;
-        // camera.up.y = 1;
-        // camera.up.z = 0;
+        camera.position.x = 10;
+        camera.position.y = 10;
+        camera.position.z = -10;
         // camera.lookAt(0, 0, 0);
-
     }
 
     // 渲染器*
     let renderer;
 
     function initRenderer() {
+
         renderer = new THREE.WebGLRenderer({
             antialias: true
         });
         renderer.name = 'RENDERER';
         renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;//更柔和的影子，需要的性能更高
         renderer.setSize(getShowWidth(), getShowHeight());
         document.getElementById('canvas-frame').appendChild(renderer.domElement);
         renderer.setClearColor(0xFFFFFF, 1.0);//背景颜色
     }
 
+    function clearRenderer() {
+        renderer.dispose();
+        renderer.forceContextLoss();
+        renderer.context = null;
+        renderer.domElement = null;
+        renderer = null;
+    }
+
+    function clearCache(object) {
+        let mesh = object;
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+    }
+
     // 相机控制器
     let controls;
     let controlsType = "Custom";
-    let objects=[];
+    let objects = [];
+
     function initControls() {
         switch (controlsType) {
             case "OrbitControls":
-                controls = new THREE.OrbitControls(camera);
-                // 如果使用animate方法时，将此函数删除
-                //controls.addEventListener( 'change', render ,false);
+                document.getElementById("blocker").style.display = 'none';
+                controls = new OrbitControls(camera, document.body);
                 // 使动画循环使用时阻尼或自转 意思是否有惯性
                 controls.enableDamping = true;
                 //动态阻尼系数 就是鼠标拖拽旋转灵敏度
@@ -258,7 +266,8 @@
     initRenderer();//渲染器*
     initLight();//光源*
     initStats();//监控控件
-    initControls();//控制器
+    initControls();
+
     //--------------------------------------动作代码------------------------------------------
     //运动
     function actionMove(obj, actions) {
@@ -355,7 +364,7 @@
 
     // 网格线
     (function () {
-        const gridSize = 100;
+        const gridSize = 50;
         const lineWidth = 4;
         for (let i = 0; i <= gridSize * 2 / lineWidth; i++) {
 
@@ -365,11 +374,13 @@
 
             let lineX = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: 0xcccccc, opacity: 0.2}));
             lineX.position.z = (i * lineWidth) - gridSize;
+            lineX.position.y = 0.01;
             scene.add(lineX);
 
             let lineY = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: 0xcccccc, opacity: 0.2}));
             lineY.position.x = (i * lineWidth) - gridSize;
             lineY.rotation.y = 90 * Math.PI / 180;   //  旋转90度
+            lineY.position.y = 0.01;
             scene.add(lineY);
 
             // let lineZ = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: 0x0000ff, opacity: 0.5}));
@@ -381,19 +392,18 @@
 
     //平台底板
     (function addBasePlane() {
-        let geometry = new THREE.PlaneGeometry(200, 200, 1, 1);
+        let geometry = new THREE.CubeGeometry(100, 1, 100);
         let material = new THREE.MeshLambertMaterial({color: 0xffffff});
         let basePlaneMesh = new THREE.Mesh(geometry, material);
-        basePlaneMesh.rotation.x = -0.5 * Math.PI;
-        basePlaneMesh.position.y = -0.001;
+        basePlaneMesh.position.y = -0.5;
         basePlaneMesh.receiveShadow = true;
         scene.add(basePlaneMesh);
-
+        objects.push(basePlaneMesh);
     })();
 
     //增加天空盒
     (function () {
-        let backgroundType = 3;
+        let backgroundType = 1;
         let textureCube = new THREE.CubeTextureLoader().load([
             'img/1.png',
             'img/2.png',
@@ -427,9 +437,8 @@
     let lightValueChangeDirection = true;
 
     function changeLight() {
-        light1.intensity = getAmbientLightIntensity();
-        light2.intensity = getPointLightIntensity();
-        light3.intensity = getDirectionalLightIntensity();
+        lightAmbient.intensity = getAmbientLightIntensity();
+        lightDirectional.intensity = getDirectionalLightIntensity();
         if (lightValueChangeDirection) {
             if (lightCurrentIntensity >= lightLowIntensity - (lightHighIntensity - lightLowIntensity)) {
                 lightCurrentIntensity -= 0.002;
@@ -460,8 +469,8 @@
 
         _images = [];//实际使用的贴图
         _materials = [];
-        customCubeImages = [];//自定义贴图，仅在cubeType为“custom”时生效
         _cubeSize = 1;//方块边长，默认1
+        customCubeImages = [];//自定义贴图，仅在cubeType为“custom”时生效
         cubeType;//预设的几种方块类型
 
         //预设方块信息
@@ -522,7 +531,7 @@
                 }
                 this._materials.push(new THREE.MeshLambertMaterial({
                     map: texture,
-                    fog: false,//当前材质是否受到全局雾化效果器影响
+                    fog: true,//当前材质是否受到全局雾化效果器影响
                     ...extraOptions
                 }));
             }
@@ -568,12 +577,15 @@
             texture.minFilter = THREE.NearestFilter;
             materials.push(new THREE.MeshLambertMaterial({
                 map: texture,
-                fog: false,//当前材质是否收到全局雾化效果器影响
+                fog: true,//当前材质是否收到全局雾化效果器影响
                 // transparent:true,//透明
                 // opacity:0.2,//透明度
             }));
         }
-        let cube = new THREE.Mesh(new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize), materials);
+        let cube = new THREE.Mesh(
+            new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize),
+            materials
+        );
         cube.receiveShadow = cube.castShadow = true;
         cube.position.x = x + cubeSize / 2;
         cube.position.y = y + cubeSize / 2;
@@ -583,169 +595,215 @@
     }
 
     (function addGrassCubes() {
-        let letterPositionInfo = {
-            A: [
-                [2, 0, 0],
-                [3, 0, 0],
-                [4, 0, 0],
-                [5, 0, 0],
-                [6, 0, 0],
-                [1, 0, -1],
-                [4, 0, -1],
-                [0, 0, -2],
-                [4, 0, -2],
-                [1, 0, -3],
-                [4, 0, -3],
-                [2, 0, -4],
-                [3, 0, -4],
-                [4, 0, -4],
-                [5, 0, -4],
-                [6, 0, -4],
-            ],
-            B: [
-                [0, 0, 0],
-                [1, 0, 0],
-                [2, 0, 0],
-                [3, 0, 0],
-                [4, 0, 0],
-                [5, 0, 0],
-                [6, 0, 0],
-                [0, 0, -1],
-                [3, 0, -1],
-                [6, 0, -1],
-                [0, 0, -2],
-                [3, 0, -2],
-                [6, 0, -2],
-                [0, 0, -3],
-                [3, 0, -3],
-                [6, 0, -3],
-                [1, 0, -4],
-                [2, 0, -4],
-                [4, 0, -4],
-                [5, 0, -4],
-            ],
-            E: [
-                [0, 0, 0],
-                [1, 0, 0],
-                [2, 0, 0],
-                [3, 0, 0],
-                [4, 0, 0],
-                [5, 0, 0],
-                [6, 0, 0],
-                [0, 0, -1],
-                [3, 0, -1],
-                [6, 0, -1],
-                [0, 0, -2],
-                [3, 0, -2],
-                [6, 0, -2],
-                [0, 0, -3],
-                [3, 0, -3],
-                [6, 0, -3],
-                [0, 0, -4],
-                [6, 0, -4],
-            ],
-            G: [
-                [1, 0, 0],
-                [2, 0, 0],
-                [3, 0, 0],
-                [4, 0, 0],
-                [5, 0, 0],
-                [0, 0, -1],
-                [6, 0, -1],
-                [0, 0, -2],
-                [6, 0, -2],
-                [0, 0, -3],
-                [4, 0, -3],
-                [6, 0, -3],
-                [1, 0, -4],
-                [4, 0, -4],
-                [5, 0, -4],
-            ],
-            I: [
-                [0, 0, -1],
-                [6, 0, -1],
-                [0, 0, -2],
-                [1, 0, -2],
-                [2, 0, -2],
-                [3, 0, -2],
-                [4, 0, -2],
-                [5, 0, -2],
-                [6, 0, -2],
-                [0, 0, -3],
-                [6, 0, -3],
-            ],
-            M: [
-                [0, 0, 0],
-                [1, 0, 0],
-                [2, 0, 0],
-                [3, 0, 0],
-                [4, 0, 0],
-                [5, 0, 0],
-                [6, 0, 0],
-                [2, 0, -1],
-                [3, 0, -2],
-                [2, 0, -3],
-                [0, 0, -4],
-                [1, 0, -4],
-                [2, 0, -4],
-                [3, 0, -4],
-                [4, 0, -4],
-                [5, 0, -4],
-                [6, 0, -4],
-            ],
-            N: [
-                [0, 0, 0],
-                [1, 0, 0],
-                [2, 0, 0],
-                [3, 0, 0],
-                [4, 0, 0],
-                [5, 0, 0],
-                [6, 0, 0],
-                [2, 0, -1],
-                [3, 0, -2],
-                [4, 0, -3],
-                [0, 0, -4],
-                [1, 0, -4],
-                [2, 0, -4],
-                [3, 0, -4],
-                [4, 0, -4],
-                [5, 0, -4],
-                [6, 0, -4],
-            ],
-            T: [
-                [0, 0, 0],
-                [0, 0, -1],
-                [0, 0, -2],
-                [1, 0, -2],
-                [2, 0, -2],
-                [3, 0, -2],
-                [4, 0, -2],
-                [5, 0, -2],
-                [6, 0, -2],
-                [0, 0, -3],
-                [0, 0, -4],
-            ]
-        };
         let cubeFactory = new CubeFactory("GrassDirt");
-        let word = "BEGIN";
-        let moveZ = 0;
-        for (let letter of word) {
-            for (let grassCubePositionInfo of letterPositionInfo[letter]) {
-                let cube = cubeFactory.create(grassCubePositionInfo[0], grassCubePositionInfo[1], grassCubePositionInfo[2] + moveZ);
+
+        // let letterPositionInfo = {
+        //     A: [
+        //         [2, 0, 0],
+        //         [3, 0, 0],
+        //         [4, 0, 0],
+        //         [5, 0, 0],
+        //         [6, 0, 0],
+        //         [1, 0, -1],
+        //         [4, 0, -1],
+        //         [0, 0, -2],
+        //         [4, 0, -2],
+        //         [1, 0, -3],
+        //         [4, 0, -3],
+        //         [2, 0, -4],
+        //         [3, 0, -4],
+        //         [4, 0, -4],
+        //         [5, 0, -4],
+        //         [6, 0, -4],
+        //     ],
+        //     B: [
+        //         [0, 0, 0],
+        //         [1, 0, 0],
+        //         [2, 0, 0],
+        //         [3, 0, 0],
+        //         [4, 0, 0],
+        //         [5, 0, 0],
+        //         [6, 0, 0],
+        //         [0, 0, -1],
+        //         [3, 0, -1],
+        //         [6, 0, -1],
+        //         [0, 0, -2],
+        //         [3, 0, -2],
+        //         [6, 0, -2],
+        //         [0, 0, -3],
+        //         [3, 0, -3],
+        //         [6, 0, -3],
+        //         [1, 0, -4],
+        //         [2, 0, -4],
+        //         [4, 0, -4],
+        //         [5, 0, -4],
+        //     ],
+        //     E: [
+        //         [0, 0, 0],
+        //         [1, 0, 0],
+        //         [2, 0, 0],
+        //         [3, 0, 0],
+        //         [4, 0, 0],
+        //         [5, 0, 0],
+        //         [6, 0, 0],
+        //         [0, 0, -1],
+        //         [3, 0, -1],
+        //         [6, 0, -1],
+        //         [0, 0, -2],
+        //         [3, 0, -2],
+        //         [6, 0, -2],
+        //         [0, 0, -3],
+        //         [3, 0, -3],
+        //         [6, 0, -3],
+        //         [0, 0, -4],
+        //         [6, 0, -4],
+        //     ],
+        //     G: [
+        //         [1, 0, 0],
+        //         [2, 0, 0],
+        //         [3, 0, 0],
+        //         [4, 0, 0],
+        //         [5, 0, 0],
+        //         [0, 0, -1],
+        //         [6, 0, -1],
+        //         [0, 0, -2],
+        //         [6, 0, -2],
+        //         [0, 0, -3],
+        //         [4, 0, -3],
+        //         [6, 0, -3],
+        //         [1, 0, -4],
+        //         [4, 0, -4],
+        //         [5, 0, -4],
+        //     ],
+        //     I: [
+        //         [0, 0, -1],
+        //         [6, 0, -1],
+        //         [0, 0, -2],
+        //         [1, 0, -2],
+        //         [2, 0, -2],
+        //         [3, 0, -2],
+        //         [4, 0, -2],
+        //         [5, 0, -2],
+        //         [6, 0, -2],
+        //         [0, 0, -3],
+        //         [6, 0, -3],
+        //     ],
+        //     M: [
+        //         [0, 0, 0],
+        //         [1, 0, 0],
+        //         [2, 0, 0],
+        //         [3, 0, 0],
+        //         [4, 0, 0],
+        //         [5, 0, 0],
+        //         [6, 0, 0],
+        //         [2, 0, -1],
+        //         [3, 0, -2],
+        //         [2, 0, -3],
+        //         [0, 0, -4],
+        //         [1, 0, -4],
+        //         [2, 0, -4],
+        //         [3, 0, -4],
+        //         [4, 0, -4],
+        //         [5, 0, -4],
+        //         [6, 0, -4],
+        //     ],
+        //     N: [
+        //         [0, 0, 0],
+        //         [1, 0, 0],
+        //         [2, 0, 0],
+        //         [3, 0, 0],
+        //         [4, 0, 0],
+        //         [5, 0, 0],
+        //         [6, 0, 0],
+        //         [2, 0, -1],
+        //         [3, 0, -2],
+        //         [4, 0, -3],
+        //         [0, 0, -4],
+        //         [1, 0, -4],
+        //         [2, 0, -4],
+        //         [3, 0, -4],
+        //         [4, 0, -4],
+        //         [5, 0, -4],
+        //         [6, 0, -4],
+        //     ],
+        //     T: [
+        //         [0, 0, 0],
+        //         [0, 0, -1],
+        //         [0, 0, -2],
+        //         [1, 0, -2],
+        //         [2, 0, -2],
+        //         [3, 0, -2],
+        //         [4, 0, -2],
+        //         [5, 0, -2],
+        //         [6, 0, -2],
+        //         [0, 0, -3],
+        //         [0, 0, -4],
+        //     ]
+        // };
+        // let word = "BEGIN";
+        // let moveZ = 0;
+        // for (let letter of word) {
+        //     for (let cubePosition of letterPositionInfo[letter]) {
+        //         let cube = cubeFactory.create(cubePosition[0], cubePosition[1], cubePosition[2] + moveZ);
+        //         scene.add(cube);
+        //         objects.push(cube);
+        //     }
+        //     moveZ -= 6;
+        // }
+        {
+            let mountain = [];
+            for (let x = 0; x < 5; x++) {
+                for (let z = 0; z < 5; z++) {
+                    if (x !== 2 || z !== 2) {
+                        mountain.push([x, 0, z]);
+                    }
+                }
+            }
+            mountain.push([0, 1, 0]);
+            for (let cubePosition of mountain) {
+                let cube = cubeFactory.create(cubePosition[0] - 7, cubePosition[1], cubePosition[2]);
                 scene.add(cube);
                 objects.push(cube);
             }
-            moveZ -= 6;
         }
         {
-        let box = new THREE.Mesh(
-            new THREE.CubeGeometry(40, 1, 40),
-            new THREE.MeshPhongMaterial({color: 0xcccccc})
-        );
+            let mountain = [];
+            for (let x = 0; x < 5; x++) {
+                for (let z = 0; z < 5; z++) {
+                    for (let y = 0; y < 5; y++) {
+                        mountain.push([x, y - x, z])
+                    }
+                }
+            }
+            for (let cubePosition of mountain) {
+                let cube = cubeFactory.create(cubePosition[0] - 7, cubePosition[1], cubePosition[2] - 16);
+                scene.add(cube);
+                objects.push(cube);
+            }
+        }
+        {
+            let box = new THREE.Mesh(
+                new THREE.CubeGeometry(2, 1, 2),
+                new THREE.MeshPhongMaterial({color: 0xcccccc})
+            );
             box.receiveShadow = box.castShadow = true;
-        box.position.y = 9;
-        scene.add(box);
-        objects.push(box)
+            box.position.y = 3;
+            box.position.x = -4;
+            box.position.z = 0;
+            scene.add(box);
+            objects.push(box)
+        }
+        {
+            let box = new THREE.Mesh(
+                new THREE.CubeGeometry(2, 1, 2),
+                new THREE.MeshPhongMaterial({color: 0xcccccc})
+            );
+            box.receiveShadow = box.castShadow = true;
+            box.position.y = 8;
+            box.position.x = camera.position.x;
+            box.position.z = camera.position.z;
+            scene.add(box);
+            objects.push(box)
         }
     })();
 
@@ -756,6 +814,8 @@
         TWEEN.update();
         controls.update();
         renderer.render(scene, camera);
+        console.log(camera.position.y - 1.5)
+
         autoRefresh();
     })();
 

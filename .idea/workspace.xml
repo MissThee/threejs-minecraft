@@ -5,15 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minecraft/minecraft.html" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft/minecraft.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minecraft/utils/Control.js" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft/utils/Control.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/Detector.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/DragControls.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/FirstPersonControls.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/OrbitControls.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/PointerLockControls.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/stats.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/three.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/three.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/tween.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +32,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/minecraft" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../MineCraftWeb" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -92,17 +83,28 @@
       <workItem from="1575889185996" duration="6526000" />
       <workItem from="1575901707595" duration="11933000" />
       <workItem from="1575982984620" duration="16383000" />
+      <workItem from="1576061702348" duration="24553000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
-    <state x="463" y="117" key="FileChooserDialogImpl" timestamp="1575913109954">
+    <state x="463" y="117" key="FileChooserDialogImpl" timestamp="1576062185624">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="117" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1575913109954" />
+    <state x="463" y="117" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1576062185624" />
     <state x="359" y="102" width="647" height="524" key="find.popup" timestamp="1575992935780">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

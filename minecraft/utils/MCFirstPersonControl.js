@@ -1,8 +1,15 @@
 import {PointerLockControls} from '../jsm/controls/PointerLockControls.js'
 import * as THREE from '../base/three.module.js';
 
-export default class Control {
-    constructor(camera, scene, objects) {
+export default class MCFirstPersonControl {
+    static _instance;
+    controls;
+
+    constructor(camera, domElement, objects) {
+        this.camera = camera;
+        if (MCFirstPersonControl._instance) {
+            return MCFirstPersonControl._instance;
+        }
         this.checkRay = {//0为负，1为正
             lowX0Z0: undefined,
             lowX0Z1: undefined,
@@ -24,7 +31,7 @@ export default class Control {
         this.isRunning = false;
         this.canJump = false;
         this.objects = [];
-        this.prevTime = performance.now();
+        // this.prevTime = performance.now();
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
         this.worldOption = {
@@ -34,35 +41,47 @@ export default class Control {
             height: 1.8,//人物总高度
             sightHeight: 1.5,//眼部高度
             jumpHeight: 1.4,
-            speedWalk: 6,
-            speedRun: 16
+            speedWalk: 5.7,
+            speedRun: 10
         };
-
-        return this.init(camera, scene, objects);
+        this.init(camera, domElement, objects);
+        MCFirstPersonControl._instance = this;
+        return MCFirstPersonControl._instance;
     }
 
-    init(camera, scene, objects) {
+    init(camera, domElement, objects) {
         this.objects = objects;
-        this.controls = new PointerLockControls(camera, document.body);
-
-        let blocker = document.getElementById('blocker');
-        let instructions = document.getElementById('instructions');
-
-        instructions.addEventListener('click', () => {
+        this.controls = new PointerLockControls(camera, domElement);
+        //增加遮罩层
+        let blocker = document.createElement("div");
+        blocker.style.position = "absolute";
+        blocker.style.zIndex = "1000";
+        blocker.style.width = "100%";
+        blocker.style.height = "100%";
+        blocker.style.top = "0";
+        blocker.style.left = "0";
+        blocker.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
+        document.body.append(blocker);
+        blocker.addEventListener('click', () => {
             this.controls.lock();
         }, false);
-
         this.controls.addEventListener('lock', function () {
-            instructions.style.display = 'none';
             blocker.style.display = 'none';
         });
-
         this.controls.addEventListener('unlock', function () {
             blocker.style.display = 'block';
-            instructions.style.display = '';
         });
-
-        scene.add(this.controls.getObject());
+        //添加准星
+        let aimX = document.createElement("div");
+        aimX.style.height = "2px";
+        aimX.style.width = "20px";
+        setAimStyle(aimX);
+        document.body.append(aimX);
+        let aimY = document.createElement("div");
+        aimY.style.height = "20px";
+        aimY.style.width = "2px";
+        setAimStyle(aimY);
+        document.body.append(aimY);
 
         let onKeyDown = (event) => {
             switch (event.keyCode) {
@@ -143,29 +162,25 @@ export default class Control {
         document.addEventListener('keyup', onKeyUp, false);
 
         for (let i = 0; i < 4; i++) {
-            this.checkRay.Y0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 5));
+            this.checkRay.Y0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 0));
         }
         for (let i = 0; i < 4; i++) {
-            this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 5));
+            this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 0));
         }
-        return this;
     }
 
-
-    update() {
+    update(delta) {
         if (!this.controls.isLocked) {
             this.moveForward = false;
             this.moveBackward = false;
             this.moveLeft = false;
             this.moveRight = false;
         }
-        let time = performance.now();
-        let delta = (time - this.prevTime) / 1000;
-
+        // let time = performance.now();
+        // let delta = (time - this.prevTime) / 1000;
 
         this.velocity.x = this.velocity.x / 2.0 * delta;
         this.velocity.z = this.velocity.z / 2.0 * delta;
-
 
         this.direction.z = Number(this.moveForward) - Number(this.moveBackward);
         this.direction.x = Number(this.moveRight) - Number(this.moveLeft);
@@ -224,8 +239,8 @@ export default class Control {
 
             let nextY = this.controls.getObject().position.y + (this.velocity.y * delta);
             if (topFlatY !== undefined) {
-                if (topFlatY - (this.personOption.height - this.personOption.sightHeight)< nextY) {
-                    nextY=topFlatY - (this.personOption.height - this.personOption.sightHeight)
+                if (topFlatY - (this.personOption.height - this.personOption.sightHeight) < nextY) {
+                    nextY = topFlatY - (this.personOption.height - this.personOption.sightHeight)
                     this.velocity.y = 0;
                 }
             }
@@ -242,7 +257,51 @@ export default class Control {
                 this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
             }
         }
-        this.prevTime = time;
+        // this.prevTime = time;
+        if(this.controls.getObject().position.y<-10000){
+            // this.velocity.y=0;
+            this.controls.getObject().position.y=10000;
+            this.controls.getObject().position.x=0;
+            this.controls.getObject().position.z=0;
+        }
     }
 
+    initClickFunction(objects) {
+        window.addEventListener('mousedown', (event) => {
+            let clickedObjects = getClickedObject(event, objects, this.camera);
+            if (clickedObjects.length > 0) {
+                let obj = clickedObjects[0].object;
+                console.log("点击的对象：" + obj.name);
+            }
+        }, false);
+    }
+}
+
+function setAimStyle(aimEl) {
+    aimEl.style.position = "absolute";
+    aimEl.style.left = "50%";
+    aimEl.style.top = "50%";
+    aimEl.style.transform = "translate(-50%,-50%)";
+    aimEl.style.zIndex = "1";
+    aimEl.style.fontSize = "100%";
+    aimEl.style.fontWeight = "bold";
+    aimEl.style.textAlign = "center";
+    aimEl.style.verticalAlign = "middle";
+    aimEl.style.lineHeight = "10px";
+    aimEl.style.fontFamily = "\"Times New Roman\",serif";
+    aimEl.style.backgroundColor = "#E0E0E0";
+    // aimEl.style.filter = "hue-rotate(180deg)";
+}
+
+//获取点击的对象
+function getClickedObject(event, objects, camera) {
+    let raycaster = new THREE.Raycaster();
+    let aim = new THREE.Vector2();
+    //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
+    aim.x = 0;
+    aim.y = 0;
+    // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
+    raycaster.setFromCamera(aim, camera);
+    // 获取raycaster直线和所有模型相交的数组集合
+    return raycaster.intersectObjects(objects);
 }

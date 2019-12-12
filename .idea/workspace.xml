@@ -4,7 +4,7 @@
     <list default="true" id="1e9087ba-d48e-4b9a-9693-d8f999e7521e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minecraft/minecraft.html" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft/minecraft.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minecraft/utils/Control.js" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft/utils/Control.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft/utils/Control.js" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft/utils/MCFirstPersonControl.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +32,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../MineCraftWeb" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -45,15 +45,15 @@
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="P:\threejs-test\minecraft\utils" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="P:\threejs-test\minecraft" />
       <recent name="P:\threejs-test\minecraft\base" />
       <recent name="P:\threejs-test\minecraft\utils" />
       <recent name="P:\threejs-test\test-cube\img\blocks" />
       <recent name="P:\threejs-test" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="P:\threejs-test\minecraft\utils" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -84,6 +84,8 @@
       <workItem from="1575901707595" duration="11933000" />
       <workItem from="1575982984620" duration="16383000" />
       <workItem from="1576061702348" duration="24553000" />
+      <workItem from="1576147961910" duration="24000" />
+      <workItem from="1576157915466" duration="17800000" />
     </task>
     <servers />
   </component>

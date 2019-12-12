@@ -11,125 +11,73 @@
 
         html, body {
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
             height: 100%;
             width: 100%;
         }
 
         .canvas-frame {
             height: 100%;
-            min-height: 400px;
+            /*min-height: 400px;*/
             width: 100%;
-            border: none;
             cursor: pointer;
-            background-color: #EEEEEE;
-        }
-
-        #blocker {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        #instructions {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-
-            display: -webkit-box;
-            display: -moz-box;
-            display: box;
-
-            -webkit-box-orient: horizontal;
-            -moz-box-orient: horizontal;
-            box-orient: horizontal;
-
-            -webkit-box-pack: center;
-            -moz-box-pack: center;
-            box-pack: center;
-
-            -webkit-box-align: center;
-            -moz-box-align: center;
-            box-align: center;
-
-            color: #ffffff;
-            text-align: center;
-
-            cursor: pointer;
-
         }
     </style>
 
 </head>
 <body>
-<div id="blocker">
-    <div id="instructions">
-        <span style="font-size:40px">Click to play</span>
-        <br/>
-        (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
-    </div>
-</div>
 <div id="canvas-frame" class="canvas-frame"></div>
 <script type="module">
     import * as THREE from './base/three.module.js'
-    import {OrbitControls} from './jsm/controls/OrbitControls.js'
-    import * as DragControls from './jsm/controls/DragControls.js'
-    import Control from "./utils/Control.js";
+    import MCFirstPersonControl from "./utils/MCFirstPersonControl.js";
     import {WEBGL} from "./jsm/WebGL.js";
-    import Stats from "./jsm/libs/stats.module.js";
     import {TWEEN} from "./jsm/libs/tween.module.min.js";
+    import CubeFactory from "./utils/CubeFactory.js";
+    import StatsWindow from "./utils/Stats.js";
+    import ShowOrbitControl from "./utils/ShowOrbitControl.js";
+
+    let enableShadow = false;
 
     if (WEBGL.isWebGLAvailable() === false) {
         document.body.appendChild(WEBGL.getWebGLErrorMessage());
     }
+    let canvasEL = document.getElementById("canvas-frame");
 
-    function getShowWidth() {
-        return Math.max(window.innerWidth, 225)
-    }
-
-    function getShowHeight() {
-        return Math.max(window.innerHeight, 400)
-    }
-
-    let width = getShowWidth();
-    let height = getShowHeight();
+    let width = canvasEL.offsetWidth;
+    let height = canvasEL.offsetHeight;
 
     // 舞台*
     let scene;
-
-    function initScene() {
+    (function initScene() {
         scene = new THREE.Scene();
         scene.name = 'SCENE';
         // scene.fog = new THREE.FogExp2( 0xffffff, 0.02 );//雾效果
-    }
+    })();
 
     // 光源*
     let lightCurrentIntensity = 1;
+    let lightValueChangeDirection = true;
+
     let lightAmbient;
     let lightDirectional;
 
     let lightHighIntensity = 1;
-    let lightLowIntensity = 0.4;
+    let lightLowIntensity = 0.3;
 
     function getAmbientLightIntensity() {
-        return Math.min(Math.max(lightLowIntensity, lightCurrentIntensity), lightHighIntensity) * 3 / 4;
+        return Math.min(Math.max(lightLowIntensity, lightCurrentIntensity), lightHighIntensity) * 2 / 4;
     }
 
     function getDirectionalLightIntensity() {
-        return Math.min(Math.max(lightLowIntensity, lightCurrentIntensity), lightHighIntensity) / 4;
+        return Math.min(Math.max(0, lightCurrentIntensity), lightHighIntensity) / 4;
     }
 
-    function initLight() {
-        // 这4种可以产生阴影：DirectionalLight、PointLight、RectAreaLight、SpotLight。
-        //现只会SpotLight，PointLight可以在有其他平行环境光时，制造比较清晰的阴影
-        // 光，会影响MeshLambertMaterial和MeshPhongMaterial材质
+    (function initLight() {
         lightAmbient = new THREE.AmbientLight(0xffffff, getAmbientLightIntensity());//环境光。让物体变亮
         scene.add(lightAmbient);
-
         lightDirectional = new THREE.DirectionalLight(0xffffff, getDirectionalLightIntensity());//平行光。制造明暗面，并不使方块变色严重
         lightDirectional.position.set(-100, 100, -100);
-        lightDirectional.castShadow = true;
+        lightDirectional.castShadow = enableShadow;
         lightDirectional.shadow.camera.near = 0; //产生阴影的最近距离
         lightDirectional.shadow.camera.far = 300; //产生阴影的最远距离
         lightDirectional.shadow.camera.left = -50; //产生阴影距离位置的最左边位置
@@ -137,136 +85,66 @@
         lightDirectional.shadow.camera.top = 50; //最上边
         lightDirectional.shadow.camera.bottom = -50; //最下面
         //这两个值决定使用多少像素生成阴影 默认512
-        lightDirectional.shadow.mapSize.height = 1024 * 4;
-        lightDirectional.shadow.mapSize.width = 1024 * 4;
+        lightDirectional.shadow.mapSize.height = 128;
+        lightDirectional.shadow.mapSize.width = 128;
         scene.add(lightDirectional);
-    }
+    })();
 
     // 相机*
     let camera;
-
-    function initCamera() {
-        camera = new THREE.PerspectiveCamera(45, getShowWidth() / getShowHeight(), 0.01, 100);//最远1e10
+    (function initCamera() {
+        camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 100000);//最远1e10
         camera.name = "CAMERA";
         camera.position.x = 10;
         camera.position.y = 10;
         camera.position.z = -10;
         // camera.lookAt(0, 0, 0);
-    }
+    })();
 
     // 渲染器*
     let renderer;
-
-    function initRenderer() {
-
+    (function initRenderer() {
         renderer = new THREE.WebGLRenderer({
-            antialias: true
+            antialias: true//是否开启反锯齿
         });
         renderer.name = 'RENDERER';
-        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.enabled = enableShadow;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;//更柔和的影子，需要的性能更高
-        renderer.setSize(getShowWidth(), getShowHeight());
+        renderer.setSize(width, height);
         document.getElementById('canvas-frame').appendChild(renderer.domElement);
         renderer.setClearColor(0xFFFFFF, 1.0);//背景颜色
-    }
-
-    function clearRenderer() {
-        renderer.dispose();
-        renderer.forceContextLoss();
-        renderer.context = null;
-        renderer.domElement = null;
-        renderer = null;
-    }
-
-    function clearCache(object) {
-        let mesh = object;
-        mesh.geometry.dispose();
-        mesh.material.dispose();
-    }
+    })();
 
     // 相机控制器
     let controls;
-    let controlsType = "Custom";
+    let controlsType = "MCFirstPersonControl";
     let objects = [];
-
-    function initControls() {
+    (function initControls() {
         switch (controlsType) {
-            case "OrbitControls":
-                document.getElementById("blocker").style.display = 'none';
-                controls = new OrbitControls(camera, document.body);
-                // 使动画循环使用时阻尼或自转 意思是否有惯性
-                controls.enableDamping = true;
-                //动态阻尼系数 就是鼠标拖拽旋转灵敏度
-                controls.dampingFactor = 1.5;
+            case "ShowOrbitControl":
+                let showOrbitControl = new ShowOrbitControl(camera, renderer.domElement);
+                showOrbitControl.initClickFunction(scene.children);
+                controls = showOrbitControl.controls;
                 break;
-            case "Custom":
-                controls = new Control(camera, scene, objects);
+            case "MCFirstPersonControl":
+                let mcFirstPersonControl = new MCFirstPersonControl(camera, renderer.domElement, objects);
+                mcFirstPersonControl.initClickFunction(scene.children);
+                controls = mcFirstPersonControl;
                 break;
         }
-    }
+    })();
 
-    // 查看信息小控件
-    let stats;
-
-    function initStats() {
-        stats = new Stats();
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.left = '0px';
-        stats.domElement.style.top = '0px';
-        document.getElementById('canvas-frame').appendChild(stats.domElement);
-    }
 
     //使渲染器与相机随窗口大小改变适应。自适应窗口大小
     window.onresize = function () {
+        width = canvasEL.offsetWidth;
+        height = canvasEL.offsetHeight;
         //更新相机视角比例
-        camera.aspect = getShowWidth() / getShowHeight();
+        camera.aspect = width / height;
         camera.updateProjectionMatrix();
-        renderer.setSize(getShowWidth(), getShowHeight());
+        renderer.setSize(width, height);
     };
 
-    //--------------------------------------点击事件--------------------------------------start
-    let raycaster = new THREE.Raycaster();
-    let mouse = new THREE.Vector2();
-
-    //获取点击的对象
-    function getClickedObject(event) {
-        //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
-        raycaster.setFromCamera(mouse, camera);
-        // 获取raycaster直线和所有模型相交的数组集合
-        return raycaster.intersectObjects(scene.children);
-    }
-
-    //监听事件
-    window.addEventListener('mousedown', function (event) {
-        let objects = getClickedObject(event);
-        if (objects.length > 0) {
-            let obj = objects[0].object;
-            console.log("点击的对象：" + obj.name);
-        }
-    }, false);
-
-    //给对象设置拖动事件
-    function setDragFunction(obj) {
-        let dragControls = new DragControls([obj], camera, renderer.domElement);
-        dragControls.addEventListener('dragstart', function () {
-            controls.enabled = false;
-        }, false);
-        dragControls.addEventListener('dragend', function () {
-            controls.enabled = true;
-        }, false);
-    }
-
-    //--------------------------------------点击事件--------------------------------------end
-    // 初始化基本控件
-    initScene();//舞台*
-    initCamera();//相机*
-    initRenderer();//渲染器*
-    initLight();//光源*
-    initStats();//监控控件
-    initControls();
 
     //--------------------------------------动作代码------------------------------------------
     //运动
@@ -364,7 +242,7 @@
 
     // 网格线
     (function () {
-        const gridSize = 50;
+        const gridSize = 25;
         const lineWidth = 4;
         for (let i = 0; i <= gridSize * 2 / lineWidth; i++) {
 
@@ -392,11 +270,11 @@
 
     //平台底板
     (function addBasePlane() {
-        let geometry = new THREE.CubeGeometry(100, 1, 100);
+        let geometry = new THREE.CubeGeometry(50, 1, 50);
         let material = new THREE.MeshLambertMaterial({color: 0xffffff});
         let basePlaneMesh = new THREE.Mesh(geometry, material);
         basePlaneMesh.position.y = -0.5;
-        basePlaneMesh.receiveShadow = true;
+        basePlaneMesh.receiveShadow = enableShadow;
         scene.add(basePlaneMesh);
         objects.push(basePlaneMesh);
     })();
@@ -434,8 +312,6 @@
     })();
 
 
-    let lightValueChangeDirection = true;
-
     function changeLight() {
         lightAmbient.intensity = getAmbientLightIntensity();
         lightDirectional.intensity = getDirectionalLightIntensity();
@@ -454,144 +330,6 @@
                 }
             }
         }
-    }
-
-
-    function autoRefresh() {
-        changeLight();
-    }
-
-    class CubeFactory {
-        constructor(cubeType, customCubeImages) {
-            this.cubeType = cubeType;
-            this.customCubeImages = customCubeImages;
-        }
-
-        _images = [];//实际使用的贴图
-        _materials = [];
-        _cubeSize = 1;//方块边长，默认1
-        customCubeImages = [];//自定义贴图，仅在cubeType为“custom”时生效
-        cubeType;//预设的几种方块类型
-
-        //预设方块信息
-        static DefaultCubeInfo = {
-            GrassDirt: {
-                images: [
-                    'img/blocks/grass_side.png',
-                    'img/blocks/grass_side.png',
-                    'img/blocks/grass_top_green.png',
-                    'img/blocks/dirt.png',
-                    'img/blocks/grass_side.png',
-                    'img/blocks/grass_side.png',],
-                material: {}
-            },
-            Cloud: {
-                images: [
-                    'img/blocks/grass_side.png',
-                    'img/blocks/grass_side.png',
-                    'img/blocks/grass_top_green.png',
-                    'img/blocks/dirt.png',
-                    'img/blocks/grass_side.png',
-                    'img/blocks/grass_side.png',],
-                material: {
-                    transparent: true,//透明
-                    opacity: 0.2,//透明度
-                }
-            }
-        };
-
-        //初始化images
-        initImages() {
-            if (this._images && this._images.length !== 0) {
-                return;
-            }
-            if (this.cubeType === "Custom") {
-                this._images = this.customCubeImages;
-            } else if (CubeFactory.DefaultCubeInfo[this.cubeType]) {
-                this._images = CubeFactory.DefaultCubeInfo[this.cubeType].images;
-            } else {
-                throw "unknown cubeType";
-            }
-        };
-
-        //初始化材质
-        initMaterials() {
-            if (this._materials && this._materials.length !== 0) {
-                return;
-            }
-            let textureLoader = new THREE.TextureLoader();
-            for (let i = 0; i < 6; ++i) {
-                let texture = textureLoader.load(this._images[i]);
-                texture.generateMipmaps = false;
-                texture.magFilter = THREE.NearestFilter;
-                texture.minFilter = THREE.NearestFilter;
-                let extraOptions = {};
-                if (CubeFactory.DefaultCubeInfo[this.cubeType]) {
-                    extraOptions = CubeFactory.DefaultCubeInfo[this.cubeType].material;
-                }
-                this._materials.push(new THREE.MeshLambertMaterial({
-                    map: texture,
-                    fog: true,//当前材质是否受到全局雾化效果器影响
-                    ...extraOptions
-                }));
-            }
-        };
-
-        //构造方块
-        buildCube(x, y, z) {
-            x = x || 0;
-            y = y || 0;
-            z = z || 0;
-            let cube = new THREE.Mesh(new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize), this._materials);
-            cube.receiveShadow = cube.castShadow = true;
-            cube.position.x = x + this._cubeSize / 2;
-            cube.position.y = y + this._cubeSize / 2;
-            cube.position.z = z + this._cubeSize / 2;
-            cube.name = "GrassCube(" + x + "," + y + "," + z + ")";
-            return cube;
-        }
-
-        create(x, y, z) {
-            this.initImages();
-            this.initMaterials();
-            return this.buildCube(x, y, z);
-        }
-    }
-
-    //草地块
-    function addGrassCube(x, y, z) {
-        let cubeSize = 1;
-        let images = [
-            'img/blocks/grass_side.png',
-            'img/blocks/grass_side.png',
-            'img/blocks/grass_top_green.png',
-            'img/blocks/dirt.png',
-            'img/blocks/grass_side.png',
-            'img/blocks/grass_side.png',];
-        let materials = [];
-        let textureLoader = new THREE.TextureLoader();
-        for (let i = 0; i < 6; ++i) {
-            let texture = textureLoader.load(images[i]);
-            texture.generateMipmaps = false;
-            texture.magFilter = THREE.NearestFilter;
-            texture.minFilter = THREE.NearestFilter;
-            materials.push(new THREE.MeshLambertMaterial({
-                map: texture,
-                fog: true,//当前材质是否收到全局雾化效果器影响
-                // transparent:true,//透明
-                // opacity:0.2,//透明度
-            }));
-        }
-        let cube = new THREE.Mesh(
-            new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize),
-            materials
-        );
-        cube.receiveShadow = cube.castShadow = true;
-        cube.position.x = x + cubeSize / 2;
-        cube.position.y = y + cubeSize / 2;
-        cube.position.z = z + cubeSize / 2;
-        cube.name = "GrassCube(" + x + "," + y + "," + z + ")";
-        scene.add(cube);
     }
 
     (function addGrassCubes() {
@@ -766,12 +504,33 @@
                 objects.push(cube);
             }
         }
+
+        {
+            let mountainHeight = 6;
+            let mountain = [];
+            for (let y = 0; y < mountainHeight; y++) {
+                for (let x = y; x < 2 * mountainHeight - y; x++) {
+                    for (let z = y; z < 2 * mountainHeight - y; z++) {
+                        mountain.push([x + 13, y, z - 10])
+                    }
+                }
+            }
+            mountain.push([0, 1, 0]);
+            for (let cubePosition of mountain) {
+                let cube = cubeFactory.create(cubePosition[0] - 7, cubePosition[1], cubePosition[2]);
+                scene.add(cube);
+                objects.push(cube);
+            }
+        }
+
+
         {
             let mountain = [];
             for (let x = 0; x < 5; x++) {
                 for (let z = 0; z < 5; z++) {
                     for (let y = 0; y < 5; y++) {
-                        mountain.push([x, y - x, z])
+                        if (y >= x)
+                            mountain.push([x, y - x, z])
                     }
                 }
             }
@@ -786,7 +545,7 @@
                 new THREE.CubeGeometry(2, 1, 2),
                 new THREE.MeshPhongMaterial({color: 0xcccccc})
             );
-            box.receiveShadow = box.castShadow = true;
+            box.receiveShadow = box.castShadow = enableShadow;
             box.position.y = 3;
             box.position.x = -4;
             box.position.z = 0;
@@ -798,7 +557,7 @@
                 new THREE.CubeGeometry(2, 1, 2),
                 new THREE.MeshPhongMaterial({color: 0xcccccc})
             );
-            box.receiveShadow = box.castShadow = true;
+            box.receiveShadow = box.castShadow = enableShadow;
             box.position.y = 8;
             box.position.x = camera.position.x;
             box.position.z = camera.position.z;
@@ -806,17 +565,18 @@
             objects.push(box)
         }
     })();
+    let prevTime = performance.now();
 
-
-    (function render() {
-        requestAnimationFrame(render);
-        stats.update();
-        TWEEN.update();
-        controls.update();
+    (function animate() {
+        requestAnimationFrame(animate);
+        let time = performance.now();
+        let delta = (time - prevTime) / 1000;
+        prevTime = time;
+        TWEEN.update(delta);
+        controls.update(delta);
         renderer.render(scene, camera);
-        console.log(camera.position.y - 1.5)
-
-        autoRefresh();
+        new StatsWindow("canvas-frame").stats.update(delta);
+        changeLight();
     })();
 
 </script>

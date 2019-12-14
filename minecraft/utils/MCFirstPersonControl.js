@@ -258,9 +258,9 @@ export default class MCFirstPersonControl {
             }
         }
         // this.prevTime = time;
-        if(this.controls.getObject().position.y<-10000){
+        if(this.controls.getObject().position.y<-2000){
             // this.velocity.y=0;
-            this.controls.getObject().position.y=10000;
+            this.controls.getObject().position.y=2000;
             this.controls.getObject().position.x=0;
             this.controls.getObject().position.z=0;
         }

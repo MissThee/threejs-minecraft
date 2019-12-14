@@ -1,13 +1,15 @@
 import * as THREE from '../base/three.module.js';
+
 export default class CubeFactory {
     constructor(cubeType, customCubeImages) {
         this.cubeType = cubeType;
         this.customCubeImages = customCubeImages;
+        this._images = [];//实际使用的贴图
+        this._materials = [];
+        this._cubeSize = 1;//方块边长，默认1
     }
 
-    _images = [];//实际使用的贴图
-    _materials = [];
-    _cubeSize = 1;//方块边长，默认1
+
     customCubeImages = [];//自定义贴图，仅在cubeType为“custom”时生效
     cubeType;//预设的几种方块类型
 
@@ -20,7 +22,8 @@ export default class CubeFactory {
                 'img/blocks/grass_top_green.png',
                 'img/blocks/dirt.png',
                 'img/blocks/grass_side.png',
-                'img/blocks/grass_side.png',],
+                'img/blocks/grass_side.png',
+            ],
             material: {}
         },
         Cloud: {
@@ -30,7 +33,8 @@ export default class CubeFactory {
                 'img/blocks/grass_top_green.png',
                 'img/blocks/dirt.png',
                 'img/blocks/grass_side.png',
-                'img/blocks/grass_side.png',],
+                'img/blocks/grass_side.png',
+            ],
             material: {
                 transparent: true,//透明
                 opacity: 0.2,//透明度
@@ -67,11 +71,12 @@ export default class CubeFactory {
             if (CubeFactory.DefaultCubeInfo[this.cubeType]) {
                 extraOptions = CubeFactory.DefaultCubeInfo[this.cubeType].material;
             }
-            this._materials.push(new THREE.MeshLambertMaterial({
-                map: texture,
-                fog: true,//当前材质是否受到全局雾化效果器影响
-                ...extraOptions
-            }));
+            this._materials.push(
+                new THREE.MeshLambertMaterial({
+                    map: texture,
+                    fog: true,//当前材质是否受到全局雾化效果器影响
+                    ...extraOptions
+                }));
         }
     };
 
@@ -81,7 +86,7 @@ export default class CubeFactory {
         y = y || 0;
         z = z || 0;
         let cube = new THREE.Mesh(new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize), this._materials);
-        cube.receiveShadow = cube.castShadow = true;
+        // cube.receiveShadow = cube.castShadow = true;
         cube.position.x = x + this._cubeSize / 2;
         cube.position.y = y + this._cubeSize / 2;
         cube.position.z = z + this._cubeSize / 2;

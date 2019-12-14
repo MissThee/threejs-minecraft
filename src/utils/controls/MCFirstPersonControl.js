@@ -235,7 +235,7 @@ export default class MCFirstPersonControl {
                 this.checkRay.Y0[3].ray.origin.x -= 0.4;
                 this.checkRay.Y0[3].ray.origin.z -= 0.4;
                 for (let i = 0; i < 4; i++) {
-                    let intersections = this.checkRay.Y0[i].intersectObjects(this.objects);
+                    let intersections = this.checkRay.Y0[i].intersectObjects(this.scene.children);
                     if (intersections.length > 0) {
                         let bottomFlatYTmp = intersections[0].point.y;
                         bottomFlatY = Math.max(bottomFlatY === undefined ? bottomFlatYTmp : bottomFlatY, bottomFlatYTmp);

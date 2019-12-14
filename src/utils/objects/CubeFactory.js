@@ -61,7 +61,7 @@ export default class CubeFactory {
         for (let i = 0; i < 6; ++i) {
             let texture = textureLoader.load(this._images[i]);
             texture.generateMipmaps = false;
-            texture.magFilter = THREE.NearestFilter;
+            texture.magFilter = THREE.NearestFilter;//minFilter属性：指定纹理如何缩小。默认值：THREE.LinearMipMapLinearFilter。 THREE.NearestFilter 贴图像素化
             texture.minFilter = THREE.NearestFilter;
             let extraOptions = {};
             if (CubeFactory.DefaultCubeInfo[this.cubeType]) {
@@ -81,7 +81,11 @@ export default class CubeFactory {
         x = x || 0;
         y = y || 0;
         z = z || 0;
-        let cube = new THREE.Mesh(new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize), this._materials);
+        let cube = new THREE.Mesh(
+            new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize),
+            this._materials
+            // new THREE.MeshLambertMaterial({color: 0x00cc00})
+        );
         // cube.receiveShadow = cube.castShadow = true;
         cube.position.x = x + this._cubeSize / 2;
         cube.position.y = y + this._cubeSize / 2;

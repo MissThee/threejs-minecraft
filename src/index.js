@@ -110,8 +110,7 @@ let objects = [];
             controls = showOrbitControl.controls;
             break;
         case "MCFirstPersonControl":
-            let mcFirstPersonControl = new MCFirstPersonControl(camera, renderer.domElement, objects);
-            mcFirstPersonControl.initClickFunction(scene.children);
+            let mcFirstPersonControl = new MCFirstPersonControl(camera, renderer.domElement, objects, scene);
             controls = mcFirstPersonControl;
             break;
     }
@@ -119,9 +118,8 @@ let objects = [];
 
 
 //-----------以下为物体添加代码---------------------------------------------------------------
-import * as AddXYZLing from './utils/objects/AddXYZLine';
-
-AddXYZLing.buildXYZLine(scene);
+// import * as AddXYZLing from './utils/objects/AddXYZLine';
+// AddXYZLing.buildXYZLine(scene);
 
 function changeLight() {
     lightAmbient.intensity = getAmbientLightIntensity();
@@ -142,15 +140,15 @@ function changeLight() {
         }
     }
 }
-
 (function addGrassCubes() {
     let cubeFactory = new CubeFactory("GrassDirt");
     {
-        let mountain = [];
+        let testBlock = [];
+        let width = 10;
         //底板
-        for (let x = -10; x < 10; x++) {
-            for (let z = -10; z < 10; z++) {
-                mountain.push([x, -1, z]);
+        for (let x = -width; x < width; x++) {
+            for (let z = -width; z < width; z++) {
+                testBlock.push([x, -1, z]);
             }
         }
         //阶梯
@@ -158,17 +156,17 @@ function changeLight() {
             for (let z = 0; z < 5; z++) {
                 for (let y = 0; y < 5; y++) {
                     if (y >= x) {
-                        mountain.push([x - 7, y - x, z - 5])
+                        testBlock.push([x - 7, y - x, z - 7])
                     }
                 }
             }
         }
         //土堆
-        let mountainHeight = 5;
+        let mountainHeight = 4;
         for (let y = 0; y < mountainHeight; y++) {
             for (let x = y; x < 2 * mountainHeight - y; x++) {
                 for (let z = y; z < 2 * mountainHeight - y; z++) {
-                    mountain.push([x - 10, y, z + 4])
+                    testBlock.push([x - 5, y, z + 1])
                 }
             }
         }
@@ -176,26 +174,26 @@ function changeLight() {
         for (let x = 0; x < 5; x++) {
             for (let z = 0; z < 5; z++) {
                 if (x !== 2 || z !== 2) {
-                    mountain.push([x, 0, z]);
+                    testBlock.push([x, 0, z-5]);
                 }
             }
         }
-        mountain.push([0, 1, 0]);
-        mountain.push([3, 3, 0]);
-        mountain.push([2, 3, 0]);
-        mountain.push([3, 3, 1]);
-        mountain.push([2, 3, 1]);
-        mountain.push([3, 3, -1]);
-        mountain.push([2, 3, -1]);
-        mountain.push([3, 3, -2]);
-        mountain.push([2, 3, -2]);
-        mountain.push([3, 2, -3]);
-        mountain.push([2, 2, -3]);
-        mountain.push([5, 2, 1]);
-        mountain.push([4, 2, 1]);
-        mountain.push([0, 1, 0]);
+        testBlock.push([0, 1, -5]);
+        testBlock.push([3, 3, -5]);
+        testBlock.push([2, 3, -5]);
+        testBlock.push([3, 3, -4]);
+        testBlock.push([2, 3, -4]);
+        testBlock.push([3, 3, -6]);
+        testBlock.push([2, 3, -6]);
+        testBlock.push([3, 3, -7]);
+        testBlock.push([2, 3, -7]);
+        testBlock.push([3, 2, -8]);
+        testBlock.push([2, 2, -8]);
+        testBlock.push([5, 2, -4]);
+        testBlock.push([4, 2, -4]);
+        testBlock.push([0, 1, -5]);
 
-        for (let cubePosition of mountain) {
+        for (let cubePosition of testBlock) {
             let cube = cubeFactory.create(cubePosition[0], cubePosition[1], cubePosition[2]);
             scene.add(cube);
             objects.push(cube);
@@ -225,3 +223,52 @@ window.onresize = function () {
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
 };
+window.onload = () => {
+    playBGM();
+};
+let audioBGM;
+
+function playBGM() {
+    let currentIndex = 0;
+    let arr = [//把需要播放的歌曲从后往前排，这里已添加两首音乐，可继续添加多个音乐
+        "./assets/sound/calm1.ogg",
+        "./assets/sound/calm2.ogg",
+        "./assets/sound/calm3.ogg",
+        "./assets/sound/hal1.ogg",
+        "./assets/sound/hal2.ogg",
+        "./assets/sound/hal3.ogg",
+        "./assets/sound/hal4.ogg",
+    ];
+    audioBGM = new Audio();
+    audioBGM.preload = "true";
+    audioBGM.controls = true;
+    audioBGM.autoplay = true;
+    // audioBGM.muted = true;
+    audioBGM.hidden = true;
+    audioBGM.style.display = "none";
+    audioBGM.style.position = "fixed";
+    audioBGM.style.top = "0";
+    audioBGM.style.right = "0";
+    audioBGM.style.zIndex = "101";
+    audioBGM.loop = false;//禁止循环，否则无法触发ended事件
+    audioBGM.src = arr[currentIndex];         //每次读数组最后一个元素
+    audioBGM.addEventListener('ended', playEndedHandler, false);
+    document.addEventListener('click', playHandler, false);
+    // audioBGM.play();
+    document.body.appendChild(audioBGM);
+
+    function playEndedHandler() {
+        currentIndex++;
+        if (currentIndex >= arr.length) {
+            currentIndex = 0;
+        }
+        audioBGM.src = arr[currentIndex];
+        audioBGM.play();
+        // myAudio.removeEventListener('ended', playEndedHandler, false);
+    }
+
+    function playHandler() {
+        audioBGM.play();
+        document.removeEventListener('click', playHandler, false);
+    }
+}

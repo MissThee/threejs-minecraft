@@ -1,12 +1,16 @@
 import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls'
 import * as THREE from 'three';
+import CubeFactory from "../objects/CubeFactory";
 
 export default class MCFirstPersonControl {
 
-    constructor(camera, domElement, objects) {
+    constructor(camera, domElement, objects, scene) {
         // MCFirstPersonControl._instance;
         // this.controls;
+        // this.removeBlockTimer;//移除方块计时
         this.camera = camera;
+        this.objects = objects;
+        this.scene = scene;
         if (MCFirstPersonControl._instance) {
             return MCFirstPersonControl._instance;
         }
@@ -30,7 +34,6 @@ export default class MCFirstPersonControl {
         this.preRuning = undefined;
         this.isRunning = false;
         this.canJump = false;
-        this.objects = [];
         // this.prevTime = performance.now();
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
@@ -44,25 +47,25 @@ export default class MCFirstPersonControl {
             speedWalk: 5.7,     //最大行走速度
             speedRun: 10,       //最大奔跑速度，连按w两次
             accelerateRateStart: 0.3,//加速时加速比率。正数向前；负数反向；0不会加速；绝对值大于等于1可立即到最大速度
-            accelerateRateStop: 0.9//停止时减速比率。范围[0-1]。0时不会减速，1时立即停止
+            accelerateRateStop: 0.8//停止时减速比率。范围[0-1]。0时立即停止，1时不会减速
         };
-        this.init(camera, domElement, objects);
+        this.init(camera, domElement);
         MCFirstPersonControl._instance = this;
         return MCFirstPersonControl._instance;
     }
 
-    init(camera, domElement, objects) {
-        this.objects = objects;
+    init(camera, domElement) {
         this.controls = new PointerLockControls(camera, domElement);
         //增加遮罩层
         {
             let blocker = document.createElement("div");
             blocker.style.position = "absolute";
-            blocker.style.zIndex = "1000";
+            blocker.style.zIndex = "100";
             blocker.style.width = "100%";
             blocker.style.height = "100%";
             blocker.style.top = "0";
             blocker.style.left = "0";
+            blocker.id = "blocker";
             // blocker.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
             document.body.append(blocker);
             blocker.addEventListener('click', () => {
@@ -173,6 +176,8 @@ export default class MCFirstPersonControl {
         for (let i = 0; i < 4; i++) {
             this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 0));
         }
+        //初始化点击功能
+        this.initClickFunction();
     }
 
     update(delta) {
@@ -290,19 +295,50 @@ export default class MCFirstPersonControl {
         }
     }
 
-    initClickFunction(objects) {
+    initClickFunction() {
+        window.addEventListener('mouseup', (event) => {
+            if (event.button === 1) {
+
+            }
+        });
         window.addEventListener('mousedown', (event) => {
-            let clickedObjects = getClickedObject(event, objects, this.camera);
+            let clickedObjects = getClickedObject(this.scene.children, this.camera);
             if (clickedObjects.length > 0) {
-                let obj = clickedObjects[0].object;
-                console.log("点击的对象：" + obj.name);
+                console.log("点击对象【" + clickedObjects[0].object.name + "】", clickedObjects[0]);
+                if (
+                    clickedObjects[0]
+                    && clickedObjects[0].distance <= 10
+                    && clickedObjects[0].face && clickedObjects[0].face.normal
+                    && clickedObjects[0].object && clickedObjects[0].object.position
+                ) {
+                    let normal = clickedObjects[0].face.normal;
+                    let position = clickedObjects[0].object.position;
+                    // console.log(normal.x, normal.y, normal.z, position.x, position.y, position.z)
+                    let newPosition = {
+                        x: normal.x + position.x - 0.5,
+                        y: normal.y + position.y - 0.5,
+                        z: normal.z + position.z - 0.5,
+                    };
+                    // console.log("newPosition", newPosition, normal.x + position.x, normal.y + position.y, normal.z + position.z)
+                    if (event.button === 2) {//添加方块 右键
+                        //TODO 添加方块代码独立，方块不能添加到人物所站的地方
+                        let cubeFactory = new CubeFactory("GrassDirt");
+                        let cube = cubeFactory.create(newPosition.x, newPosition.y, newPosition.z);
+                        this.scene.add(cube);
+                        this.objects.push(cube)
+                    } else if (event.button === 0) {//删除方块 左键
+                        //TODO 改为长按统一方块时才删除
+                        console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name))
+                        this.scene.remove(this.scene.getObjectById(clickedObjects[0].object.id));
+                    }
+                }
             }
         }, false);
     }
 }
 
 function setAimStyle(aimEl) {
-    aimEl.style.position = "absolute";
+    aimEl.style.position = "fixed";
     aimEl.style.left = "50%";
     aimEl.style.top = "50%";
     aimEl.style.transform = "translate(-50%,-50%)";
@@ -317,7 +353,7 @@ function setAimStyle(aimEl) {
 }
 
 //获取点击的对象
-function getClickedObject(event, objects, camera) {
+function getClickedObject(objects, camera) {
     let raycaster = new THREE.Raycaster();
     let aim = new THREE.Vector2();
     //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.

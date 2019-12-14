@@ -1,10 +1,5 @@
 {
-  "index.js": "package/index.ef9e886c37266c72be06.bundle.js",
-  "index.js.map": "package/index.ef9e886c37266c72be06.bundle.js.map",
-  "runtime.js": "package/runtime.cd5d9ec8af2bb0b164fa.js",
-  "runtime.js.map": "package/runtime.cd5d9ec8af2bb0b164fa.js.map",
-  "vendors.js": "package/vendors.78c9f0b829c25111eee9.bundle.js",
-  "vendors.js.map": "package/vendors.78c9f0b829c25111eee9.bundle.js.map",
+  "index.js": "package/index.56b82e7b4ac8a478fec5.js",
   "assets/img/1.gif": "assets/img/1.gif",
   "assets/img/1.png": "assets/img/1.png",
   "assets/img/2.png": "assets/img/2.png",
@@ -364,6 +359,13 @@
   "assets/img/blocks/wool_colored_white.png": "assets/img/blocks/wool_colored_white.png",
   "assets/img/blocks/wool_colored_yellow.png": "assets/img/blocks/wool_colored_yellow.png",
   "assets/img/sky.jpg": "assets/img/sky.jpg",
+  "assets/sound/calm1.ogg": "assets/sound/calm1.ogg",
+  "assets/sound/calm2.ogg": "assets/sound/calm2.ogg",
+  "assets/sound/calm3.ogg": "assets/sound/calm3.ogg",
+  "assets/sound/hal1.ogg": "assets/sound/hal1.ogg",
+  "assets/sound/hal2.ogg": "assets/sound/hal2.ogg",
+  "assets/sound/hal3.ogg": "assets/sound/hal3.ogg",
+  "assets/sound/hal4.ogg": "assets/sound/hal4.ogg",
   "favicon.ico": "favicon.ico",
   "index.html": "index.html"
 }

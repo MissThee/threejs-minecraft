@@ -1,4 +1,5 @@
-var path = require('path');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const path = require('path');
 //打包成插件用的
 module.exports = {
     entry: './src/package/index.js',
@@ -20,5 +21,9 @@ module.exports = {
         //     amd: 'lodash',
         //     root: '_'
         // }
-    }
+    },
+    plugins: [
+        //清理输出目录
+        new CleanWebpackPlugin(),//npm install clean-webpack-plugin --save-dev
+    ]
 };

@@ -1,11 +1,11 @@
-import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
+import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls'
 import * as THREE from 'three';
 
 export default class MCFirstPersonControl {
 
     constructor(camera, domElement, objects) {
-        MCFirstPersonControl._instance;
-        this.controls;
+        // MCFirstPersonControl._instance;
+        // this.controls;
         this.camera = camera;
         if (MCFirstPersonControl._instance) {
             return MCFirstPersonControl._instance;
@@ -40,9 +40,11 @@ export default class MCFirstPersonControl {
         this.personOption = {
             height: 1.8,//人物总高度
             sightHeight: 1.5,//眼部高度
-            jumpHeight: 1.4,
-            speedWalk: 5.7,
-            speedRun: 10
+            jumpHeight: 1.4,    //最大跳跃高度，实际为到此高度
+            speedWalk: 5.7,     //最大行走速度
+            speedRun: 10,       //最大奔跑速度，连按w两次
+            accelerateRateStart: 0.3,//加速时加速比率。正数向前；负数反向；0不会加速；绝对值大于等于1可立即到最大速度
+            accelerateRateStop: 0.9//停止时减速比率。范围[0-1]。0时不会减速，1时立即停止
         };
         this.init(camera, domElement, objects);
         MCFirstPersonControl._instance = this;
@@ -53,36 +55,40 @@ export default class MCFirstPersonControl {
         this.objects = objects;
         this.controls = new PointerLockControls(camera, domElement);
         //增加遮罩层
-        let blocker = document.createElement("div");
-        blocker.style.position = "absolute";
-        blocker.style.zIndex = "1000";
-        blocker.style.width = "100%";
-        blocker.style.height = "100%";
-        blocker.style.top = "0";
-        blocker.style.left = "0";
-        blocker.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
-        document.body.append(blocker);
-        blocker.addEventListener('click', () => {
-            this.controls.lock();
-        }, false);
-        this.controls.addEventListener('lock', function () {
-            blocker.style.display = 'none';
-        });
-        this.controls.addEventListener('unlock', function () {
-            blocker.style.display = 'block';
-        });
+        {
+            let blocker = document.createElement("div");
+            blocker.style.position = "absolute";
+            blocker.style.zIndex = "1000";
+            blocker.style.width = "100%";
+            blocker.style.height = "100%";
+            blocker.style.top = "0";
+            blocker.style.left = "0";
+            // blocker.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
+            document.body.append(blocker);
+            blocker.addEventListener('click', () => {
+                this.controls.lock();
+            }, false);
+            this.controls.addEventListener('lock', function () {
+                blocker.style.display = 'none';
+            });
+            this.controls.addEventListener('unlock', function () {
+                blocker.style.display = 'block';
+            });
+        }
         //添加准星
-        let aimX = document.createElement("div");
-        aimX.style.height = "2px";
-        aimX.style.width = "20px";
-        setAimStyle(aimX);
-        document.body.append(aimX);
-        let aimY = document.createElement("div");
-        aimY.style.height = "20px";
-        aimY.style.width = "2px";
-        setAimStyle(aimY);
-        document.body.append(aimY);
-
+        {
+            let aimX = document.createElement("div");
+            aimX.style.height = "2px";
+            aimX.style.width = "20px";
+            setAimStyle(aimX);
+            document.body.append(aimX);
+            let aimY = document.createElement("div");
+            aimY.style.height = "20px";
+            aimY.style.width = "2px";
+            setAimStyle(aimY);
+            document.body.append(aimY);
+        }
+        //加按键事件
         let onKeyDown = (event) => {
             switch (event.keyCode) {
                 case 38: // up
@@ -160,7 +166,7 @@ export default class MCFirstPersonControl {
         };
         document.addEventListener('keydown', onKeyDown, false);
         document.addEventListener('keyup', onKeyUp, false);
-
+        //加垂直方向碰撞检测
         for (let i = 0; i < 4; i++) {
             this.checkRay.Y0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 0));
         }
@@ -170,27 +176,45 @@ export default class MCFirstPersonControl {
     }
 
     update(delta) {
+        delta = delta || 0.016;
         if (!this.controls.isLocked) {
             this.moveForward = false;
             this.moveBackward = false;
             this.moveLeft = false;
             this.moveRight = false;
         }
-        // let time = performance.now();
-        // let delta = (time - this.prevTime) / 1000;
+        //水平方向移动
+        {
+            this.direction.z = Number(this.moveForward) - Number(this.moveBackward);
+            this.direction.x = Number(this.moveRight) - Number(this.moveLeft);
+            this.direction.normalize(); // this ensures consistent movements in all directions
 
-        this.velocity.x = this.velocity.x / 2.0 * delta;
-        this.velocity.z = this.velocity.z / 2.0 * delta;
-
-        this.direction.z = Number(this.moveForward) - Number(this.moveBackward);
-        this.direction.x = Number(this.moveRight) - Number(this.moveLeft);
-        this.direction.normalize(); // this ensures consistent movements in all directions
-
-        if (this.moveForward || this.moveBackward) this.velocity.z -= this.direction.z * (this.isRunning ? this.personOption.speedRun : this.personOption.speedWalk);
-        if (this.moveLeft || this.moveRight) this.velocity.x -= this.direction.x * (this.isRunning ? this.personOption.speedRun : this.personOption.speedWalk);
-        this.controls.moveRight(-this.velocity.x * delta);
-        this.controls.moveForward(-this.velocity.z * delta);
-        {//垂直方向
+            let velocityXZMax = this.isRunning ? this.personOption.speedRun : this.personOption.speedWalk;
+            if (this.moveForward || this.moveBackward) {
+                let velocityZTmp = this.velocity.z + this.direction.z * velocityXZMax * this.personOption.accelerateRateStart;
+                if (Math.abs(velocityZTmp) < velocityXZMax) {
+                    this.velocity.z = velocityZTmp;
+                } else {
+                    this.velocity.z = this.direction.z * velocityXZMax;
+                }
+            } else {
+                this.velocity.z = Math.abs(this.velocity.z) > 1 ? this.velocity.z * (this.personOption.accelerateRateStop) : 0;
+            }
+            if (this.moveLeft || this.moveRight) {
+                let velocityXTmp = this.velocity.x + this.direction.x * velocityXZMax * this.personOption.accelerateRateStart;
+                if (Math.abs(velocityXTmp) < velocityXZMax) {
+                    this.velocity.x = velocityXTmp;
+                } else {
+                    this.velocity.x = this.direction.x * velocityXZMax;
+                }
+            } else {
+                this.velocity.x = Math.abs(this.velocity.x) > 1 ? this.velocity.x * (this.personOption.accelerateRateStop) : 0;
+            }
+            this.controls.moveRight(this.velocity.x * delta);
+            this.controls.moveForward(this.velocity.z * delta);
+        }
+        //垂直方向移动+碰撞检测
+        {
             let bottomFlatY = undefined;
             //坠落四角检测
             {
@@ -235,16 +259,17 @@ export default class MCFirstPersonControl {
                     }
                 }
             }
-
-
+            //无碰撞时下次垂直位置(相机位置)
+            let needStopY = false;
             let nextY = this.controls.getObject().position.y + (this.velocity.y * delta);
             if (topFlatY !== undefined) {
-                if (topFlatY - (this.personOption.height - this.personOption.sightHeight) < nextY) {
+                if (nextY > topFlatY - (this.personOption.height - this.personOption.sightHeight)) {
                     nextY = topFlatY - (this.personOption.height - this.personOption.sightHeight)
                     this.velocity.y = 0;
                 }
             }
             if (bottomFlatY !== undefined) {
+                //下方检测到平台时，脚部不能低于最低平台
                 this.controls.getObject().position.y = Math.max(bottomFlatY + this.personOption.sightHeight, nextY);
                 if (nextY > bottomFlatY + this.personOption.sightHeight) {
                     this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
@@ -253,13 +278,12 @@ export default class MCFirstPersonControl {
                     this.canJump = true;
                 }
             } else {
-                this.controls.getObject().position.y = nextY; // new behavior
+                //下方未检测到平台时
+                this.controls.getObject().position.y = nextY;
                 this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
             }
         }
-        // this.prevTime = time;
         if (this.controls.getObject().position.y < -2000) {
-            // this.velocity.y=0;
             this.controls.getObject().position.y = 2000;
             this.controls.getObject().position.x = 0;
             this.controls.getObject().position.z = 0;
@@ -290,7 +314,6 @@ function setAimStyle(aimEl) {
     aimEl.style.lineHeight = "10px";
     aimEl.style.fontFamily = "\"Times New Roman\",serif";
     aimEl.style.backgroundColor = "#E0E0E0";
-    // aimEl.style.filter = "hue-rotate(180deg)";
 }
 
 //获取点击的对象

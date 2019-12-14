@@ -4,8 +4,8 @@ import * as THREE from 'three';
 export default class ShowOrbitControl {
 
     constructor(camera, domElement) {
-        ShowOrbitControl._instance;
-        this.controls;
+        // ShowOrbitControl._instance;
+        // this.controls;
         this.camera=camera;
         if (ShowOrbitControl._instance) {
             return ShowOrbitControl._instance;

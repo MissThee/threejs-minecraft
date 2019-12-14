@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+
 const ManifestPlugin = require('webpack-manifest-plugin');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
@@ -14,8 +14,7 @@ module.exports = {
         contentBase: '../dist'
     },
     plugins: [
-        //清理输出目录
-        new CleanWebpackPlugin(),//npm install clean-webpack-plugin --save-dev
+
         //生成index。html并添加所有入口文件的引用
         new HtmlWebpackPlugin({//npm install --save-dev html-webpack-plugin
             title: 'MC',//标题
@@ -45,9 +44,7 @@ module.exports = {
         // 引用静态资源文件路径。相对路径从index目录为起始，即打开的html所在目录;绝对路径从根目录起始即/
         publicPath: ''
     },
-    externals: {
-
-    },
+    externals: {},
     mode: "production",//也可以在命令行接口中使用 --optimize-minimize 标记，来使用 UglifyJSPlugin
     module: {
         rules: [

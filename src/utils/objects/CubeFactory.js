@@ -12,23 +12,23 @@ export default class CubeFactory {
         CubeFactory.DefaultCubeInfo = {
             GrassDirt: {
                 images: [
-                    './assets/img/blocks/grass_side.png',
-                    './assets/img/blocks/grass_side.png',
-                    './assets/img/blocks/grass_top_green.png',
-                    './assets/img/blocks/dirt.png',
-                    './assets/img/blocks/grass_side.png',
-                    './assets/img/blocks/grass_side.png',
+                    '../assets/img/blocks/grass_side.png',
+                    '../assets/img/blocks/grass_side.png',
+                    '../assets/img/blocks/grass_top_green.png',
+                    '../assets/img/blocks/dirt.png',
+                    '../assets/img/blocks/grass_side.png',
+                    '../assets/img/blocks/grass_side.png',
                 ],
                 material: {}
             },
             Cloud: {
                 images: [
-                    './assets/img/blocks/grass_side.png',
-                    './assets/img/blocks/grass_side.png',
-                    './assets/img/blocks/grass_top_green.png',
-                    './assets/img/blocks/dirt.png',
-                    './assets/img/blocks/grass_side.png',
-                    './assets/img/blocks/grass_side.png',
+                    '../assets/img/blocks/grass_side.png',
+                    '../assets/img/blocks/grass_side.png',
+                    '../assets/img/blocks/grass_top_green.png',
+                    '../assets/img/blocks/dirt.png',
+                    '../assets/img/blocks/grass_side.png',
+                    '../assets/img/blocks/grass_side.png',
                 ],
                 material: {
                     transparent: true,//透明
@@ -37,8 +37,6 @@ export default class CubeFactory {
             }
         };
     }
-
-
 
     //初始化images
     initImages() {

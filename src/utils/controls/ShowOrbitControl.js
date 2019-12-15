@@ -1,12 +1,13 @@
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import {Raycaster, Vector2} from 'three';
 
+const THREE = {Raycaster, Vector2};
 export default class ShowOrbitControl {
 
     constructor(camera, domElement) {
         // ShowOrbitControl._instance;
         // this.controls;
-        this.camera=camera;
+        this.camera = camera;
         if (ShowOrbitControl._instance) {
             return ShowOrbitControl._instance;
         }

@@ -1,5 +1,10 @@
 {
-  "index.js": "package/index.97a5bf05a3115682d07b.js",
+  "index.js": "package/index.cb78e41fe09136e8e9ea.bundle.js",
+  "index.js.map": "package/index.cb78e41fe09136e8e9ea.bundle.js.map",
+  "runtime.js": "package/runtime.cd5d9ec8af2bb0b164fa.js",
+  "runtime.js.map": "package/runtime.cd5d9ec8af2bb0b164fa.js.map",
+  "vendors.js": "package/vendors.624d7b790d7b883dfda0.bundle.js",
+  "vendors.js.map": "package/vendors.624d7b790d7b883dfda0.bundle.js.map",
   "assets/img/1.gif": "assets/img/1.gif",
   "assets/img/1.png": "assets/img/1.png",
   "assets/img/2.png": "assets/img/2.png",

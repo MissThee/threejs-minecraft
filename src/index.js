@@ -1,10 +1,12 @@
-import * as THREE from 'three';
+import {Scene,FogExp2,CubeTextureLoader,Color,ShaderLib,ShaderMaterial,BackSide,CubeGeometry,AmbientLight,PerspectiveCamera,WebGLRenderer,PCFSoftShadowMap} from 'three';
 import {WEBGL} from "three/examples/jsm/WebGL.js";
 // import TWEEN from "@tweenjs/tween.js";//动作库
 import CubeFactory from "./utils/objects/CubeFactory.js";
 import StatsWindow from "./utils/stats/StatsWindow.js";
 import ShowOrbitControl from "./utils/controls/ShowOrbitControl.js";
 import MCFirstPersonControl from "./utils/controls/MCFirstPersonControl.js";
+
+const THREE={Scene,FogExp2,CubeTextureLoader,Color,ShaderLib,ShaderMaterial,BackSide,CubeGeometry,AmbientLight,PerspectiveCamera,WebGLRenderer,PCFSoftShadowMap};
 
 let enableShadow = false;
 

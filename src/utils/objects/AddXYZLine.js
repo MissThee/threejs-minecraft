@@ -1,5 +1,5 @@
-import * as THREE from "three";
-
+import {Vector2,Geometry,Raycaster,MeshBasicMaterial,LineSegments} from "three";
+const THREE = {Vector2,Geometry,Raycaster,MeshBasicMaterial,LineSegments};
 function buildLine(x1, y1, z1, x2, y2, z2, color) {
     x1 = x1 || 0;
     y1 = y1 || 0;

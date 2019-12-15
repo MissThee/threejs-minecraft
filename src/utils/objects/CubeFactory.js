@@ -1,5 +1,6 @@
-import * as THREE from 'three';
+import {TextureLoader, NearestFilter,Mesh, MeshLambertMaterial, CubeGeometry} from "three";
 
+const THREE = {TextureLoader, NearestFilter,Mesh, MeshLambertMaterial, CubeGeometry};
 export default class CubeFactory {
     constructor(cubeType, customCubeImages) {
         this.cubeType = cubeType;

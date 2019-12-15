@@ -44,7 +44,9 @@ module.exports = {
         // 引用静态资源文件路径。相对路径从index目录为起始，即打开的html所在目录;绝对路径从根目录起始即/
         publicPath: ''
     },
-    externals: {},
+    externals: {
+
+    },
     mode: "production",//也可以在命令行接口中使用 --optimize-minimize 标记，来使用 UglifyJSPlugin
     module: {
         rules: [

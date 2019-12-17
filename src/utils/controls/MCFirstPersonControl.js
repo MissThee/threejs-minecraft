@@ -192,6 +192,7 @@ export default class MCFirstPersonControl {
     }
 
     update(delta) {
+        console.log(this.objects.length)
         delta = delta || 0.016;
         if (!this.controls.isLocked) {
             this.moveForward = false;
@@ -257,7 +258,7 @@ export default class MCFirstPersonControl {
                     this.checkRay.Z0[5].ray.origin.x -= rayMoveX;
                     this.checkRay.Z0[5].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
                     for (let i = 0; i < 6; i++) {
-                        let intersections = this.checkRay.Z0[i].intersectObjects(this.scene.children);
+                        let intersections = this.checkRay.Z0[i].intersectObjects(this.objects);
                         if (intersections.length > 0) {
                             let Z0NearFlatTmp = intersections[0].point.z;
                             Z0Flat = Math.max(Z0Flat === undefined ? Z0NearFlatTmp : Z0Flat, Z0NearFlatTmp);
@@ -286,7 +287,7 @@ export default class MCFirstPersonControl {
                     this.checkRay.Z1[5].ray.origin.x -= rayMoveX;
                     this.checkRay.Z1[5].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
                     for (let i = 0; i < 6; i++) {
-                        let intersections = this.checkRay.Z1[i].intersectObjects(this.scene.children);
+                        let intersections = this.checkRay.Z1[i].intersectObjects(this.objects);
                         if (intersections.length > 0) {
                             let Z1NearFlatTmp = intersections[0].point.z;
                             Z1Flat = Math.min(Z1Flat === undefined ? Z1NearFlatTmp : Z1Flat, Z1NearFlatTmp);
@@ -322,7 +323,7 @@ export default class MCFirstPersonControl {
                     this.checkRay.X0[5].ray.origin.z -= rayMoveX;
                     this.checkRay.X0[5].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.051);
                     for (let i = 0; i < 6; i++) {
-                        let intersections = this.checkRay.X0[i].intersectObjects(this.scene.children);
+                        let intersections = this.checkRay.X0[i].intersectObjects(this.objects);
                         if (intersections.length > 0) {
                             let X0NearFlatTmp = intersections[0].point.x;
                             X0Flat = Math.max(X0Flat === undefined ? X0NearFlatTmp : X0Flat, X0NearFlatTmp);
@@ -351,7 +352,7 @@ export default class MCFirstPersonControl {
                     this.checkRay.X1[5].ray.origin.z -= rayMoveX;
                     this.checkRay.X1[5].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
                     for (let i = 0; i < 6; i++) {
-                        let intersections = this.checkRay.X1[i].intersectObjects(this.scene.children);
+                        let intersections = this.checkRay.X1[i].intersectObjects(this.objects);
                         if (intersections.length > 0) {
                             let X1NearFlatTmp = intersections[0].point.x;
                             X1Flat = Math.min(X1Flat === undefined ? X1NearFlatTmp : X1Flat, X1NearFlatTmp);
@@ -384,7 +385,7 @@ export default class MCFirstPersonControl {
                 this.checkRay.Y0[3].ray.origin.x -= rayMove;
                 this.checkRay.Y0[3].ray.origin.z -= rayMove;
                 for (let i = 0; i < 4; i++) {
-                    let intersections = this.checkRay.Y0[i].intersectObjects(this.scene.children);
+                    let intersections = this.checkRay.Y0[i].intersectObjects(this.objects);
                     if (intersections.length > 0) {
                         let bottomFlatYTmp = intersections[0].point.y;
                         bottomFlatY = Math.max(bottomFlatY === undefined ? bottomFlatYTmp : bottomFlatY, bottomFlatYTmp);
@@ -424,21 +425,22 @@ export default class MCFirstPersonControl {
             }
             if (bottomFlatY !== undefined) {
                 //下方检测到平台时，脚部不能低于最低平台
-                this.controls.getObject().position.y = Math.max(bottomFlatY + this.personOption.sightHeight, nextY);
-                if (nextY > bottomFlatY + this.personOption.sightHeight) {
-                    this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
-                } else {
+                nextY = Math.max(bottomFlatY + this.personOption.sightHeight, nextY);
+                if (nextY === bottomFlatY + this.personOption.sightHeight) {
                     this.velocity.y = 0;
                     this.canJump = true;
+                } else {
+                    this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
                 }
             } else {
                 //下方未检测到平台时
-                this.controls.getObject().position.y = nextY;
                 this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
             }
+            this.controls.getObject().position.y = nextY;
         }
-        if (this.controls.getObject().position.y < -2000) {
-            this.controls.getObject().position.y = 2000;
+        if (this.controls.getObject().position.y < -500) {
+            this.velocity.y = 0;
+            this.controls.getObject().position.y = 500;
             this.controls.getObject().position.x = 0;
             this.controls.getObject().position.z = 0;
         }
@@ -476,8 +478,12 @@ export default class MCFirstPersonControl {
                         this.scene.add(cube);
                         this.objects.push(cube)
                     } else if (event.button === 0) {//删除方块 左键
-                        //TODO 改为长按统一方块时才删除
-                        console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name))
+                        //TODO 改为长按同一方块时才删除
+                        console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name));
+                        let index = this.objects.findIndex(e => e.id === clickedObjects[0].object.id);
+                        if (index >= 0) {
+                            this.objects.splice(index, 1);
+                        }
                         this.scene.remove(this.scene.getObjectById(clickedObjects[0].object.id));
                     }
                 }

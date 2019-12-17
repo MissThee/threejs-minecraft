@@ -25,7 +25,7 @@ let sceneOption = {
 let scene = (function initScene() {
     let scene = new THREE.Scene();
     scene.name = 'SCENE';
-    scene.fog = new THREE.FogExp2(sceneOption.backgroundColor, 0.001);//雾效果
+    scene.fog = new THREE.FogExp2(sceneOption.backgroundColor, 0.005);//雾效果
     //增加天空盒
     (function skyBox(backgroundType) {
         backgroundType = backgroundType || 1;
@@ -79,7 +79,7 @@ let lightAmbient;
 // 相机*
 let camera;
 (function initCamera() {
-    camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 100000);//最远1e10
+    camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000);//最远1e10
     camera.name = "CAMERA";
     camera.position.x = 0;
     camera.position.y = 10;

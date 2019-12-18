@@ -1,5 +1,4 @@
-import {Vector2,Geometry,Raycaster,MeshBasicMaterial,LineSegments} from "three";
-const THREE = {Vector2,Geometry,Raycaster,MeshBasicMaterial,LineSegments};
+import * as THREE from 'three';
 function buildLine(x1, y1, z1, x2, y2, z2, color) {
     x1 = x1 || 0;
     y1 = y1 || 0;
@@ -20,9 +19,9 @@ function buildLine(x1, y1, z1, x2, y2, z2, color) {
 export function buildXYZLine(scene) {
     //坐标线
     let lines = [];
-    lines.push(buildLine(0, 0, 0, 10, 0, 0, 0xff0000));//中心坐标线，X轴，红
-    lines.push(buildLine(0, 0, 0, 0, 10, 0, 0x00ff00));//中心坐标线，Y轴，绿
-    lines.push(buildLine(0, 0, 0, 0, 0, 10, 0x0000ff));//中心坐标线，Z轴，蓝
+    lines.push(buildLine(0, 0, 0, 1, 0, 0, 0xff0000));//中心坐标线，X轴，红
+    lines.push(buildLine(0, 0, 0, 0, 1, 0, 0x00ff00));//中心坐标线，Y轴，绿
+    lines.push(buildLine(0, 0, 0, 0, 0, 1, 0x0000ff));//中心坐标线，Z轴，蓝
     if(scene){
         scene.add(...lines)
     }

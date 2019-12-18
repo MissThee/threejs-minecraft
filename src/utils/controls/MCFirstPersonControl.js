@@ -1,8 +1,7 @@
 import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls'
-import {Vector3, Raycaster, Vector2} from 'three';
-import CubeFactory from "../objects/CubeFactory";
-
-const THREE = {Vector3, Raycaster, Vector2};
+import CubeFactory from "../objects/cube/CubeFactory";
+import * as THREE from 'three';
+import DefaultCube from '../objects/cube/DefaultCube'
 export default class MCFirstPersonControl {
 
     constructor(camera, domElement, objects, scene) {
@@ -473,8 +472,8 @@ export default class MCFirstPersonControl {
                     // console.log("newPosition", newPosition, normal.x + position.x, normal.y + position.y, normal.z + position.z)
                     if (event.button === 2) {//添加方块 右键
                         //TODO 添加方块代码独立，方块不能添加到人物所站的地方
-                        let cubeFactory = new CubeFactory("GrassDirt");
-                        let cube = cubeFactory.create(newPosition.x, newPosition.y, newPosition.z);
+                        let cubeFactory = new CubeFactory(DefaultCube.GrassDirt);
+                        let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z);
                         this.scene.add(cube);
                         this.objects.push(cube)
                     } else if (event.button === 0) {//删除方块 左键

@@ -32,7 +32,7 @@ function clock() {
                 ctx.stroke();
                 ctx.restore();
             }
-        };
+        }
 
         function Line() {
         };

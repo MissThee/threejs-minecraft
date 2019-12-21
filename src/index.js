@@ -79,7 +79,7 @@ function changeLight() {
 }
 
 (function addGrassCubes() {
-    let cubeFactory = new CubeFactory(DefaultCube.GrassDirt);
+    let cubeFactory = new CubeFactory(DefaultCube.grass);
     {
         let testBlock = [];
         let width = 10;
@@ -134,6 +134,12 @@ function changeLight() {
             testBlock.push([4, 2, -4]);
             testBlock.push([0, 1, -5]);
         }
+        testBlock.push([10, 1, 0, DefaultCube.cobblestone]);
+        testBlock.push([10, 1, -2, DefaultCube.cobblestone_mossy]);
+        testBlock.push([10, 1, -4, DefaultCube.stone]);
+        testBlock.push([10, 1, -6, DefaultCube.stone_slab]);
+        testBlock.push([10, 1, -8, DefaultCube.planks_birch]);
+        testBlock.push([0, 10, 0, DefaultCube.grass]);
         // //填满
         // for (let x = -10; x < 10; x++) {
         //     for (let z = -10; z < 10; z++) {
@@ -157,8 +163,8 @@ function changeLight() {
         //         }
         //     }
         // }
-        for (let cubePosition of testBlock) {
-            let cube = cubeFactory.buildCube(cubePosition[0], cubePosition[1], cubePosition[2]);
+        for (let cubeInfo of testBlock) {
+            let cube = cubeFactory.buildCube(cubeInfo[0], cubeInfo[1], cubeInfo[2], cubeInfo[3]);
             scene.add(cube);
             objects.push(cube);
         }

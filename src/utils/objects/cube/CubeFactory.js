@@ -8,6 +8,7 @@ export default class CubeFactory {
         }
         this.cubeOptions = defaultCube;
         this._materials = [];
+        this._materialsMap = [];
         this._geometry = undefined;
         this._cubeSize = 1;//方块边长，默认1
         this.initMaterials();
@@ -17,11 +18,26 @@ export default class CubeFactory {
         }
     }
 
+    //初始化形状
+    initGeometry() {
+        if (this._geometry) {
+            return;
+        }
+        this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize)
+    }
+
     //初始化材质
     initMaterials() {
+        if (!this.cubeOptions.key) {
+            throw '"key" in cubeType is undefined'
+        }
+        if (this._materialsMap) {
+            this._materials = this._materialsMap[this.cubeOptions.key];
+        }
         if (this._materials && this._materials.length !== 0) {
             return;
         }
+        this._materials = [];
         let textureLoader = new THREE.TextureLoader();
         let textureList = [];
         for (let imageUrl of this.cubeOptions.images) {
@@ -47,17 +63,16 @@ export default class CubeFactory {
         for (let key of this.cubeOptions.imageSet) {
             this._materials.push(materialList[key]);
         }
+        this._materialsMap[this.cubeOptions.key] = this._materials;
     };
 
-    initGeometry() {
-        if (this._geometry) {
-            return;
-        }
-        this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize)
-    }
 
     //构造方块
-    buildCube(x, y, z) {
+    buildCube(x, y, z, defaultCube) {
+        if (defaultCube) {
+            this.cubeOptions = defaultCube;
+            this.initMaterials();
+        }
         x = x || 0;
         y = y || 0;
         z = z || 0;
@@ -70,7 +85,7 @@ export default class CubeFactory {
         cube.position.x = x + this._cubeSize / 2;
         cube.position.y = y + this._cubeSize / 2;
         cube.position.z = z + this._cubeSize / 2;
-        cube.name = "GrassCube(" + x + "," + y + "," + z + ")";
+        cube.name = this.cubeOptions.key + "(" + x + "," + y + "," + z + ")";
         return cube;
     }
 }

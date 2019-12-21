@@ -472,7 +472,7 @@ export default class MCFirstPersonControl {
                     // console.log("newPosition", newPosition, normal.x + position.x, normal.y + position.y, normal.z + position.z)
                     if (event.button === 2) {//添加方块 右键
                         //TODO 添加方块代码独立，方块不能添加到人物所站的地方
-                        let cubeFactory = new CubeFactory(DefaultCube.GrassDirt);
+                        let cubeFactory = new CubeFactory(DefaultCube.grass);
                         let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z);
                         this.scene.add(cube);
                         this.objects.push(cube)

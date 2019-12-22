@@ -2,18 +2,21 @@ import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockContro
 import CubeFactory from "../objects/cube/CubeFactory";
 import * as THREE from 'three';
 import DefaultCube from '../objects/cube/DefaultCube'
+
 export default class MCFirstPersonControl {
 
     constructor(camera, domElement, objects, scene) {
+        if (MCFirstPersonControl._instance) {
+            return MCFirstPersonControl._instance;
+        }
         // MCFirstPersonControl._instance;
         // this.controls;
         // this.removeBlockTimer;//移除方块计时
         this.camera = camera;
         this.objects = objects;
         this.scene = scene;
-        if (MCFirstPersonControl._instance) {
-            return MCFirstPersonControl._instance;
-        }
+        this.currentCubeTypeIndex = 0;
+
         this.checkRay = {//0为负，1为正
             X0: [],
             X1: [],
@@ -187,7 +190,7 @@ export default class MCFirstPersonControl {
             this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 0));
         }
         //初始化点击功能
-        this.initClickFunction();
+        this.initMouseFunction();
     }
 
     update(delta) {
@@ -445,12 +448,8 @@ export default class MCFirstPersonControl {
         }
     }
 
-    initClickFunction() {
-        window.addEventListener('mouseup', (event) => {
-            if (event.button === 1) {
-
-            }
-        });
+    initMouseFunction() {
+        //点击功能
         window.addEventListener('mousedown', (event) => {
             let clickedObjects = getClickedObject(this.scene.children, this.camera);
             if (clickedObjects.length > 0) {
@@ -463,17 +462,23 @@ export default class MCFirstPersonControl {
                 ) {
                     let normal = clickedObjects[0].face.normal;
                     let position = clickedObjects[0].object.position;
+                    let rotate = clickedObjects[0].object.rotation;
                     // console.log(normal.x, normal.y, normal.z, position.x, position.y, position.z)
+
+                    let newPositionVector=new THREE.Vector3(normal.x,normal.y,normal.z);
+                    newPositionVector=newPositionVector.applyAxisAngle(new THREE.Vector3(1,0,0),rotate.x);
+                    newPositionVector=newPositionVector.applyAxisAngle(new THREE.Vector3(0,1,0),rotate.y);
+                    newPositionVector=newPositionVector.applyAxisAngle(new THREE.Vector3(0,0,1),rotate.z);
                     let newPosition = {
-                        x: normal.x + position.x - 0.5,
-                        y: normal.y + position.y - 0.5,
-                        z: normal.z + position.z - 0.5,
+                        x: newPositionVector.x + position.x - 0.5,
+                        y: newPositionVector.y + position.y - 0.5,
+                        z: newPositionVector.z + position.z - 0.5,
                     };
-                    // console.log("newPosition", newPosition, normal.x + position.x, normal.y + position.y, normal.z + position.z)
                     if (event.button === 2) {//添加方块 右键
                         //TODO 添加方块代码独立，方块不能添加到人物所站的地方
                         let cubeFactory = new CubeFactory(DefaultCube.grass);
-                        let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z);
+                        console.log('放置??', this.currentCubeTypeIndex);
+                        let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z, DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]);
                         this.scene.add(cube);
                         this.objects.push(cube)
                     } else if (event.button === 0) {//删除方块 左键
@@ -488,6 +493,44 @@ export default class MCFirstPersonControl {
                 }
             }
         }, false);
+        //滑轮功能
+        {
+            if (document.addEventListener) {//firefox
+                document.addEventListener('DOMMouseScroll', (e) => {
+                    e = e || window.event;
+                    if (e.wheelDelta) { //第一步：先判断浏览器IE，谷歌滑轮事件
+                        this.changeCurrentCubeTypeIndex(e.wheelDelta < 0);
+                    } else if (e.detail) { //Firefox滑轮事件
+                        this.changeCurrentCubeTypeIndex(e.detail < 0);
+                    }
+                }, false);
+            }
+            //滚动滑轮触发scrollFunc方法 //ie 谷歌
+            window.onmousewheel = (e) => {
+                console.log('滑轮', this.currentCubeTypeIndex)
+                e = e || window.event;
+                if (e.wheelDelta) { //第一步：先判断浏览器IE，谷歌滑轮事件
+                    this.changeCurrentCubeTypeIndex(e.wheelDelta < 0);
+                } else if (e.detail) { //Firefox滑轮事件
+                    this.changeCurrentCubeTypeIndex(e.detail < 0);
+                }
+            };
+        }
+
+    }
+
+    changeCurrentCubeTypeIndex(isNext) {
+        if (isNext) {
+            this.currentCubeTypeIndex++;
+            if (this.currentCubeTypeIndex === Object.keys(DefaultCube).length) {
+                this.currentCubeTypeIndex = 0;
+            }
+        } else {
+            if (this.currentCubeTypeIndex === 0) {
+                this.currentCubeTypeIndex = Object.keys(DefaultCube).length;
+            }
+            this.currentCubeTypeIndex--;
+        }
     }
 }
 
@@ -518,3 +561,7 @@ function getClickedObject(objects, camera) {
     // 获取raycaster直线和所有模型相交的数组集合
     return raycaster.intersectObjects(objects);
 }
+
+
+
+

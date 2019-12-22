@@ -48,15 +48,17 @@ export default class CubeFactory {
             textureList.push(texture);
         }
         let materialList = [];
-        for (let texture of textureList) {
+        for (let textureIndex in textureList) {
+            let texture = textureList[textureIndex];
             materialList.push(
                 new THREE.MeshLambertMaterial({
                     // color:0x4F9C1A,
+                    // side: THREE.DoubleSide,
                     map: texture,
-                    vertexColors: THREE.VertexColors,
-                    side: THREE.DoubleSide,
+                    // vertexColors: THREE.VertexColors,
                     fog: true,//当前材质是否受到全局雾化效果器影响
-                    ...this.cubeOptions.materialParameters
+                    ...(this.cubeOptions.materialParameters ? this.cubeOptions.materialParameters : {}),
+                    ...(this.cubeOptions.materialParametersForOneList && this.cubeOptions.materialParametersForOneList[textureIndex] ? this.cubeOptions.materialParametersForOneList[textureIndex] : {}),
                 })
             );
         }
@@ -68,7 +70,7 @@ export default class CubeFactory {
 
 
     //构造方块
-    buildCube(x, y, z, defaultCube) {
+    buildCube(x, y, z, defaultCube, rotateX, rotateY, rotateZ) {
         if (defaultCube) {
             this.cubeOptions = defaultCube;
             this.initMaterials();
@@ -85,6 +87,9 @@ export default class CubeFactory {
         cube.position.x = x + this._cubeSize / 2;
         cube.position.y = y + this._cubeSize / 2;
         cube.position.z = z + this._cubeSize / 2;
+        if(rotateX) {cube.rotateX(rotateX*Math.PI/180);}
+        if(rotateY) {cube.rotateY(rotateY*Math.PI/180);}
+        if(rotateZ) {cube.rotateZ(rotateZ*Math.PI/180);}
         cube.name = this.cubeOptions.key + "(" + x + "," + y + "," + z + ")";
         return cube;
     }

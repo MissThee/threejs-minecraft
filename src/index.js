@@ -10,6 +10,7 @@ import {initCamera} from "./utils/basic/Camera";
 import {initRenderer} from "./utils/basic/Renderer";
 import {initControls} from "./utils/controls/ControlBuilder";
 import DefaultCube from "./utils/objects/cube/DefaultCube";
+import GlobalSetting from "./utils/setting/GlobalSetting";
 
 if (!WEBGL.isWebGLAvailable()) {
     document.body.appendChild(WEBGL.getWebGLErrorMessage());
@@ -43,10 +44,9 @@ let objects = [];
 let controls = initControls("MCFirstPersonControl", scene, camera, renderer, objects);
 //------------------------------------初始化基本对象-结束------------------------------------------------
 //-----------以下为物体添加代码---------------------------------------------------------------
-import * as AddXYZLing from './utils/objects/AddXYZLine';
-import GlobalSetting from "./utils/setting/GlobalSetting";
+// import * as AddXYZLing from './utils/objects/AddXYZLine';
 
-AddXYZLing.buildXYZLine(scene);
+// AddXYZLing.buildXYZLine(scene);
 
 let lightOption = {
     current: lightCurrentIntensity,
@@ -134,11 +134,12 @@ function changeLight() {
             testBlock.push([4, 2, -4]);
             testBlock.push([0, 1, -5]);
         }
-        testBlock.push([10, 1, 0, DefaultCube.cobblestone]);
-        testBlock.push([10, 1, -2, DefaultCube.cobblestone_mossy]);
-        testBlock.push([10, 1, -4, DefaultCube.stone]);
-        testBlock.push([10, 1, -6, DefaultCube.stone_slab]);
-        testBlock.push([10, 1, -8, DefaultCube.planks_birch]);
+
+        let zValue = -10;
+        for (let cubeType of Object.values(DefaultCube)) {
+            testBlock.push([8, 1, zValue++, cubeType, 90]);
+        }
+
         testBlock.push([0, 10, 0, DefaultCube.grass]);
         // //填满
         // for (let x = -10; x < 10; x++) {
@@ -164,7 +165,7 @@ function changeLight() {
         //     }
         // }
         for (let cubeInfo of testBlock) {
-            let cube = cubeFactory.buildCube(cubeInfo[0], cubeInfo[1], cubeInfo[2], cubeInfo[3]);
+            let cube = cubeFactory.buildCube(...cubeInfo);
             scene.add(cube);
             objects.push(cube);
         }

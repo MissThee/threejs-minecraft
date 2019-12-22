@@ -137,8 +137,9 @@ function changeLight() {
 
         let zValue = -10;
         for (let cubeType of Object.values(DefaultCube)) {
-            testBlock.push([8, 1, zValue++, cubeType, 90]);
+            testBlock.push([8, 1, zValue++, cubeType, 0, 0, 90]);
         }
+        testBlock.push([0, 3, 0, DefaultCube.test]);
 
         testBlock.push([0, 10, 0, DefaultCube.grass]);
         // //填满

@@ -1,5 +1,6 @@
 //预设方块信息
 import * as THREE from 'three'
+
 export default {
     grass: {
         key: 'grass',
@@ -13,7 +14,51 @@ export default {
         materialParametersForOneList: [
             {},
             {color: 0xB1FB6C},
-        ]
+        ],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+    },
+    test: {
+        key: 'test',
+        images: [
+            './assets/img/1.png',
+            './assets/img/2.png',
+            './assets/img/3.png',
+            './assets/img/4.png',
+            './assets/img/5.png',
+            './assets/img/6.png',
+        ],
+        imageSet: [0, 1, 2, 3, 4, 5],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        }
+    },
+    dirt: {
+        key: 'dirt',
+        images: [
+            './assets/img/blocks/dirt.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        }
     },
     // Cloud: {
     //     key: 'Cloud',
@@ -35,7 +80,14 @@ export default {
         ],
         imageSet: [0, 0, 0, 0, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        }
     },
     cobblestone_mossy: {
         key: 'cobblestone_mossy',
@@ -44,7 +96,14 @@ export default {
         ],
         imageSet: [0, 0, 0, 0, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        }
     },
     stone: {
         key: 'Stone',
@@ -53,7 +112,14 @@ export default {
         ],
         imageSet: [0, 0, 0, 0, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        }
     },
     stone_slab: {
         key: 'stone_slab',
@@ -63,7 +129,14 @@ export default {
         ],
         imageSet: [0, 0, 1, 1, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        }
     },
     planks_birch: {
         key: 'planks_birch',
@@ -72,7 +145,14 @@ export default {
         ],
         imageSet: [0, 0, 0, 0, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        }
     },
     // reeds: {
     //     key: 'reeds',
@@ -95,7 +175,14 @@ export default {
         ],
         imageSet: [0, 0, 1, 1, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        }
     },
     leaves_acacia: {
         key: 'leaves_acacia',
@@ -107,7 +194,7 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
     leaves_acacia_opaque: {
         key: 'leaves_acacia_opaque',
@@ -118,7 +205,7 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
 
     log_birch: {
@@ -129,7 +216,14 @@ export default {
         ],
         imageSet: [0, 0, 1, 1, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        }
     },
     leaves_birch: {
         key: 'leaves_birch',
@@ -141,7 +235,7 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
     leaves_birch_opaque: {
         key: 'leaves_birch_opaque',
@@ -152,7 +246,7 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
 
     log_jungle: {
@@ -163,7 +257,14 @@ export default {
         ],
         imageSet: [0, 0, 1, 1, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        }
     },
     leaves_jungle: {
         key: 'leaves_jungle',
@@ -175,7 +276,7 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
     leaves_jungle_opaque: {
         key: 'leaves_jungle_opaque',
@@ -186,7 +287,7 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
 
     log_oak: {
@@ -197,7 +298,14 @@ export default {
         ],
         imageSet: [0, 0, 1, 1, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        }
     },
     leaves_oak: {
         key: 'leaves_oak',
@@ -209,7 +317,7 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
     leaves_oak_opaque: {
         key: 'leaves_oak_opaque',
@@ -220,7 +328,7 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
 
     log_spruce: {
@@ -231,7 +339,14 @@ export default {
         ],
         imageSet: [0, 0, 1, 1, 0, 0],
         materialParameters: {},
-        materialParametersForOneList:[]
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        }
     },
     leaves_spruce: {
         key: 'leaves_spruce',
@@ -243,7 +358,7 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
     leaves_spruce_opaque: {
         key: 'leaves_spruce_opaque',
@@ -254,6 +369,6 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList:[]
+        materialParametersForOneList: []
     },
 }

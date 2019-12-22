@@ -2,6 +2,7 @@ import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockContro
 import CubeFactory from "../objects/cube/CubeFactory";
 import * as THREE from 'three';
 import DefaultCube from '../objects/cube/DefaultCube'
+import {Vector3} from "three";
 
 export default class MCFirstPersonControl {
 
@@ -461,14 +462,15 @@ export default class MCFirstPersonControl {
                     && clickedObjects[0].object && clickedObjects[0].object.position
                 ) {
                     let normal = clickedObjects[0].face.normal;
-                    let position = clickedObjects[0].object.position;
                     let rotate = clickedObjects[0].object.rotation;
+                    let position = clickedObjects[0].object.position;
                     // console.log(normal.x, normal.y, normal.z, position.x, position.y, position.z)
 
-                    let newPositionVector=new THREE.Vector3(normal.x,normal.y,normal.z);
-                    newPositionVector=newPositionVector.applyAxisAngle(new THREE.Vector3(1,0,0),rotate.x);
-                    newPositionVector=newPositionVector.applyAxisAngle(new THREE.Vector3(0,1,0),rotate.y);
-                    newPositionVector=newPositionVector.applyAxisAngle(new THREE.Vector3(0,0,1),rotate.z);
+                    let newPositionVector = new THREE.Vector3(normal.x, normal.y, normal.z);
+                    newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 0, 1), rotate.z);
+                    newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotate.y);
+                    newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(1, 0, 0), rotate.x);
+                    newPositionVector.round();
                     let newPosition = {
                         x: newPositionVector.x + position.x - 0.5,
                         y: newPositionVector.y + position.y - 0.5,
@@ -476,14 +478,46 @@ export default class MCFirstPersonControl {
                     };
                     if (event.button === 2) {//添加方块 右键
                         //TODO 添加方块代码独立，方块不能添加到人物所站的地方
+                        let newDirectionRotate = {
+                            x: 0,
+                            y: 0,
+                            z: 0,
+                        };
+                        {//放置 转向
+                            let newDirection;
+                            let worldDirection = this.camera.getWorldDirection();
+                            if (Math.abs(worldDirection.x) >= Math.abs(worldDirection.z)) {
+                                newDirection = new Vector3(-worldDirection.x, 0, 0)
+                            } else {
+                                newDirection = new Vector3(0, 0, -worldDirection.z)
+                            }
+                            newDirection.normalize().round();
+                            if (Math.abs(worldDirection.y) >= 0.5) {
+                                newDirection.y = worldDirection.y > 0 ? 1 : -1
+                            }
+                            //水平旋转
+                            if (newDirection.x === 1) {
+                                newDirectionRotate.y = 0;
+                            } else if (newDirection.x === -1) {
+                                newDirectionRotate.y = 180;
+                            } else if (newDirection.z === 1) {
+                                newDirectionRotate.y = -90;
+                            } else if (newDirection.z === -1) {
+                                newDirectionRotate.y = 90;
+                            }
+                            //垂直旋转
+                            if (newDirection.y !== 0) {
+                                newDirectionRotate.z = newDirection.y > 0 ? -90 : 90;
+                            }
+                            newDirectionRotate.z += 90;//放置时方块顶部面冲玩家
+                        }
                         let cubeFactory = new CubeFactory(DefaultCube.grass);
-                        console.log('放置??', this.currentCubeTypeIndex);
-                        let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z, DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]);
+                        let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z, DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]], 0, newDirectionRotate.y, newDirectionRotate.z);
                         this.scene.add(cube);
                         this.objects.push(cube)
                     } else if (event.button === 0) {//删除方块 左键
                         //TODO 改为长按同一方块时才删除
-                        console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name));
+                        // console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name));
                         let index = this.objects.findIndex(e => e.id === clickedObjects[0].object.id);
                         if (index >= 0) {
                             this.objects.splice(index, 1);

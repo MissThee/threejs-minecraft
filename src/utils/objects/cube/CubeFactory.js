@@ -78,19 +78,25 @@ export default class CubeFactory {
         x = x || 0;
         y = y || 0;
         z = z || 0;
-        let cube = new THREE.Mesh(
+        let mesh = new THREE.Mesh(
             this._geometry,
             this._materials
             // new THREE.MeshLambertMaterial({color: 0x00cc00})
         );
-        cube.receiveShadow = cube.castShadow = GlobalSetting.enableShadow;
-        cube.position.x = x + this._cubeSize / 2;
-        cube.position.y = y + this._cubeSize / 2;
-        cube.position.z = z + this._cubeSize / 2;
-        if(rotateX) {cube.rotateX(rotateX*Math.PI/180);}
-        if(rotateY) {cube.rotateY(rotateY*Math.PI/180);}
-        if(rotateZ) {cube.rotateZ(rotateZ*Math.PI/180);}
-        cube.name = this.cubeOptions.key + "(" + x + "," + y + "," + z + ")";
-        return cube;
+        mesh.receiveShadow = mesh.castShadow = GlobalSetting.enableShadow;
+        mesh.position.x = x + this._cubeSize / 2;
+        mesh.position.y = y + this._cubeSize / 2;
+        mesh.position.z = z + this._cubeSize / 2;
+        if (rotateX && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.x)) {
+            mesh.rotateX(rotateX * Math.PI / 180);
+        }
+        if (rotateY && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.y)) {
+            mesh.rotateY(rotateY * Math.PI / 180);
+        }
+        if (rotateZ && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.z)) {
+            mesh.rotateZ(rotateZ * Math.PI / 180);
+        }
+        mesh.name = this.cubeOptions.key + "(" + x + "," + y + "," + z + ")";
+        return mesh;
     }
 }

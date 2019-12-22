@@ -138,6 +138,22 @@ export default {
             }
         }
     },
+    brick: {
+        key: 'brick',
+        images: [
+            './assets/img/blocks/brick.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        }
+    },
     planks_birch: {
         key: 'planks_birch',
         images: [
@@ -148,9 +164,73 @@ export default {
         materialParametersForOneList: [],
         meshParameters: {
             rotateEnable: {
-                x: true,
+                x: false,
                 y: true,
-                z: true,
+                z: false,
+            }
+        }
+    },
+    planks_acacia: {
+        key: 'planks_acacia',
+        images: [
+            './assets/img/blocks/planks_acacia.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        }
+    },
+    planks_jungle: {
+        key: 'planks_jungle',
+        images: [
+            './assets/img/blocks/planks_jungle.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        }
+    },
+    planks_oak: {
+        key: 'planks_oak',
+        images: [
+            './assets/img/blocks/planks_oak.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        }
+    },
+    planks_spruce: {
+        key: 'planks_spruce',
+        images: [
+            './assets/img/blocks/planks_spruce.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
             }
         }
     },
@@ -370,5 +450,88 @@ export default {
             color: 0x89B95C,
         },
         materialParametersForOneList: []
+    },
+    glass: {
+        key: 'glass',
+        images: [
+            './assets/img/blocks/glass.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: []
+    },
+    // ice: {
+    //     key: 'ice',
+    //     images: [
+    //         './assets/img/blocks/ice.png',
+    //     ],
+    //     imageSet: [0, 0, 0, 0, 0, 0],
+    //     materialParameters: {
+    //         transparent:true
+    //     },
+    //     materialParametersForOneList: [
+    //     ],
+    //     meshParameters: {
+    //         rotateEnable: {
+    //             x: false,
+    //             y: false,
+    //             z: false,
+    //         }
+    //     },
+    // },
+    melon: {
+        key: 'melon',
+        images: [
+            './assets/img/blocks/melon_side.png',
+            './assets/img/blocks/melon_top.png',
+        ],
+        imageSet: [0, 0, 1, 1, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+    },
+    pumpkin_face_off: {
+        key: 'pumpkin_face_off',
+        images: [
+            './assets/img/blocks/pumpkin_side.png',
+            './assets/img/blocks/pumpkin_face_off.png',
+            './assets/img/blocks/pumpkin_top.png',
+        ],
+        imageSet: [1, 0, 2, 2, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+    },
+    pumpkin_face_on: {
+        key: 'pumpkin_face_on',
+        images: [
+            './assets/img/blocks/pumpkin_side.png',
+            './assets/img/blocks/pumpkin_face_on.png',
+            './assets/img/blocks/pumpkin_top.png',
+        ],
+        imageSet: [1, 0, 2, 2, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
     },
 }

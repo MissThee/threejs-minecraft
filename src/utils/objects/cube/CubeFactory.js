@@ -41,11 +41,15 @@ export default class CubeFactory {
         let textureLoader = new THREE.TextureLoader();
         let textureList = [];
         for (let imageUrl of this.cubeOptions.images) {
-            let texture = textureLoader.load(imageUrl);
-            texture.generateMipmaps = true;//生成纹理，用于相关滤镜，根据远近自动调整贴图质量
-            texture.minFilter = THREE.NearestMipMapNearestFilter;//minFilter属性：指定纹理如何缩小。默认值：THREE.LinearMipMapLinearFilter。
-            texture.magFilter = THREE.NearestFilter;//magFilter属性：指定纹理如何放大。THREE.NearestFilter 贴图像素化
-            textureList.push(texture);
+            if (imageUrl === '' || imageUrl === undefined) {
+                textureList.push(undefined);
+            } else {
+                let texture = textureLoader.load(imageUrl);
+                texture.generateMipmaps = true;//生成纹理，用于相关滤镜，根据远近自动调整贴图质量
+                texture.minFilter = THREE.NearestMipMapNearestFilter;//minFilter属性：指定纹理如何缩小。默认值：THREE.LinearMipMapLinearFilter。
+                texture.magFilter = THREE.NearestFilter;//magFilter属性：指定纹理如何放大。THREE.NearestFilter 贴图像素化
+                textureList.push(texture);
+            }
         }
         let materialList = [];
         for (let textureIndex in textureList) {

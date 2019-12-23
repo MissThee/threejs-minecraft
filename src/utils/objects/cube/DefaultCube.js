@@ -501,11 +501,11 @@ export default {
     pumpkin_face_off: {
         key: 'pumpkin_face_off',
         images: [
-            './assets/img/blocks/pumpkin_side.png',
             './assets/img/blocks/pumpkin_face_off.png',
+            './assets/img/blocks/pumpkin_side.png',
             './assets/img/blocks/pumpkin_top.png',
         ],
-        imageSet: [1, 0, 2, 2, 0, 0],
+        imageSet: [0, 1, 2, 2, 1, 1],
         materialParameters: {},
         materialParametersForOneList: [],
         meshParameters: {
@@ -519,12 +519,30 @@ export default {
     pumpkin_face_on: {
         key: 'pumpkin_face_on',
         images: [
-            './assets/img/blocks/pumpkin_side.png',
             './assets/img/blocks/pumpkin_face_on.png',
+            './assets/img/blocks/pumpkin_side.png',
             './assets/img/blocks/pumpkin_top.png',
         ],
-        imageSet: [1, 0, 2, 2, 0, 0],
+        imageSet: [0, 1, 2, 2, 1, 1],
         materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+    },
+    cloud: {
+        key: 'cloud',
+        images: [''],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            color: 0xFFFFFF,
+            transparent: true,//透明
+            opacity: 0.8,//透明度
+        },
         materialParametersForOneList: [],
         meshParameters: {
             rotateEnable: {

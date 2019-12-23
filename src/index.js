@@ -146,7 +146,7 @@ function changeLight() {
             }
         }
 
-        testBlock.push([0, 10, 0, DefaultCube.grass]);
+        testBlock.push([0, 15, 0, DefaultCube.grass]);
         // //填满
         // for (let x = -10; x < 10; x++) {
         //     for (let z = -10; z < 10; z++) {

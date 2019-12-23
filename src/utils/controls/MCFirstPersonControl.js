@@ -13,6 +13,7 @@ export default class MCFirstPersonControl {
         // MCFirstPersonControl._instance;
         // this.controls;
         // this.removeBlockTimer;//移除方块计时
+        // this.previewCube;//预览方块
         this.camera = camera;
         this.objects = objects;
         this.scene = scene;
@@ -192,6 +193,8 @@ export default class MCFirstPersonControl {
         }
         //初始化点击功能
         this.initMouseFunction();
+        //
+        this.initPreviewCube();
     }
 
     update(delta) {
@@ -203,7 +206,7 @@ export default class MCFirstPersonControl {
             this.moveLeft = false;
             this.moveRight = false;
         }
-        //水平方向移动
+        //水平方向移动+碰撞检测
         {
             this.direction.z = Number(this.moveForward) - Number(this.moveBackward);
             this.direction.x = Number(this.moveRight) - Number(this.moveLeft);
@@ -441,12 +444,14 @@ export default class MCFirstPersonControl {
             }
             this.controls.getObject().position.y = nextY;
         }
+        //掉落位置重置
         if (this.controls.getObject().position.y < -500) {
             this.velocity.y = 0;
             this.controls.getObject().position.y = 500;
             this.controls.getObject().position.x = 0;
             this.controls.getObject().position.z = 0;
         }
+        this.updatePreviewCube();
     }
 
     initMouseFunction() {
@@ -485,7 +490,7 @@ export default class MCFirstPersonControl {
                         };
                         {//放置 转向
                             let newDirection;
-                            let worldDirection = this.camera.getWorldDirection();
+                            let worldDirection = this.camera.getWorldDirection(new Vector3(1, 0, 0));
                             if (Math.abs(worldDirection.x) >= Math.abs(worldDirection.z)) {
                                 newDirection = new Vector3(-worldDirection.x, 0, 0)
                             } else {
@@ -511,7 +516,7 @@ export default class MCFirstPersonControl {
                             }
                             newDirectionRotate.z += 90;//放置时方块顶部面冲玩家
                         }
-                        let cubeFactory = new CubeFactory(DefaultCube.grass);
+                        let cubeFactory = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]);
                         let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z, DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]], 0, newDirectionRotate.y, newDirectionRotate.z);
                         this.scene.add(cube);
                         this.objects.push(cube)
@@ -541,7 +546,7 @@ export default class MCFirstPersonControl {
             }
             //滚动滑轮触发scrollFunc方法 //ie 谷歌
             window.onmousewheel = (e) => {
-                console.log('滑轮', this.currentCubeTypeIndex)
+                console.log('滑轮', this.currentCubeTypeIndex);
                 e = e || window.event;
                 if (e.wheelDelta) { //第一步：先判断浏览器IE，谷歌滑轮事件
                     this.changeCurrentCubeTypeIndex(e.wheelDelta < 0);
@@ -550,7 +555,6 @@ export default class MCFirstPersonControl {
                 }
             };
         }
-
     }
 
     changeCurrentCubeTypeIndex(isNext) {
@@ -565,6 +569,43 @@ export default class MCFirstPersonControl {
             }
             this.currentCubeTypeIndex--;
         }
+    }
+
+    getCurrentCubeTypeIndex(plusValue) {
+        let result = this.currentCubeTypeIndex + (plusValue || 0) % Object.keys(DefaultCube).length;
+        if (result >= 0) {
+            return result;
+        } else {
+            return Object.keys(DefaultCube).length - 1 + result
+        }
+    }
+
+    initPreviewCube() {
+        this.previewCube = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]).buildCube(0, 0, 0);
+        this.previewCube.geometry = this.previewCube.geometry.clone();
+        this.previewCube.geometry.scale(0.01, 0.01, 0.01);
+        this.scene.add(this.previewCube);
+    }
+
+    updatePreviewCube() {
+        if (!this.previewCubeRotation) {
+            this.previewCubeRotation = {
+                y: 0,
+            }
+        } else {
+            this.previewCubeRotation.y += Math.PI / 180;
+        }
+
+        this.previewCube.material = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.getCurrentCubeTypeIndex()]])._materials;
+        this.previewCube.position.copy(this.camera.position);
+        this.previewCube.rotation.copy(this.camera.rotation);
+        this.previewCube.position.add(
+            new Vector3(0, -0.065, -0.2)
+                .applyAxisAngle(new Vector3(0, 0, 1), this.camera.rotation.z)
+                .applyAxisAngle(new Vector3(0, 1, 0), this.camera.rotation.y)
+                .applyAxisAngle(new Vector3(1, 0, 0), this.camera.rotation.x)
+        );
+        this.previewCube.rotateY(Math.PI / 4 + this.previewCubeRotation.y)
     }
 }
 

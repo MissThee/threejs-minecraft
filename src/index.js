@@ -139,7 +139,8 @@ function changeLight() {
         let xValue = 8;
         let yValue = 1;
         for (let cubeType of Object.values(DefaultCube)) {
-            testBlock.push([xValue,yValue, zValue++, cubeType, 0, 0]);
+            let idHalfCube = cubeType.cubeAttributes && cubeType.cubeAttributes.isHalfCube;
+            testBlock.push([xValue, idHalfCube ? yValue - 1 / 4 : yValue, zValue++, cubeType]);
             if (zValue === 10) {
                 yValue++;
                 zValue = -10;
@@ -147,31 +148,11 @@ function changeLight() {
         }
 
         testBlock.push([0, 15, 0, DefaultCube.grass]);
-        // //填满
-        // for (let x = -10; x < 10; x++) {
-        //     for (let z = -10; z < 10; z++) {
-        //         for (let y = 1; y <5; y++) {
-        //                 testBlock.push([x, y, z])
-        //         }
-        //     }
-        // }
-        // for (let num = 0; num < 100; num++) {
-        //     let x = Math.round(-Math.random() * 80) + 40;
-        //     let z = Math.round(-Math.random() * 80) + 40;
-        //     let y = Math.round(Math.random() * 80) + 2;
-        //     let xNumMax = Math.round(Math.random() * 8);
-        //     let zNumMax = Math.round(Math.random() * 8);
-        //     let yNumMax = Math.round(Math.random() * 8);
-        //     for (let yNum = 0; yNum < yNumMax; yNum++) {
-        //         for (let xNum = 0; xNum < xNumMax - yNum; xNum++) {
-        //             for (let zNum = 0; zNum < zNumMax - yNum; zNum++) {
-        //                     testBlock.push([x + xNum- yNum, y + yNum, z + zNum- yNum]);
-        //             }
-        //         }
-        //     }
-        // }
+
+
         for (let cubeInfo of testBlock) {
             let cube = cubeFactory.buildCube(...cubeInfo);
+
             scene.add(cube);
             objects.push(cube);
         }

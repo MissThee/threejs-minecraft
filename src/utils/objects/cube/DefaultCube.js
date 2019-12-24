@@ -3,24 +3,29 @@ import * as THREE from 'three'
 
 export default {
     grass: {
-        key: 'grass',
-        images: [
+        key: 'grass',//设置和对象key一样
+        images: [//贴图路径
             './assets/img/blocks/grass_side.png',
             './assets/img/blocks/grass_top.png',
             './assets/img/blocks/dirt.png',
         ],
-        imageSet: [0, 0, 1, 2, 0, 0],
-        materialParameters: {},
-        materialParametersForOneList: [
+        imageSet: [0, 0, 1, 2, 0, 0],//六面贴图使用的images图片下标
+        materialParameters: {},//THREE.MeshXxxMaterial 对象参数，六面都影响
+        materialParametersForOneList: [//THREE.MeshXxxMaterial 对象参数，只影响对应的一个面
             {},
             {color: 0xB1FB6C},
         ],
         meshParameters: {
-            rotateEnable: {
+            rotateEnable: {//放置方块时，旋转辅助参数，是否可在对应轴上旋转
                 x: false,
                 y: false,
                 z: false,
             }
+        },
+        cubeAttributes:{
+            isPenetrable: false,//不能碰撞。false-能踩能撞
+            isIndestructible: false,//不能销毁。false-左键点击能消除
+            isHalfCube: false,//是半砖。false-不是半砖。true-是一个半砖，可以在一个1x1x1内叠加另一个半砖
         },
     },
     test: {
@@ -42,7 +47,12 @@ export default {
                 y: true,
                 z: true,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     dirt: {
         key: 'dirt',
@@ -58,7 +68,12 @@ export default {
                 y: false,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     // Cloud: {
     //     key: 'Cloud',
@@ -87,7 +102,12 @@ export default {
                 y: false,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     cobblestone_mossy: {
         key: 'cobblestone_mossy',
@@ -103,7 +123,12 @@ export default {
                 y: false,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     stone: {
         key: 'Stone',
@@ -119,7 +144,12 @@ export default {
                 y: false,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     stone_slab: {
         key: 'stone_slab',
@@ -136,7 +166,12 @@ export default {
                 y: true,
                 z: true,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     brick: {
         key: 'brick',
@@ -152,7 +187,12 @@ export default {
                 y: true,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     planks_birch: {
         key: 'planks_birch',
@@ -168,7 +208,12 @@ export default {
                 y: true,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     planks_acacia: {
         key: 'planks_acacia',
@@ -184,7 +229,12 @@ export default {
                 y: true,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     planks_jungle: {
         key: 'planks_jungle',
@@ -200,7 +250,12 @@ export default {
                 y: true,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     planks_oak: {
         key: 'planks_oak',
@@ -216,7 +271,12 @@ export default {
                 y: true,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     planks_spruce: {
         key: 'planks_spruce',
@@ -232,7 +292,12 @@ export default {
                 y: true,
                 z: false,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     // reeds: {
     //     key: 'reeds',
@@ -262,7 +327,12 @@ export default {
                 y: true,
                 z: true,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_acacia: {
         key: 'leaves_acacia',
@@ -274,7 +344,12 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_acacia_opaque: {
         key: 'leaves_acacia_opaque',
@@ -285,7 +360,12 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
 
     log_birch: {
@@ -303,7 +383,12 @@ export default {
                 y: true,
                 z: true,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_birch: {
         key: 'leaves_birch',
@@ -315,7 +400,12 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_birch_opaque: {
         key: 'leaves_birch_opaque',
@@ -326,7 +416,12 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
 
     log_jungle: {
@@ -344,7 +439,12 @@ export default {
                 y: true,
                 z: true,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_jungle: {
         key: 'leaves_jungle',
@@ -356,7 +456,12 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_jungle_opaque: {
         key: 'leaves_jungle_opaque',
@@ -367,7 +472,12 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
 
     log_oak: {
@@ -385,7 +495,12 @@ export default {
                 y: true,
                 z: true,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_oak: {
         key: 'leaves_oak',
@@ -397,7 +512,12 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_oak_opaque: {
         key: 'leaves_oak_opaque',
@@ -408,7 +528,12 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
 
     log_spruce: {
@@ -426,7 +551,12 @@ export default {
                 y: true,
                 z: true,
             }
-        }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_spruce: {
         key: 'leaves_spruce',
@@ -438,7 +568,12 @@ export default {
             color: 0x89B95C,
             transparent: true,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     leaves_spruce_opaque: {
         key: 'leaves_spruce_opaque',
@@ -449,7 +584,12 @@ export default {
         materialParameters: {
             color: 0x89B95C,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     glass: {
         key: 'glass',
@@ -460,7 +600,12 @@ export default {
         materialParameters: {
             transparent: true,
         },
-        materialParametersForOneList: []
+        materialParametersForOneList: [],
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     // ice: {
     //     key: 'ice',
@@ -497,6 +642,11 @@ export default {
                 z: false,
             }
         },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     pumpkin_face_off: {
         key: 'pumpkin_face_off',
@@ -514,6 +664,11 @@ export default {
                 y: true,
                 z: false,
             }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
         },
     },
     pumpkin_face_on: {
@@ -533,6 +688,11 @@ export default {
                 z: false,
             }
         },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: false,
+        },
     },
     cloud: {
         key: 'cloud',
@@ -550,6 +710,11 @@ export default {
                 y: true,
                 z: false,
             }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: true,
         },
     },
 }

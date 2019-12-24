@@ -8,8 +8,9 @@ export default class CubeFactory {
         }
         this.cubeOptions = defaultCube;
         this._materials = [];
-        this._materialsMap = [];
+        this._materialsMap = {};
         this._geometry = undefined;
+        this._geometryMap = {};
         this._cubeSize = 1;//方块边长，默认1
         this.initMaterials();
         this.initGeometry();
@@ -20,17 +21,21 @@ export default class CubeFactory {
 
     //初始化形状
     initGeometry() {
+        if (this._geometryMap) {
+            this._geometry = this._geometryMap[this.cubeOptions.key];
+        }
         if (this._geometry) {
             return;
         }
-        this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize)
+
+        let isHalfCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.isHalfCube;
+        this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize / (isHalfCube ? 2 : 1), this._cubeSize);
+
+        this._geometryMap[this.cubeOptions.key] = this._geometry
     }
 
     //初始化材质
     initMaterials() {
-        if (!this.cubeOptions.key) {
-            throw '"key" in cubeType is undefined'
-        }
         if (this._materialsMap) {
             this._materials = this._materialsMap[this.cubeOptions.key];
         }
@@ -75,32 +80,46 @@ export default class CubeFactory {
 
     //构造方块
     buildCube(x, y, z, defaultCube, rotateX, rotateY, rotateZ) {
+        let position = {x: x, y: y, z: z};
+        let rotation = {rotateX: rotateX, rotateY: rotateY, rotateZ: rotateZ};
         if (defaultCube) {
             this.cubeOptions = defaultCube;
+            this.initGeometry();
             this.initMaterials();
         }
-        x = x || 0;
-        y = y || 0;
-        z = z || 0;
+        position.x = position.x || 0;
+        position.y = position.y || 0;
+        position.z = position.z || 0;
         let mesh = new THREE.Mesh(
             this._geometry,
             this._materials
             // new THREE.MeshLambertMaterial({color: 0x00cc00})
         );
         mesh.receiveShadow = mesh.castShadow = GlobalSetting.enableShadow;
-        mesh.position.x = x + this._cubeSize / 2;
-        mesh.position.y = y + this._cubeSize / 2;
-        mesh.position.z = z + this._cubeSize / 2;
-        if (rotateX && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.x)) {
-            mesh.rotateX(rotateX * Math.PI / 180);
+        //新方块中心位置
+        {
+            mesh.position.x = position.x;
+            mesh.position.y = position.y;
+            mesh.position.z = position.z;
+            mesh.userData = {
+                fullCubePosition: {
+                    x: mesh.position.x,
+                    y: mesh.position.y,
+                    z: mesh.position.z,
+                },
+                cubeTypeKey: this.cubeOptions.key,
+            };
         }
-        if (rotateY && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.y)) {
-            mesh.rotateY(rotateY * Math.PI / 180);
+        if (rotation.rotateX && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.x)) {
+            mesh.rotateX(rotation.rotateX * Math.PI / 180);
         }
-        if (rotateZ && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.z)) {
-            mesh.rotateZ(rotateZ * Math.PI / 180);
+        if (rotation.rotateY && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.y)) {
+            mesh.rotateY(rotation.rotateY * Math.PI / 180);
         }
-        mesh.name = this.cubeOptions.key + "(" + x + "," + y + "," + z + ")";
+        if (rotation.rotateZ && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.z)) {
+            mesh.rotateZ(rotation.rotateZ * Math.PI / 180);
+        }
+        mesh.name = this.cubeOptions.key + "(" + position.x + "," + position.y + "," + position.z + ")";
         return mesh;
     }
 }

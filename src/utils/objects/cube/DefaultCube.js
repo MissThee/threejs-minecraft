@@ -89,7 +89,7 @@ export default {
     //     }
     // },
     cobblestone: {
-        key: 'Cobblestone',
+        key: 'cobblestone',
         images: [
             './assets/img/blocks/cobblestone.png',
         ],
@@ -131,7 +131,7 @@ export default {
         },
     },
     stone: {
-        key: 'Stone',
+        key: 'stone',
         images: [
             './assets/img/blocks/stone.png',
         ],
@@ -694,8 +694,8 @@ export default {
             isHalfCube: false,
         },
     },
-    cloud: {
-        key: 'cloud',
+    test_half: {
+        key: 'test_half',
         images: [''],
         imageSet: [0, 0, 0, 0, 0, 0],
         materialParameters: {
@@ -703,6 +703,154 @@ export default {
             transparent: true,//透明
             opacity: 0.8,//透明度
         },
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: true,
+        },
+    },
+    stone_slab_half: {
+        key: 'stone_slab_half',
+        images: [
+            './assets/img/blocks/stone_slab_side.png',
+            './assets/img/blocks/stone_slab_top.png',
+        ],
+        imageSet: [0, 0, 1, 1, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: true,
+        },
+    },
+    brick_half: {
+        key: 'brick_half',
+        images: [
+            './assets/img/blocks/brick.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: true,
+        },
+    },
+    planks_birch_half: {
+        key: 'planks_birch_half',
+        images: [
+            './assets/img/blocks/planks_birch.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: true,
+        },
+    },
+    planks_acacia_half: {
+        key: 'planks_acacia_half',
+        images: [
+            './assets/img/blocks/planks_acacia.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: true,
+        },
+    },
+    planks_jungle_half: {
+        key: 'planks_jungle_half',
+        images: [
+            './assets/img/blocks/planks_jungle.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: true,
+        },
+    },
+    planks_oak_half: {
+        key: 'planks_oak_half',
+        images: [
+            './assets/img/blocks/planks_oak.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            isHalfCube: true,
+        },
+    },
+    planks_spruce_half: {
+        key: 'planks_spruce_half',
+        images: [
+            './assets/img/blocks/planks_spruce.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
         materialParametersForOneList: [],
         meshParameters: {
             rotateEnable: {

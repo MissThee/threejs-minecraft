@@ -517,7 +517,7 @@ export default class MCFirstPersonControl {
                     let position = clickedObjects[0].object.position;
                     let point = clickedObjects[0].point;
 
-                    let targetIsHalfCube = DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.isHalfCube;
+                    let targetIsHalfCube =DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes&& DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.isHalfCube;
                     // this.objects.findIndex(e => e.userData)
                     // console.log(normal.x, normal.y, normal.z, position.x, position.y, position.z)
 

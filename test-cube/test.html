@@ -484,6 +484,7 @@
     function addPlaneGeometry(name) {
         let geometry = new THREE.PlaneGeometry(10, 5, 1, 1);
         let texture = THREE.TextureLoader.prototype.load("img/1.gif");
+
         let material = new THREE.MeshPhysicalMaterial({map: texture, side: THREE.DoubleSide});
         let mesh = new THREE.Mesh(geometry, material);
         mesh.name = name;

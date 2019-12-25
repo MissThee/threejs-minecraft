@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import GlobalSetting from "../../setting/GlobalSetting";
+import {Texture} from "three";
 
 export default class CubeFactory {
     constructor(defaultCube) {
@@ -9,6 +10,7 @@ export default class CubeFactory {
         this.cubeOptions = defaultCube;
         this._materials = [];
         this._materialsMap = {};
+        this._materialsHalfMap = {};
         this._geometry = undefined;
         this._geometryMap = {};
         this._cubeSize = 1;//方块边长，默认1
@@ -45,7 +47,8 @@ export default class CubeFactory {
         this._materials = [];
         let textureLoader = new THREE.TextureLoader();
         let textureList = [];
-        for (let imageUrl of this.cubeOptions.images) {
+        for (let imageUrlIndex in this.cubeOptions.images) {
+            let imageUrl = this.cubeOptions.images[imageUrlIndex]
             if (imageUrl === '' || imageUrl === undefined) {
                 textureList.push(undefined);
             } else {
@@ -59,6 +62,7 @@ export default class CubeFactory {
         let materialList = [];
         for (let textureIndex in textureList) {
             let texture = textureList[textureIndex];
+
             materialList.push(
                 new THREE.MeshLambertMaterial({
                     // color:0x4F9C1A,
@@ -71,8 +75,36 @@ export default class CubeFactory {
                 })
             );
         }
-        for (let key of this.cubeOptions.imageSet) {
-            this._materials.push(materialList[key]);
+        //半高贴图
+        let isHalfCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.isHalfCube;
+
+        for (let keyIndex in this.cubeOptions.imageSet) {
+            let key = this.cubeOptions.imageSet[keyIndex];
+            let materialTmp = materialList[key];
+            if (isHalfCube) {
+                if ("0145".indexOf(keyIndex) >= 0) {
+                    if (!this._materialsHalfMap) {
+                        this._materialsHalfMap = {}
+                    }
+                    if (this._materialsHalfMap[this.cubeOptions.key]) {
+                        console.log("侧面贴图")
+                        materialTmp = this._materialsHalfMap[this.cubeOptions.key];
+                    } else if (materialTmp.map) {
+                        let materialNew = materialTmp.clone();
+                        materialNew.map = materialTmp.map.clone();
+                        let textureNew = textureLoader.load(this.cubeOptions.images[this.cubeOptions.imageSet[keyIndex]]);
+                        textureNew.generateMipmaps = true;
+                        textureNew.minFilter = THREE.NearestMipMapNearestFilter;
+                        textureNew.magFilter = THREE.NearestFilter;
+                        textureNew.wrapS = textureNew.wrapT = THREE.RepeatWrapping;
+                        textureNew.repeat.set(1, 0.5);
+                        materialNew.map = textureNew;
+                        materialTmp = materialNew;
+                        this._materialsHalfMap[this.cubeOptions.key] = materialTmp;
+                    }
+                }
+            }
+            this._materials.push(materialTmp);
         }
         this._materialsMap[this.cubeOptions.key] = this._materials;
     };

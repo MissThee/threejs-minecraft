@@ -132,7 +132,6 @@ function changeLight() {
             testBlock.push([2, 2, -8]);
             testBlock.push([5, 2, -4]);
             testBlock.push([4, 2, -4]);
-            testBlock.push([0, 1, -5]);
         }
 
         let zValue = -10;

@@ -175,7 +175,7 @@ export default class MCFirstPersonControl {
         for (let i = 0; i < 10; i++) {
             this.checkRay.X0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(-1, 0, 0), 0, 0));
         }
-        for (let i = 0; i <10; i++) {
+        for (let i = 0; i < 10; i++) {
             this.checkRay.X1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(1, 0, 0), 0, 0));
         }
         for (let i = 0; i < 10; i++) {
@@ -193,7 +193,7 @@ export default class MCFirstPersonControl {
         }
         //初始化点击功能
         this.initMouseFunction();
-        //
+        //加载预览方块
         this.initPreviewCube();
     }
 
@@ -241,179 +241,88 @@ export default class MCFirstPersonControl {
             this.controls.moveForward(this.velocity.z * delta);
             this.controls.moveRight(this.velocity.x * delta);
 
+            //横向碰撞检测辅助参数
+            const checkPositionOptions = [
+                -(this.personOption.sightHeight - 0.05),
+                -(this.personOption.sightHeight - this.personOption.height / 2),
+                (this.personOption.height - this.personOption.sightHeight - 0.05),
+                -(this.personOption.sightHeight - 0.5),
+                (this.personOption.height - this.personOption.sightHeight - 0.5)
+            ];
+            let rayMove = this.personOption.thickness / 2;
+
             {//z轴碰撞检测
+
                 let Z0Flat = undefined;//z负轴碰撞检测
+                let Z0NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
                         this.checkRay.Z0[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z0[i].ray.origin.x = positionBeforeX;//修正为移动前的x轴位置，防止使用位移后的位置检测墙壁
-                    }
-                    let rayMove = this.personOption.thickness / 2;
-                    this.checkRay.Z0[0].ray.origin.x += rayMove;
-                    this.checkRay.Z0[0].ray.origin.y -= (this.personOption.sightHeight - 0.05);
-                    this.checkRay.Z0[1].ray.origin.x -= rayMove;
-                    this.checkRay.Z0[1].ray.origin.y -= (this.personOption.sightHeight - 0.05);
-
-                    this.checkRay.Z0[2].ray.origin.x += rayMove;
-                    this.checkRay.Z0[2].ray.origin.y -= (this.personOption.sightHeight - this.personOption.height / 2);
-                    this.checkRay.Z0[3].ray.origin.x -= rayMove;
-                    this.checkRay.Z0[3].ray.origin.y -= (this.personOption.sightHeight - this.personOption.height / 2);
-
-                    this.checkRay.Z0[4].ray.origin.x += rayMove;
-                    this.checkRay.Z0[4].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
-                    this.checkRay.Z0[5].ray.origin.x -= rayMove;
-                    this.checkRay.Z0[5].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
-
-                    this.checkRay.Z0[6].ray.origin.z += rayMove;
-                    this.checkRay.Z0[6].ray.origin.y -= (this.personOption.sightHeight-0.5);
-                    this.checkRay.Z0[7].ray.origin.z -= rayMove;
-                    this.checkRay.Z0[7].ray.origin.y -= (this.personOption.sightHeight-0.5);
-
-                    this.checkRay.Z0[8].ray.origin.z += rayMove;
-                    this.checkRay.Z0[8].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.5);
-                    this.checkRay.Z0[9].ray.origin.z -= rayMove;
-                    this.checkRay.Z0[9].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.5);
-
-
-                    for (let i = 0; i < 10; i++) {
+                        this.checkRay.Z0[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
+                        this.checkRay.Z0[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
                         let intersections = this.checkRay.Z0[i].intersectObjects(this.objects);
                         if (intersections.length > 0) {
-                            let Z0NearFlatTmp = intersections[0].point.z;
+                            Z0NearFlatTmp = intersections[0].point.z;
                             Z0Flat = Math.max(Z0Flat === undefined ? Z0NearFlatTmp : Z0Flat, Z0NearFlatTmp);
                         }
                     }
                 }
                 let Z1Flat = undefined;//z正轴碰撞检测
+                let Z1NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
                         this.checkRay.Z1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z1[i].ray.origin.x = positionBeforeX;
-                    }
-                    let rayMove = this.personOption.thickness / 2;
-                    this.checkRay.Z1[0].ray.origin.x += rayMove;
-                    this.checkRay.Z1[0].ray.origin.y -= (this.personOption.sightHeight - 0.05);
-                    this.checkRay.Z1[1].ray.origin.x -= rayMove;
-                    this.checkRay.Z1[1].ray.origin.y -= (this.personOption.sightHeight - 0.05);
-
-                    this.checkRay.Z1[2].ray.origin.x += rayMove;
-                    this.checkRay.Z1[2].ray.origin.y -= (this.personOption.sightHeight - this.personOption.height / 2);
-                    this.checkRay.Z1[3].ray.origin.x -= rayMove;
-                    this.checkRay.Z1[3].ray.origin.y -= (this.personOption.sightHeight - this.personOption.height / 2);
-
-                    this.checkRay.Z1[4].ray.origin.x += rayMove;
-                    this.checkRay.Z1[4].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
-                    this.checkRay.Z1[5].ray.origin.x -= rayMove;
-                    this.checkRay.Z1[5].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
-
-                    this.checkRay.Z0[6].ray.origin.z += rayMove;
-                    this.checkRay.Z0[6].ray.origin.y -= (this.personOption.sightHeight-0.5);
-                    this.checkRay.Z0[7].ray.origin.z -= rayMove;
-                    this.checkRay.Z0[7].ray.origin.y -= (this.personOption.sightHeight-0.5);
-
-                    this.checkRay.Z0[8].ray.origin.z += rayMove;
-                    this.checkRay.Z0[8].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.5);
-                    this.checkRay.Z0[9].ray.origin.z -= rayMove;
-                    this.checkRay.Z0[9].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.5);
-
-                    for (let i = 0; i < 10; i++) {
+                        this.checkRay.Z1[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
+                        this.checkRay.Z1[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
                         let intersections = this.checkRay.Z1[i].intersectObjects(this.objects);
                         if (intersections.length > 0) {
-                            let Z1NearFlatTmp = intersections[0].point.z;
+                            Z1NearFlatTmp = intersections[0].point.z;
                             Z1Flat = Math.min(Z1Flat === undefined ? Z1NearFlatTmp : Z1Flat, Z1NearFlatTmp);
                         }
                     }
                 }
                 let nextZ = this.controls.getObject().position.z;
-                nextZ = Math.max(Z0Flat === undefined ? nextZ : (Z0Flat + this.personOption.thickness / 2 + 0.001), nextZ);
-                nextZ = Math.min(Z1Flat === undefined ? nextZ : (Z1Flat - this.personOption.thickness / 2 - 0.001), nextZ);
+                nextZ = Math.min(Z1Flat === undefined ? nextZ : (Z1Flat - this.personOption.thickness / 2 - 0.01), nextZ);
+                nextZ = Math.max(Z0Flat === undefined ? nextZ : (Z0Flat + this.personOption.thickness / 2 + 0.01), nextZ);
                 this.controls.getObject().position.z = nextZ
             }
 
             {//x轴碰撞检测
                 let X0Flat = undefined;//x负轴碰撞检测
+                let X0NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
                         this.checkRay.X0[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.X0[i].ray.origin.z = positionBeforeZ;
-                    }
-                    let rayMove = this.personOption.thickness / 2;
-                    this.checkRay.X0[0].ray.origin.z += rayMove;
-                    this.checkRay.X0[0].ray.origin.y -= (this.personOption.sightHeight - 0.05);
-                    this.checkRay.X0[1].ray.origin.z -= rayMove;
-                    this.checkRay.X0[1].ray.origin.y -= (this.personOption.sightHeight - 0.05);
-
-                    this.checkRay.X0[2].ray.origin.z += rayMove;
-                    this.checkRay.X0[2].ray.origin.y -= (this.personOption.sightHeight - this.personOption.height / 2);
-                    this.checkRay.X0[3].ray.origin.z -= rayMove;
-                    this.checkRay.X0[3].ray.origin.y -= (this.personOption.sightHeight - this.personOption.height / 2);
-
-                    this.checkRay.X0[4].ray.origin.z += rayMove;
-                    this.checkRay.X0[4].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.051);
-                    this.checkRay.X0[5].ray.origin.z -= rayMove;
-                    this.checkRay.X0[5].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.051);
-
-                    this.checkRay.X0[6].ray.origin.z += rayMove;
-                    this.checkRay.X0[6].ray.origin.y -= (this.personOption.sightHeight-0.5);
-                    this.checkRay.X0[7].ray.origin.z -= rayMove;
-                    this.checkRay.X0[7].ray.origin.y -= (this.personOption.sightHeight-0.5);
-
-                    this.checkRay.X0[8].ray.origin.z += rayMove;
-                    this.checkRay.X0[8].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.5);
-                    this.checkRay.X0[9].ray.origin.z -= rayMove;
-                    this.checkRay.X0[9].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.5);
-
-
-                    for (let i = 0; i < 10; i++) {
+                        this.checkRay.X0[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
+                        this.checkRay.X0[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
                         let intersections = this.checkRay.X0[i].intersectObjects(this.objects);
                         if (intersections.length > 0) {
-                            let X0NearFlatTmp = intersections[0].point.x;
+                            X0NearFlatTmp = intersections[0].point.x;
                             X0Flat = Math.max(X0Flat === undefined ? X0NearFlatTmp : X0Flat, X0NearFlatTmp);
                         }
                     }
                 }
                 let X1Flat = undefined;//x正轴碰撞检测
+                let X1NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
                         this.checkRay.X1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.X1[i].ray.origin.z = positionBeforeZ;
-                    }
-                    let rayMove = this.personOption.thickness / 2;
-                    this.checkRay.X1[0].ray.origin.z += rayMove;
-                    this.checkRay.X1[0].ray.origin.y -= (this.personOption.sightHeight - 0.05);
-                    this.checkRay.X1[1].ray.origin.z -= rayMove;
-                    this.checkRay.X1[1].ray.origin.y -= (this.personOption.sightHeight - 0.05);
-
-                    this.checkRay.X1[2].ray.origin.z += rayMove;
-                    this.checkRay.X1[2].ray.origin.y -= (this.personOption.sightHeight - this.personOption.height / 2);
-                    this.checkRay.X1[3].ray.origin.z -= rayMove;
-                    this.checkRay.X1[3].ray.origin.y -= (this.personOption.sightHeight - this.personOption.height / 2);
-
-                    this.checkRay.X1[4].ray.origin.z += rayMove;
-                    this.checkRay.X1[4].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
-                    this.checkRay.X1[5].ray.origin.z -= rayMove;
-                    this.checkRay.X1[5].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.05);
-
-                    this.checkRay.X0[6].ray.origin.z += rayMove;
-                    this.checkRay.X0[6].ray.origin.y -= (this.personOption.sightHeight-0.5);
-                    this.checkRay.X0[7].ray.origin.z -= rayMove;
-                    this.checkRay.X0[7].ray.origin.y -= (this.personOption.sightHeight-0.5);
-
-                    this.checkRay.X0[8].ray.origin.z += rayMove;
-                    this.checkRay.X0[8].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.5);
-                    this.checkRay.X0[9].ray.origin.z -= rayMove;
-                    this.checkRay.X0[9].ray.origin.y += (this.personOption.height - this.personOption.sightHeight - 0.5);
-
-                    for (let i = 0; i < 10; i++) {
+                        this.checkRay.X1[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
+                        this.checkRay.X1[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
                         let intersections = this.checkRay.X1[i].intersectObjects(this.objects);
                         if (intersections.length > 0) {
-                            let X1NearFlatTmp = intersections[0].point.x;
+                            X1NearFlatTmp = intersections[0].point.x;
                             X1Flat = Math.min(X1Flat === undefined ? X1NearFlatTmp : X1Flat, X1NearFlatTmp);
                         }
                     }
                 }
                 let nextX = this.controls.getObject().position.x;
-                nextX = Math.max(X0Flat === undefined ? nextX : (X0Flat + this.personOption.thickness / 2 + 0.001), nextX);
-                nextX = Math.min(X1Flat === undefined ? nextX : (X1Flat - this.personOption.thickness / 2 - 0.001), nextX);
+                nextX = Math.max(X0Flat === undefined ? nextX : (X0Flat + this.personOption.thickness / 2 + 0.01), nextX);
+                nextX = Math.min(X1Flat === undefined ? nextX : (X1Flat - this.personOption.thickness / 2 - 0.01), nextX);
                 this.controls.getObject().position.x = nextX
                 // console.log(Z0Flat,Z1Flat,X0Flat,X1Flat)
             }
@@ -450,7 +359,7 @@ export default class MCFirstPersonControl {
                 for (let i = 0; i < 4; i++) {
                     this.checkRay.Y1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                 }
-                let rayMove = this.personOption.thickness / 2 - 0.01;
+                let rayMove = this.personOption.thickness / 2 - 0.001;
                 this.checkRay.Y1[0].ray.origin.x += rayMove;
                 this.checkRay.Y1[0].ray.origin.z -= rayMove;
                 this.checkRay.Y1[1].ray.origin.x += rayMove;
@@ -517,7 +426,8 @@ export default class MCFirstPersonControl {
                     let position = clickedObjects[0].object.position;
                     let point = clickedObjects[0].point;
 
-                    let targetIsHalfCube =DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes&& DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.isHalfCube;
+                    let targetIsHalfCube = DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes && DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.isHalfCube;
+                    let newIsHalfCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.isHalfCube;
                     // this.objects.findIndex(e => e.userData)
                     // console.log(normal.x, normal.y, normal.z, position.x, position.y, position.z)
 
@@ -529,7 +439,6 @@ export default class MCFirstPersonControl {
 
                     let yMove = newPositionVector.y;
                     {
-                        let newIsHalfCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.isHalfCube;
                         if (targetIsHalfCube) {
                             if (newIsHalfCube) {
                                 if (newPositionVector.y !== 0) {
@@ -565,6 +474,10 @@ export default class MCFirstPersonControl {
                         y: position.y + yMove,
                         z: position.z + newPositionVector.z,
                     };
+
+                    if (!newIsHalfCube && checkPositionIsExistBlock(newPosition, this.objects)) {
+                        return;
+                    }
                     if (event.button === 2) {//添加方块 右键
                         //TODO 添加方块代码独立，方块不能添加到人物所站的地方
                         let newDirectionRotate = {
@@ -743,6 +656,18 @@ function getClickedObject(objects, camera) {
     return raycaster.intersectObjects(objects);
 }
 
-
+//检测新方块要放的位置是否已经有放快了
+function checkPositionIsExistBlock(position, positionArray) {
+    for (let positionTmp of positionArray) {
+        if (Math.round(positionTmp.position.x) === Math.round(position.x)
+            &&
+            Math.round(positionTmp.position.y) === Math.round(position.y)
+            &&
+            Math.round(positionTmp.position.z) === Math.round(position.z)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 

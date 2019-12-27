@@ -19,12 +19,77 @@
             height: 100%;
             width: 100%;
         }
+
+        .github-corner {
+            width: 50px;
+            height: 50px;
+            transform: rotate(90deg);
+        }
+
+        .github-corner svg {
+            transform: rotate(90deg);
+        }
+
+        .github-corner:hover .octo-arm {
+            animation: octocat-wave 560ms ease-in-out
+        }
+
+        @keyframes octocat-wave {
+            0%, 100% {
+                transform: rotate(0)
+            }
+            20%, 60% {
+                transform: rotate(-25deg)
+            }
+            40%, 80% {
+                transform: rotate(10deg)
+            }
+        }
+
+        @media (max-width: 500px) {
+            .github-corner:hover .octo-arm {
+                animation: none
+            }
+
+            .github-corner .octo-arm {
+                animation: octocat-wave 560ms ease-in-out
+            }
+        }
     </style>
-<!--    <script src="https://unpkg.com/three@0.111.0/build/three.js"></script>-->
-<!--    <script src="https://unpkg.com/stats-js@1.0.1/build/stats.min.js"></script>-->
-<!--    <script src="https://unpkg.com/@tweenjs/tween.js@18.5.0/dist/tween.umd.js"></script>-->
 </head>
 <body>
+<script>
+    (function () {
+        var explorer = window.navigator.userAgent,
+            compare = function (s) {
+                return (explorer.indexOf(s) >= 0);
+            },
+            ie11 = (function () {
+                return ("ActiveXObject" in window)
+            })();
+        if (compare("MSIE") || ie11) {
+            let divEl = document.createElement('div');
+            divEl.style.position = "absolute";
+            divEl.style.top = "35%";
+            divEl.style.width = "100%";
+            divEl.style.zIndex = "1000";
+            divEl.style.textAlign = 'center';
+            divEl.style.fontWeight = 'bold';
+            divEl.style.color = 'gray';
+            divEl.style.fontSize = '1em';
+            let spanEl1 = document.createElement('span');
+            spanEl1.style.fontSize = '1.5em';
+            spanEl1.innerText = "不要用IE或浏览器的兼容模式 :(";
+            let spanEl2 = document.createElement('span');
+            spanEl2.innerText = "IE or browser compatibility mode is not OK :(";
+            divEl.appendChild(spanEl1);
+            divEl.appendChild(document.createElement('br'));
+            divEl.appendChild(spanEl2);
+            document.body.appendChild(divEl);
+            throw "unsupport browser";
+        }
+    })();
+</script>
 <div id="canvas-frame" style="height: 100%;width: 100%;cursor: pointer;"></div>
 <a href="https://github.com/MissThee/threejs-minecraft" target="_blank" class="github-corner" style="position: absolute;top:0;right: 0;z-index: 999;" title="前往github" aria-label="View source on GitHub">
     <svg width="50" height="50" viewBox="0 0 250 250" style="fill:#CCCCCC; color:#fff; position: absolute; top: 0; border: 0; left: 0; transform: scale(-1, 1);" aria-hidden="true">
@@ -35,41 +100,4 @@
     </svg>
 </a>
 </body>
-<style>
-    .github-corner {
-        width: 50px;
-        height: 50px;
-        transform: rotate(90deg);
-    }
-
-    .github-corner svg {
-        transform: rotate(90deg);
-    }
-
-    .github-corner:hover .octo-arm {
-        animation: octocat-wave 560ms ease-in-out
-    }
-
-    @keyframes octocat-wave {
-        0%, 100% {
-            transform: rotate(0)
-        }
-        20%, 60% {
-            transform: rotate(-25deg)
-        }
-        40%, 80% {
-            transform: rotate(10deg)
-        }
-    }
-
-    @media (max-width: 500px) {
-        .github-corner:hover .octo-arm {
-            animation: none
-        }
-
-        .github-corner .octo-arm {
-            animation: octocat-wave 560ms ease-in-out
-        }
-    }
-</style>
 </html>

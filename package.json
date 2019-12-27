@@ -26,6 +26,8 @@
   "homepage": "https://github.com/MissThee/threejs-minecraft#readme",
   "dependencies": {
     "@tweenjs/tween.js": "^18.5.0",
+    "babel-polyfill": "^6.26.0",
+    "current-device": "^0.10.0",
     "stats-js": "^1.0.1",
     "three": "^0.111.0"
   },

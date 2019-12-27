@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import GlobalSetting from "../../setting/GlobalSetting";
-import {Texture} from "three";
 
 export default class CubeFactory {
     constructor(defaultCube) {
@@ -13,7 +12,7 @@ export default class CubeFactory {
         this._materialsHalfMap = {};
         this._geometry = undefined;
         this._geometryMap = {};
-        this._cubeSize = 1;//方块边长，默认1
+        this._cubeSize = 1;//方块边长，只能为1
         this.initMaterials();
         this.initGeometry();
         CubeFactory._instanceObj = {

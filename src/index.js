@@ -11,9 +11,57 @@ import {initRenderer} from "./utils/basic/Renderer";
 import {initControls} from "./utils/controls/ControlBuilder";
 import DefaultCube from "./utils/objects/cube/DefaultCube";
 import GlobalSetting from "./utils/setting/GlobalSetting";
+import device from "current-device";
+// 检查设备
+if (device.type === 'mobile') {
+    let divEl = document.createElement('div');
+    divEl.style.position = "absolute";
+    divEl.style.top = "35%";
+    divEl.style.width = "100%";
+    divEl.style.zIndex = "1000";
+    divEl.style.textAlign = 'center';
+    divEl.style.fontWeight = 'bold';
+    divEl.style.color = 'gray';
+    divEl.style.fontSize = '1em';
+    let spanEl1 = document.createElement('span');
+    spanEl1.style.fontSize = '1.5em';
+    spanEl1.innerText = "手机不可以 :(";
+    let spanEl2 = document.createElement('span');
+    spanEl2.innerText = "Cell phone is not OK :(";
+    let spanEl3 = document.createElement('span');
+    spanEl3.style.fontSize = '1.5em';
+    spanEl3.innerText = "还是用电脑试试吧 :)";
+    let spanEl4 = document.createElement('span');
+    spanEl4.innerText = "Let's try it with computer :)";
+    divEl.append(spanEl1, document.createElement('br'), spanEl2, document.createElement('br'), spanEl3, document.createElement('br'), spanEl4);
+    document.body.appendChild(divEl);
+    throw "unsupport platform";
+}
 
 if (!WEBGL.isWebGLAvailable()) {
+    let divEl = document.createElement('div');
+    divEl.style.position = "absolute";
+    divEl.style.top = "35%";
+    divEl.style.width = "100%";
+    divEl.style.zIndex = "1000";
+    divEl.style.textAlign = 'center';
+    divEl.style.fontWeight = 'bold';
+    divEl.style.color = 'gray';
+    divEl.style.fontSize = '1em';
+    let spanEl1 = document.createElement('span');
+    spanEl1.style.fontSize = '1.5em';
+    spanEl1.innerText = "这个浏览器不太行 :(";
+    let spanEl2 = document.createElement('span');
+    spanEl2.innerText = "This browser doesn't work well :(";
+    let spanEl3 = document.createElement('span');
+    spanEl3.style.fontSize = '1.5em';
+    spanEl3.innerText = "还是用流行的浏览器试试吧 :)";
+    let spanEl4 = document.createElement('span');
+    spanEl4.innerText = "Let's try it with a popular browser :)";
+    divEl.append(spanEl1, document.createElement('br'), spanEl2, document.createElement('br'), spanEl3, document.createElement('br'), spanEl4);
+    document.body.appendChild(divEl);
     document.body.appendChild(WEBGL.getWebGLErrorMessage());
+    throw "unsupport browser";
 }
 //------------------------------------初始化基本对象-结束------------------------------------------------
 let canvasEL = document.getElementById("canvas-frame");
@@ -44,10 +92,6 @@ let objects = [];
 let controls = initControls("MCFirstPersonControl", scene, camera, renderer, objects);
 //------------------------------------初始化基本对象-结束------------------------------------------------
 //-----------以下为物体添加代码---------------------------------------------------------------
-// import * as AddXYZLing from './utils/objects/AddXYZLine';
-
-// AddXYZLing.buildXYZLine(scene);
-
 let lightOption = {
     current: lightCurrentIntensity,
     low: lightLowIntensity,

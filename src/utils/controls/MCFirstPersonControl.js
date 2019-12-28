@@ -522,7 +522,7 @@ export default class MCFirstPersonControl {
                             newDirectionRotate.z += 90;//放置时方块顶部面冲玩家
                         }
                         if (newIsStairsCube) {
-                            newDirectionRotate.z = 0;
+                            newDirectionRotate.z -= 90;
                         }
                         let cubeFactory = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]);
                         let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z, DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]], 0, newDirectionRotate.y, newDirectionRotate.z);

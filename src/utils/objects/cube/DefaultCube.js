@@ -25,7 +25,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,//不能碰撞。false-能踩能撞
             isIndestructible: false,//不能销毁。false-左键点击能消除
-            isHalfCube: false,//是半砖。false-不是半砖。true-是一个半砖，可以在一个1x1x1内叠加另一个半砖
+            geometryType:'cube',//是半砖。cube-砖。halfCube-半砖，可以在一个1x1x1内叠加另一个半砖
         },
     },
     test: {
@@ -51,7 +51,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     dirt: {
@@ -72,7 +72,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     // Cloud: {
@@ -106,7 +106,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     cobblestone_mossy: {
@@ -127,7 +127,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     stone: {
@@ -148,7 +148,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     stone_slab: {
@@ -170,7 +170,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     brick: {
@@ -191,7 +191,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     planks_birch: {
@@ -212,7 +212,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     planks_acacia: {
@@ -233,7 +233,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     planks_jungle: {
@@ -254,7 +254,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     planks_oak: {
@@ -275,7 +275,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     planks_spruce: {
@@ -296,7 +296,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     // reeds: {
@@ -331,7 +331,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_acacia: {
@@ -348,7 +348,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_acacia_opaque: {
@@ -364,7 +364,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
 
@@ -387,7 +387,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_birch: {
@@ -404,7 +404,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_birch_opaque: {
@@ -420,7 +420,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
 
@@ -443,7 +443,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_jungle: {
@@ -460,7 +460,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_jungle_opaque: {
@@ -476,7 +476,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
 
@@ -499,7 +499,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_oak: {
@@ -516,7 +516,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_oak_opaque: {
@@ -532,7 +532,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
 
@@ -555,7 +555,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_spruce: {
@@ -572,7 +572,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     leaves_spruce_opaque: {
@@ -588,7 +588,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     glass: {
@@ -604,7 +604,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     // ice: {
@@ -645,7 +645,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     pumpkin_face_off: {
@@ -668,7 +668,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     pumpkin_face_on: {
@@ -691,7 +691,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: false,
+            geometryType:'cube',
         },
     },
     test_half: {
@@ -714,7 +714,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: true,
+            geometryType:'halfCube',
         },
     },
     stone_slab_half: {
@@ -736,7 +736,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: true,
+            geometryType:'halfCube',
         },
     },
     brick_half: {
@@ -757,7 +757,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: true,
+            geometryType:'halfCube',
         },
     },
     planks_birch_half: {
@@ -778,7 +778,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: true,
+            geometryType:'halfCube',
         },
     },
     planks_acacia_half: {
@@ -799,7 +799,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: true,
+            geometryType:'halfCube',
         },
     },
     planks_jungle_half: {
@@ -820,7 +820,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: true,
+            geometryType:'halfCube',
         },
     },
     planks_oak_half: {
@@ -841,7 +841,7 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: true,
+            geometryType:'halfCube',
         },
     },
     planks_spruce_half: {
@@ -862,7 +862,218 @@ export default {
         cubeAttributes:{
             isPenetrable: false,
             isIndestructible: false,
-            isHalfCube: true,
+            geometryType:'halfCube',
+        },
+    },
+    cobblestone_stairs: {
+        key: 'cobblestone_stairs',
+        images: [
+            './assets/img/blocks/cobblestone.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    cobblestone_mossy_stairs: {
+        key: 'cobblestone_mossy_stairs',
+        images: [
+            './assets/img/blocks/cobblestone_mossy.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    stone_stairs: {
+        key: 'stone_stairs',
+        images: [
+            './assets/img/blocks/stone.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    stone_slab_stairs: {
+        key: 'stone_slab_stairs',
+        images: [
+            './assets/img/blocks/stone_slab_side.png',
+            './assets/img/blocks/stone_slab_top.png',
+        ],
+        imageSet: [0, 0, 1, 1, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    brick_stairs: {
+        key: 'brick_stairs',
+        images: [
+            './assets/img/blocks/brick.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    planks_birch_stairs: {
+        key: 'planks_birch_stairs',
+        images: [
+            './assets/img/blocks/planks_birch.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    planks_acacia_stairs: {
+        key: 'planks_acacia_stairs',
+        images: [
+            './assets/img/blocks/planks_acacia.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    planks_jungle_stairs: {
+        key: 'planks_jungle_stairs',
+        images: [
+            './assets/img/blocks/planks_jungle.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    planks_oak_stairs: {
+        key: 'planks_oak_stairs',
+        images: [
+            './assets/img/blocks/planks_oak.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
+        },
+    },
+    planks_spruce_stairs: {
+        key: 'planks_spruce_stairs',
+        images: [
+            './assets/img/blocks/planks_spruce.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes:{
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType:'stairsCube',
         },
     },
 }

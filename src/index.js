@@ -3,15 +3,18 @@ import {WEBGL} from "three/examples/jsm/WebGL.js";
 // import TWEEN from "@tweenjs/tween.js";//动作库
 import CubeFactory from "./utils/objects/cube/CubeFactory.js";
 import StatsWindow from "./utils/stats/StatsWindow.js";
-import {initAmbientLight, getAmbientLightIntensity, lightHighIntensity, lightLowIntensity, lightCurrentIntensity, lightValueBecomeHigher, initDirectionalLight, getDirectionalLightIntensity, initDirectionalLight1} from "./utils/basic/Light";
+import {initAmbientLight, getAmbientLightIntensity, lightHighIntensity, lightLowIntensity, lightCurrentIntensity, lightValueBecomeHigher, initDirectionalLight, getDirectionalLightIntensity} from "./utils/basic/Light";
 import {initBGMPlayer} from "./utils/sound/Bgm";
 import {initScene} from "./utils/basic/Scene";
 import {initCamera} from "./utils/basic/Camera";
 import {initRenderer} from "./utils/basic/Renderer";
 import {initControls} from "./utils/controls/ControlBuilder";
+import {SceneUtils} from 'three/examples/jsm/utils/SceneUtils.js';
 import DefaultCube from "./utils/objects/cube/DefaultCube";
 import GlobalSetting from "./utils/setting/GlobalSetting";
 import device from "current-device";
+
+
 // 检查设备
 if (device.type === 'mobile') {
     let divEl = document.createElement('div');
@@ -64,6 +67,7 @@ if (!WEBGL.isWebGLAvailable()) {
     throw "unsupport browser";
 }
 //------------------------------------初始化基本对象-结束------------------------------------------------
+
 let canvasEL = document.getElementById("canvas-frame");
 // 舞台*
 let scene = initScene();
@@ -182,7 +186,7 @@ function changeLight() {
         let xValue = 8;
         let yValue = 1;
         for (let cubeType of Object.values(DefaultCube)) {
-            let idHalfCube = cubeType.cubeAttributes && cubeType.cubeAttributes.isHalfCube;
+            let idHalfCube = cubeType.cubeAttributes && cubeType.cubeAttributes.geometryType === 'halfCube';
             testBlock.push([xValue, idHalfCube ? yValue - 1 / 4 : yValue, zValue++, cubeType]);
             if (zValue === 10) {
                 yValue++;

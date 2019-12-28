@@ -421,71 +421,79 @@ export default class MCFirstPersonControl {
                     && clickedObjects[0].face && clickedObjects[0].face.normal
                     && clickedObjects[0].object && clickedObjects[0].object.position
                 ) {
-                    let normal = clickedObjects[0].face.normal;
-                    let rotate = clickedObjects[0].object.rotation;
-                    let position = clickedObjects[0].object.position;
-                    let point = clickedObjects[0].point;
-
-                    let targetIsHalfCube = DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes && DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.isHalfCube;
-                    let newIsHalfCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.isHalfCube;
-                    // this.objects.findIndex(e => e.userData)
-                    // console.log(normal.x, normal.y, normal.z, position.x, position.y, position.z)
-
-                    let newPositionVector = new THREE.Vector3(normal.x, normal.y, normal.z);
-                    newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 0, 1), rotate.z);
-                    newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotate.y);
-                    newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(1, 0, 0), rotate.x);
-                    newPositionVector.round();
-
-                    let yMove = newPositionVector.y;
-                    {
-                        if (targetIsHalfCube) {
-                            if (newIsHalfCube) {
-                                if (newPositionVector.y !== 0) {
-                                    yMove = newPositionVector.y / 2
-                                }
-                            } else {
-                                if (newPositionVector.y !== 0) {
-                                    if (position.y > 0 ? position.y % 1 === 0.25 : position.y % 1 === -0.75) {
-                                        yMove = newPositionVector.y * (newPositionVector.y > 0 ? 3 : 5) / 4  //上半砖
-                                    } else {
-                                        yMove = newPositionVector.y * (newPositionVector.y > 0 ? 5 : 3) / 4  //下半砖
-                                    }
-                                } else {
-                                    if (position.y > 0 ? position.y % 1 === 0.25 : position.y % 1 === -0.75) {
-                                        yMove = -1 / 4  //上半砖
-                                    } else {
-                                        yMove = 1 / 4  //下半砖
-                                    }
-                                }
-                            }
-                        } else {
-                            if (newIsHalfCube) {
-                                if (newPositionVector.y !== 0) {
-                                    yMove = newPositionVector.y * 3 / 4;
-                                } else {
-                                    yMove = (point.y > position.y ? 1 : -1) / 4;
-                                }
-                            }
+                    if (event.button === 0) {//删除方块 左键
+                        //TODO 改为长按同一方块时才删除
+                        // console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name));
+                        let index = this.objects.findIndex(e => e.id === clickedObjects[0].object.id);
+                        if (index >= 0) {
+                            this.objects.splice(index, 1);
                         }
-                    }
-                    let newPosition = {
-                        x: position.x + newPositionVector.x,
-                        y: position.y + yMove,
-                        z: position.z + newPositionVector.z,
-                    };
-
-                    if (!newIsHalfCube && checkPositionIsExistBlock(newPosition, this.objects)) {
+                        this.scene.remove(this.scene.getObjectById(clickedObjects[0].object.id));
                         return;
                     }
                     if (event.button === 2) {//添加方块 右键
                         //TODO 添加方块代码独立，方块不能添加到人物所站的地方
+                        let normal = clickedObjects[0].face.normal;
+                        let rotate = clickedObjects[0].object.rotation;
+                        let position = clickedObjects[0].object.position;
+                        let point = clickedObjects[0].point;
+
+                        let targetIsHalfCube = DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes && DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.geometryType === 'halfCube';
+                        let newIsHalfCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === 'halfCube';
+                        let newIsStairsCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === 'stairsCube';
+
+                        let newPositionVector = new THREE.Vector3(normal.x, normal.y, normal.z);
+                        newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 0, 1), rotate.z);
+                        newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotate.y);
+                        newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(1, 0, 0), rotate.x);
+                        newPositionVector.round();
+
+                        let yMove = newPositionVector.y;
+                        {
+                            if (targetIsHalfCube) {
+                                if (newIsHalfCube) {
+                                    if (newPositionVector.y !== 0) {
+                                        yMove = newPositionVector.y / 2
+                                    }
+                                } else {
+                                    if (newPositionVector.y !== 0) {
+                                        if (position.y > 0 ? position.y % 1 === 0.25 : position.y % 1 === -0.75) {
+                                            yMove = newPositionVector.y * (newPositionVector.y > 0 ? 3 : 5) / 4  //上半砖
+                                        } else {
+                                            yMove = newPositionVector.y * (newPositionVector.y > 0 ? 5 : 3) / 4  //下半砖
+                                        }
+                                    } else {
+                                        if (position.y > 0 ? position.y % 1 === 0.25 : position.y % 1 === -0.75) {
+                                            yMove = -1 / 4  //上半砖
+                                        } else {
+                                            yMove = 1 / 4  //下半砖
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (newIsHalfCube) {
+                                    if (newPositionVector.y !== 0) {
+                                        yMove = newPositionVector.y * 3 / 4;
+                                    } else {
+                                        yMove = (point.y > position.y ? 1 : -1) / 4;
+                                    }
+                                }
+                            }
+                        }
+                        let newPosition = {
+                            x: position.x + newPositionVector.x,
+                            y: position.y + yMove,
+                            z: position.z + newPositionVector.z,
+                        };
+                        if (!newIsHalfCube && checkPositionIsExistBlock(newPosition, this.objects)) {
+                            return;
+                        }
                         let newDirectionRotate = {
                             x: 0,
                             y: 0,
                             z: 0,
                         };
-                        {//放置 转向
+                        if (!newIsHalfCube) {//放置 转向
                             let newDirection;
                             let worldDirection = this.camera.getWorldDirection(new Vector3(1, 0, 0));
                             if (Math.abs(worldDirection.x) >= Math.abs(worldDirection.z)) {
@@ -497,7 +505,7 @@ export default class MCFirstPersonControl {
                             if (Math.abs(worldDirection.y) >= 0.5) {
                                 newDirection.y = worldDirection.y > 0 ? 1 : -1
                             }
-                            //水平旋转
+                            //x，z轴旋转
                             if (newDirection.x === 1) {
                                 newDirectionRotate.y = 0;
                             } else if (newDirection.x === -1) {
@@ -507,24 +515,19 @@ export default class MCFirstPersonControl {
                             } else if (newDirection.z === -1) {
                                 newDirectionRotate.y = 90;
                             }
-                            //垂直旋转
+                            //y轴旋转
                             if (newDirection.y !== 0) {
                                 newDirectionRotate.z = newDirection.y > 0 ? -90 : 90;
                             }
                             newDirectionRotate.z += 90;//放置时方块顶部面冲玩家
                         }
+                        if (newIsStairsCube) {
+                            newDirectionRotate.z = 0;
+                        }
                         let cubeFactory = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]);
                         let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z, DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]], 0, newDirectionRotate.y, newDirectionRotate.z);
                         this.scene.add(cube);
-                        this.objects.push(cube)
-                    } else if (event.button === 0) {//删除方块 左键
-                        //TODO 改为长按同一方块时才删除
-                        // console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name));
-                        let index = this.objects.findIndex(e => e.id === clickedObjects[0].object.id);
-                        if (index >= 0) {
-                            this.objects.splice(index, 1);
-                        }
-                        this.scene.remove(this.scene.getObjectById(clickedObjects[0].object.id));
+                        this.objects.push(cube);
                     }
                 }
             }

@@ -761,6 +761,45 @@
         }
     })()
 
+//自定义几何体（）
+//     var vertices = [
+//         new THREE.Vector3(0, 6, 0),
+//         new THREE.Vector3(-1, 4, 0),
+//         new THREE.Vector3(0, 4, 1),
+//         new THREE.Vector3(1, 4, 0),
+//         new THREE.Vector3(0, 4, -1),
+//         new THREE.Vector3(0, 2, 0)
+//     ];
+//     var faces = [
+//         new THREE.Face3(0, 1, 2),
+//         new THREE.Face3(0, 2, 3),
+//         new THREE.Face3(0, 3, 4),
+//         new THREE.Face3(0, 4, 1),
+//         new THREE.Face3(5, 2, 1),
+//         new THREE.Face3(5, 3, 2),
+//         new THREE.Face3(5, 4, 3),
+//         new THREE.Face3(5, 1, 4),
+//     ];
+//     var geom = new THREE.Geometry();
+//     geom.vertices = vertices;
+//     geom.faces = faces;
+//     geom.computeFaceNormals();//计算法向量 这决定了对光做出的反应
+//
+//     var materials = [
+//         new THREE.MeshLambertMaterial({opacity: 0.8, color: 0x44e144, transparent: true}),//几何体面的材质
+//         new THREE.MeshBasicMaterial({color: 0x008800, wireframe: true}),//一个几何体框架的材质
+//     ];
+//     var mesh1=new THREE.Mesh(geom, new THREE.MeshLambertMaterial({opacity: 0.8, color: 0x44e144, transparent: true}));
+//     scene.add(mesh1);
+    //以下创建多种材质（面线材质不同的几何体）
+    // var mesh =SceneUtils.createMultiMaterialObject(geom, materials);//创建有多个材质的对象
+    // mesh.name = '源';
+    // mesh.children.forEach(function (e) {
+    //     e.castShadow = false;
+    // });
+    // scene.add(mesh);
+    // objects.push(mesh);
+
 
 </script>
 <script>

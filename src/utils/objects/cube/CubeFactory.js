@@ -23,16 +23,119 @@ export default class CubeFactory {
     //初始化形状
     initGeometry() {
         if (this._geometryMap) {
-            this._geometry = this._geometryMap[this.cubeOptions.key];
+            this._geometry = this._geometryMap[this.cubeOptions.cubeAttributes.geometryType];
         }
         if (this._geometry) {
             return;
         }
 
-        let isHalfCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.isHalfCube;
-        this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize / (isHalfCube ? 2 : 1), this._cubeSize);
+        let isHalfCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.geometryType === 'halfCube';
+        let isStairsCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.geometryType === 'stairsCube';
+        if (isHalfCube) {
+            this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize / 2, this._cubeSize);
+        } else if (isStairsCube) {
+            let geom = new THREE.Geometry();
+            let width = this._cubeSize;
+            geom.vertices = [//顶点
+                new THREE.Vector3(width / 2, -width / 2, width / 2),
+                new THREE.Vector3(width / 2, -width / 2, -width / 2),
+                new THREE.Vector3(-width / 2, -width / 2, -width / 2),
+                new THREE.Vector3(-width / 2, -width / 2, width / 2),
 
-        this._geometryMap[this.cubeOptions.key] = this._geometry
+                new THREE.Vector3(width / 2, 0, width / 2),
+                new THREE.Vector3(width / 2, 0, -width / 2),
+                new THREE.Vector3(0, 0, -width / 2),
+                new THREE.Vector3(0, 0, width / 2),
+
+                new THREE.Vector3(0, width / 2, width / 2),
+                new THREE.Vector3(0, width / 2, -width / 2),
+                new THREE.Vector3(-width / 2, width / 2, -width / 2),
+                new THREE.Vector3(-width / 2, width / 2, width / 2),
+            ];
+            geom.faces = [
+                //底面
+                new THREE.Face3(0, 2, 1),
+                new THREE.Face3(0, 3, 2),
+                //前面下半
+                new THREE.Face3(0, 1, 5),
+                new THREE.Face3(0, 5, 4),
+                //前面上半
+                new THREE.Face3(7, 6, 9),
+                new THREE.Face3(7, 9, 8),
+                //上面前半
+                new THREE.Face3(4, 5, 6),
+                new THREE.Face3(4, 6, 7),
+                //上面后半
+                new THREE.Face3(8, 9, 10),
+                new THREE.Face3(8, 10, 11),
+                //后面
+                new THREE.Face3(2, 3, 11),
+                new THREE.Face3(2, 11, 10),
+                //左
+                new THREE.Face3(7, 8, 11),
+                new THREE.Face3(7, 11, 3),
+                new THREE.Face3(7, 3, 0),
+                new THREE.Face3(7, 0, 4),
+                //右
+                new THREE.Face3(6, 10, 9),
+                new THREE.Face3(6, 2, 10),
+                new THREE.Face3(6, 1, 2),
+                new THREE.Face3(6, 5, 1),
+            ];
+            const imagePoint = [//切图位置
+                [
+                    new THREE.Vector2(0, 0),
+                    new THREE.Vector2(0.5, 0),
+                    new THREE.Vector2(1, 0),
+                ],
+                [
+                    new THREE.Vector2(0, 0.5),
+                    new THREE.Vector2(0.5, 0.5),
+                    new THREE.Vector2(1, 0.5),
+                ],
+                [
+                    new THREE.Vector2(0, 1),
+                    new THREE.Vector2(0.5, 1),
+                    new THREE.Vector2(1, 1),
+                ]
+            ]
+            {
+                //底面
+                geom.faceVertexUvs[0][0] = ([imagePoint[0][0], imagePoint[2][2], imagePoint[0][2]]);
+                geom.faceVertexUvs[0][1] = ([imagePoint[0][0], imagePoint[2][0], imagePoint[2][2]]);
+                //前面下半
+                geom.faceVertexUvs[0][2] = ([imagePoint[0][0], imagePoint[0][2], imagePoint[1][2]]);
+                geom.faceVertexUvs[0][3] = ([imagePoint[0][0], imagePoint[1][2], imagePoint[1][0]]);
+                //前面上半
+                geom.faceVertexUvs[0][4] = geom.faceVertexUvs[0][2];
+                geom.faceVertexUvs[0][5] = geom.faceVertexUvs[0][3];
+                //上面前半
+                geom.faceVertexUvs[0][6] = geom.faceVertexUvs[0][2];
+                geom.faceVertexUvs[0][7] = geom.faceVertexUvs[0][3];
+                //上面后半
+                geom.faceVertexUvs[0][8] = geom.faceVertexUvs[0][2];
+                geom.faceVertexUvs[0][9] = geom.faceVertexUvs[0][3];
+                //后面
+                geom.faceVertexUvs[0][10] = ([imagePoint[0][0], imagePoint[0][2], imagePoint[2][2]]);
+                geom.faceVertexUvs[0][11] = ([imagePoint[0][0], imagePoint[2][2], imagePoint[2][0]]);
+                //左
+                geom.faceVertexUvs[0][12] = ([imagePoint[1][1], imagePoint[2][1], imagePoint[2][0]]);
+                geom.faceVertexUvs[0][13] = ([imagePoint[1][1], imagePoint[2][0], imagePoint[0][0]]);
+                geom.faceVertexUvs[0][14] = ([imagePoint[1][1], imagePoint[0][0], imagePoint[0][2]]);
+                geom.faceVertexUvs[0][15] = ([imagePoint[1][1], imagePoint[0][2], imagePoint[1][2]]);
+                //右
+                geom.faceVertexUvs[0][16] = ([imagePoint[1][1], imagePoint[2][0], imagePoint[2][1]]);
+                geom.faceVertexUvs[0][17] = ([imagePoint[1][1], imagePoint[0][0], imagePoint[2][0]]);
+                geom.faceVertexUvs[0][18] = ([imagePoint[1][1], imagePoint[0][2], imagePoint[0][0]]);
+                geom.faceVertexUvs[0][19] = ([imagePoint[1][1], imagePoint[1][2], imagePoint[0][2]]);
+            }
+            geom.computeFaceNormals();//计算面的法向量。可以在点击时判断出face的法向量。不使用此方法，则点击时获得的face法向量xyz均为0,。
+            this._geometry = geom;
+        } else {
+            this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize);
+        }
+
+        this._geometryMap[this.cubeOptions.cubeAttributes.geometryType] = this._geometry
     }
 
     //初始化材质
@@ -75,7 +178,7 @@ export default class CubeFactory {
             );
         }
         //半高贴图
-        let isHalfCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.isHalfCube;
+        let isHalfCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.geometryType === 'halfCube';
 
         for (let keyIndex in this.cubeOptions.imageSet) {
             let key = this.cubeOptions.imageSet[keyIndex];
@@ -86,7 +189,6 @@ export default class CubeFactory {
                         this._materialsHalfMap = {}
                     }
                     if (this._materialsHalfMap[this.cubeOptions.key]) {
-                        console.log("侧面贴图")
                         materialTmp = this._materialsHalfMap[this.cubeOptions.key];
                     } else if (materialTmp.map) {
                         let materialNew = materialTmp.clone();
@@ -121,9 +223,10 @@ export default class CubeFactory {
         position.x = position.x || 0;
         position.y = position.y || 0;
         position.z = position.z || 0;
+        let isStairsCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.geometryType === 'stairsCube';
         let mesh = new THREE.Mesh(
             this._geometry,
-            this._materials
+            isStairsCube ? this._materials[0] : this._materials
             // new THREE.MeshLambertMaterial({color: 0x00cc00})
         );
         mesh.receiveShadow = mesh.castShadow = GlobalSetting.enableShadow;
@@ -141,15 +244,15 @@ export default class CubeFactory {
                 cubeTypeKey: this.cubeOptions.key,
             };
         }
-        if (rotation.rotateX && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.x)) {
-            mesh.rotateX(rotation.rotateX * Math.PI / 180);
-        }
-        if (rotation.rotateY && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.y)) {
-            mesh.rotateY(rotation.rotateY * Math.PI / 180);
-        }
-        if (rotation.rotateZ && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.z)) {
-            mesh.rotateZ(rotation.rotateZ * Math.PI / 180);
-        }
+            if (rotation.rotateX && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.x)) {
+                mesh.rotateX(rotation.rotateX * Math.PI / 180);
+            }
+            if (rotation.rotateY && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.y)) {
+                mesh.rotateY(rotation.rotateY * Math.PI / 180);
+            }
+            if (rotation.rotateZ && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.z)) {
+                mesh.rotateZ(rotation.rotateZ * Math.PI / 180);
+            }
         mesh.name = this.cubeOptions.key + "(" + position.x + "," + position.y + "," + position.z + ")";
         return mesh;
     }

@@ -3,6 +3,7 @@ import CubeFactory from "../objects/cube/CubeFactory";
 import * as THREE from 'three';
 import DefaultCube from '../objects/cube/DefaultCube'
 import {Vector3} from "three";
+import GeometryType from "../objects/cube/GeometryType";
 
 export default class MCFirstPersonControl {
 
@@ -171,26 +172,6 @@ export default class MCFirstPersonControl {
         };
         document.addEventListener('keydown', onKeyDown, false);
         document.addEventListener('keyup', onKeyUp, false);
-        //加水平方向碰撞检测  。0,1脚底；2,3腰；4,5头顶; 6,7腿中间(半砖)； 8,9头中间(半砖)
-        for (let i = 0; i < 10; i++) {
-            this.checkRay.X0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(-1, 0, 0), 0, 0));
-        }
-        for (let i = 0; i < 10; i++) {
-            this.checkRay.X1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(1, 0, 0), 0, 0));
-        }
-        for (let i = 0; i < 10; i++) {
-            this.checkRay.Z0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0, 0));
-        }
-        for (let i = 0; i < 10; i++) {
-            this.checkRay.Z1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, 1), 0, 0));
-        }
-        //加垂直方向碰撞检测
-        for (let i = 0; i < 4; i++) {
-            this.checkRay.Y0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 0));
-        }
-        for (let i = 0; i < 4; i++) {
-            this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 0));
-        }
         //初始化点击功能
         this.initMouseFunction();
         //加载预览方块
@@ -257,6 +238,9 @@ export default class MCFirstPersonControl {
                 let Z0NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
+                        if (this.checkRay.Z0[i] === undefined) {
+                            this.checkRay.Z0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0, 0));
+                        }
                         this.checkRay.Z0[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z0[i].ray.origin.x = positionBeforeX;//修正为移动前的x轴位置，防止使用位移后的位置检测墙壁
                         this.checkRay.Z0[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
@@ -272,6 +256,9 @@ export default class MCFirstPersonControl {
                 let Z1NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
+                        if (this.checkRay.Z1[i]===undefined) {
+                            this.checkRay.Z1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, 1), 0, 0));
+                        }
                         this.checkRay.Z1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z1[i].ray.origin.x = positionBeforeX;
                         this.checkRay.Z1[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
@@ -294,6 +281,9 @@ export default class MCFirstPersonControl {
                 let X0NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
+                        if (this.checkRay.X0[i] === undefined) {
+                            this.checkRay.X0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(-1, 0, 0), 0, 0));
+                        }
                         this.checkRay.X0[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.X0[i].ray.origin.z = positionBeforeZ;
                         this.checkRay.X0[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
@@ -309,6 +299,9 @@ export default class MCFirstPersonControl {
                 let X1NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
+                        if (this.checkRay.X1[i] === undefined) {
+                            this.checkRay.X1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(1, 0, 0), 0, 0));
+                        }
                         this.checkRay.X1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.X1[i].ray.origin.z = positionBeforeZ;
                         this.checkRay.X1[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
@@ -331,9 +324,12 @@ export default class MCFirstPersonControl {
         //垂直方向移动+碰撞检测
         {
             let bottomFlatY = undefined;
-            //坠落四角检测
+            //坠落四角+中间 检测
             {
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 5; i++) {
+                    if (this.checkRay.Y0[i] === undefined) {
+                        this.checkRay.Y0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 0));
+                    }
                     this.checkRay.Y0[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                 }
                 let rayMove = this.personOption.thickness / 2;
@@ -345,7 +341,7 @@ export default class MCFirstPersonControl {
                 this.checkRay.Y0[2].ray.origin.z += rayMove;
                 this.checkRay.Y0[3].ray.origin.x -= rayMove;
                 this.checkRay.Y0[3].ray.origin.z -= rayMove;
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 5; i++) {
                     let intersections = this.checkRay.Y0[i].intersectObjects(this.objects);
                     if (intersections.length > 0) {
                         let bottomFlatYTmp = intersections[0].point.y;
@@ -353,10 +349,13 @@ export default class MCFirstPersonControl {
                     }
                 }
             }
-            //头顶四角检测
+            //头顶四角+中间 检测
             let topFlatY = undefined;
             {
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 5; i++) {
+                    if( this.checkRay.Y1[i]===undefined){
+                        this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 0));
+                    }
                     this.checkRay.Y1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                 }
                 let rayMove = this.personOption.thickness / 2 - 0.001;
@@ -368,7 +367,7 @@ export default class MCFirstPersonControl {
                 this.checkRay.Y1[2].ray.origin.z += rayMove;
                 this.checkRay.Y1[3].ray.origin.x -= rayMove;
                 this.checkRay.Y1[3].ray.origin.z -= rayMove;
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 5; i++) {
                     let intersections = this.checkRay.Y1[i].intersectObjects(this.objects);
                     if (intersections.length > 0) {
                         let topFlatYTmp = intersections[0].point.y;
@@ -380,7 +379,7 @@ export default class MCFirstPersonControl {
             let nextY = this.controls.getObject().position.y + (this.velocity.y * delta);
             if (topFlatY !== undefined) {
                 if (nextY > topFlatY - (this.personOption.height - this.personOption.sightHeight)) {
-                    nextY = topFlatY - (this.personOption.height - this.personOption.sightHeight)
+                    nextY = topFlatY - (this.personOption.height - this.personOption.sightHeight);
                     this.velocity.y = 0;
                 }
             }
@@ -438,9 +437,9 @@ export default class MCFirstPersonControl {
                         let position = clickedObjects[0].object.position;
                         let point = clickedObjects[0].point;
 
-                        let targetIsHalfCube = DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes && DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.geometryType === 'halfCube';
-                        let newIsHalfCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === 'halfCube';
-                        let newIsStairsCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === 'stairsCube';
+                        let targetIsHalfCube = DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes && DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.geometryType === GeometryType.HalfCube;
+                        let newIsHalfCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === GeometryType.HalfCube;
+                        let newIsStairsCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === GeometryType.StairsCube;
 
                         let newPositionVector = new THREE.Vector3(normal.x, normal.y, normal.z);
                         newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 0, 1), rotate.z);

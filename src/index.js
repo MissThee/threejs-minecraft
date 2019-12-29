@@ -13,6 +13,7 @@ import {SceneUtils} from 'three/examples/jsm/utils/SceneUtils.js';
 import DefaultCube from "./utils/objects/cube/DefaultCube";
 import GlobalSetting from "./utils/setting/GlobalSetting";
 import device from "current-device";
+import GeometryType from "./utils/objects/cube/GeometryType";
 
 
 // 检查设备
@@ -28,7 +29,7 @@ if (device.type === 'mobile') {
     divEl.style.fontSize = '1em';
     let spanEl1 = document.createElement('span');
     spanEl1.style.fontSize = '1.5em';
-    spanEl1.innerText = "手机不可以 :(";
+    spanEl1.innerText = "手机不可以（懒得做） :(";
     let spanEl2 = document.createElement('span');
     spanEl2.innerText = "Cell phone is not OK :(";
     let spanEl3 = document.createElement('span');
@@ -186,7 +187,7 @@ function changeLight() {
         let xValue = 8;
         let yValue = 1;
         for (let cubeType of Object.values(DefaultCube)) {
-            let idHalfCube = cubeType.cubeAttributes && cubeType.cubeAttributes.geometryType === 'halfCube';
+            let idHalfCube = cubeType.cubeAttributes && cubeType.cubeAttributes.geometryType === GeometryType.HalfCube;
             testBlock.push([xValue, idHalfCube ? yValue - 1 / 4 : yValue, zValue++, cubeType]);
             if (zValue === 10) {
                 yValue++;

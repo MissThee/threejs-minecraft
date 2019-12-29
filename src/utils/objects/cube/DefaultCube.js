@@ -1,5 +1,5 @@
 //预设方块信息
-import * as THREE from 'three'
+import GeometryType from "./GeometryType";
 
 export default {
     grass: {
@@ -22,10 +22,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,//不能碰撞。false-能踩能撞
             isIndestructible: false,//不能销毁。false-左键点击能消除
-            geometryType:'cube',//是半砖。cube-砖。halfCube-半砖，可以在一个1x1x1内叠加另一个半砖
+            geometryType: GeometryType.Cube,//是半砖。cube-砖。halfCube-半砖，可以在一个1x1x1内叠加另一个半砖
         },
     },
     test: {
@@ -48,10 +48,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     dirt: {
@@ -69,10 +69,54 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
+        },
+    },
+    dirt_podzol: {
+        key: 'dirt_podzol',
+        images: [
+            './assets/img/blocks/dirt_podzol_side.png',
+            './assets/img/blocks/dirt_podzol_top.png',
+            './assets/img/blocks/dirt.png',
+        ],
+        imageSet: [0, 0, 1, 2, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    diamond_block: {
+        key: 'diamond_block',
+        images: [
+            './assets/img/blocks/diamond_block.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
         },
     },
     // Cloud: {
@@ -103,10 +147,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     cobblestone_mossy: {
@@ -124,10 +168,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     stone: {
@@ -145,10 +189,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     stone_slab: {
@@ -167,12 +211,98 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
+    stonebrick: {
+        key: 'stonebrick',
+        images: [
+            './assets/img/blocks/stonebrick.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    stonebrick_carved: {
+        key: 'stonebrick_carved',
+        images: [
+            './assets/img/blocks/stonebrick_carved.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    stonebrick_cracked: {
+        key: 'stonebrick_cracked',
+        images: [
+            './assets/img/blocks/stonebrick_cracked.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    stonebrick_mossy: {
+        key: 'stonebrick_mossy',
+        images: [
+            './assets/img/blocks/stonebrick_mossy.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+
+
     brick: {
         key: 'brick',
         images: [
@@ -188,10 +318,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     planks_birch: {
@@ -209,10 +339,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     planks_acacia: {
@@ -230,10 +360,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     planks_jungle: {
@@ -251,10 +381,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     planks_oak: {
@@ -272,10 +402,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     planks_spruce: {
@@ -293,10 +423,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     // reeds: {
@@ -328,10 +458,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_acacia: {
@@ -345,10 +475,10 @@ export default {
             transparent: true,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_acacia_opaque: {
@@ -361,10 +491,10 @@ export default {
             color: 0x89B95C,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
 
@@ -384,10 +514,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_birch: {
@@ -401,10 +531,10 @@ export default {
             transparent: true,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_birch_opaque: {
@@ -417,10 +547,10 @@ export default {
             color: 0x89B95C,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
 
@@ -440,10 +570,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_jungle: {
@@ -457,10 +587,10 @@ export default {
             transparent: true,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_jungle_opaque: {
@@ -473,10 +603,10 @@ export default {
             color: 0x89B95C,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
 
@@ -496,10 +626,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_oak: {
@@ -513,10 +643,10 @@ export default {
             transparent: true,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_oak_opaque: {
@@ -529,10 +659,10 @@ export default {
             color: 0x89B95C,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
 
@@ -552,10 +682,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_spruce: {
@@ -569,10 +699,10 @@ export default {
             transparent: true,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     leaves_spruce_opaque: {
@@ -585,10 +715,10 @@ export default {
             color: 0x89B95C,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     glass: {
@@ -601,10 +731,602 @@ export default {
             transparent: true,
         },
         materialParametersForOneList: [],
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_black: {
+        key: 'glass_black',
+        images: [
+            './assets/img/blocks/glass_black.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_blue: {
+        key: 'glass_blue',
+        images: [
+            './assets/img/blocks/glass_blue.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_brown: {
+        key: 'glass_brown',
+        images: [
+            './assets/img/blocks/glass_brown.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_cyan: {
+        key: 'glass_cyan',
+        images: [
+            './assets/img/blocks/glass_cyan.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_gray: {
+        key: 'glass_gray',
+        images: [
+            './assets/img/blocks/glass_gray.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_green: {
+        key: 'glass_green',
+        images: [
+            './assets/img/blocks/glass_green.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_light_blue: {
+        key: 'glass_light_blue',
+        images: [
+            './assets/img/blocks/glass_light_blue.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_lime: {
+        key: 'glass_lime',
+        images: [
+            './assets/img/blocks/glass_lime.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_magenta: {
+        key: 'glass_magenta',
+        images: [
+            './assets/img/blocks/glass_magenta.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_orange: {
+        key: 'glass_orange',
+        images: [
+            './assets/img/blocks/glass_orange.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_pink: {
+        key: 'glass_pink',
+        images: [
+            './assets/img/blocks/glass_pink.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_purple: {
+        key: 'glass_purple',
+        images: [
+            './assets/img/blocks/glass_purple.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_red: {
+        key: 'glass_red',
+        images: [
+            './assets/img/blocks/glass_red.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_silver: {
+        key: 'glass_silver',
+        images: [
+            './assets/img/blocks/glass_silver.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_white: {
+        key: 'glass_white',
+        images: [
+            './assets/img/blocks/glass_white.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glass_yellow: {
+        key: 'glass_yellow',
+        images: [
+            './assets/img/blocks/glass_yellow.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    glowstone: {
+        key: 'glowstone',
+        images: [
+            './assets/img/blocks/glowstone.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    gold_block: {
+        key: 'gold_block',
+        images: [
+            './assets/img/blocks/gold_block.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    gold_ore: {
+        key: 'gold_ore',
+        images: [
+            './assets/img/blocks/gold_ore.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    clay: {
+        key: 'clay',
+        images: [
+            './assets/img/blocks/clay.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay: {
+        key: 'hardened_clay',
+        images: [
+            './assets/img/blocks/hardened_clay.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_black: {
+        key: 'hardened_clay_stained_black',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_black.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_blue: {
+        key: 'hardened_clay_stained_blue',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_blue.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_brown: {
+        key: 'hardened_clay_stained_brown',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_brown.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_cyan: {
+        key: 'hardened_clay_stained_cyan',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_cyan.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_gray: {
+        key: 'hardened_clay_stained_gray',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_gray.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_green: {
+        key: 'hardened_clay_stained_green',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_green.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_light_blue: {
+        key: 'hardened_clay_stained_light_blue',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_light_blue.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_lime: {
+        key: 'hardened_clay_stained_lime',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_lime.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_magenta: {
+        key: 'hardened_clay_stained_magenta',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_magenta.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_orange: {
+        key: 'hardened_clay_stained_orange',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_orange.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_pink: {
+        key: 'hardened_clay_stained_pink',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_pink.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_purple: {
+        key: 'hardened_clay_stained_purple',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_purple.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_red: {
+        key: 'hardened_clay_stained_red',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_red.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_silver: {
+        key: 'hardened_clay_stained_silver',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_silver.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_white: {
+        key: 'hardened_clay_stained_white',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_white.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    hardened_clay_stained_yellow: {
+        key: 'hardened_clay_stained_yellow',
+        images: [
+            './assets/img/blocks/hardened_clay_stained_yellow.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {
+            transparent: true,
+        },
+        materialParametersForOneList: [],
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
         },
     },
     // ice: {
@@ -642,10 +1364,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     pumpkin_face_off: {
@@ -665,10 +1387,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     pumpkin_face_on: {
@@ -688,10 +1410,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'cube',
+            geometryType: GeometryType.Cube,
         },
     },
     test_half: {
@@ -711,10 +1433,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'halfCube',
+            geometryType: GeometryType.HalfCube,
         },
     },
     stone_slab_half: {
@@ -733,10 +1455,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'halfCube',
+            geometryType: GeometryType.HalfCube,
         },
     },
     brick_half: {
@@ -754,10 +1476,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'halfCube',
+            geometryType: GeometryType.HalfCube,
         },
     },
     planks_birch_half: {
@@ -775,10 +1497,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'halfCube',
+            geometryType: GeometryType.HalfCube,
         },
     },
     planks_acacia_half: {
@@ -796,10 +1518,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'halfCube',
+            geometryType: GeometryType.HalfCube,
         },
     },
     planks_jungle_half: {
@@ -817,10 +1539,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'halfCube',
+            geometryType: GeometryType.HalfCube,
         },
     },
     planks_oak_half: {
@@ -838,10 +1560,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'halfCube',
+            geometryType: GeometryType.HalfCube,
         },
     },
     planks_spruce_half: {
@@ -859,10 +1581,10 @@ export default {
                 z: false,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'halfCube',
+            geometryType: GeometryType.HalfCube,
         },
     },
     cobblestone_stairs: {
@@ -880,10 +1602,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     cobblestone_mossy_stairs: {
@@ -901,10 +1623,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     stone_stairs: {
@@ -922,10 +1644,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     stone_slab_stairs: {
@@ -944,10 +1666,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     brick_stairs: {
@@ -965,10 +1687,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     planks_birch_stairs: {
@@ -986,10 +1708,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     planks_acacia_stairs: {
@@ -1007,10 +1729,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     planks_jungle_stairs: {
@@ -1028,10 +1750,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     planks_oak_stairs: {
@@ -1049,10 +1771,10 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
     planks_spruce_stairs: {
@@ -1070,10 +1792,461 @@ export default {
                 z: true,
             }
         },
-        cubeAttributes:{
+        cubeAttributes: {
             isPenetrable: false,
             isIndestructible: false,
-            geometryType:'stairsCube',
+            geometryType: GeometryType.StairsCube,
         },
     },
+    hay_block: {
+        key: 'hay_block',
+        images: [
+            './assets/img/blocks/hay_block_side.png',
+            './assets/img/blocks/hay_block_top.png',
+        ],
+        imageSet: [0, 0, 1, 1, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    sandstone_normal: {
+        key: 'sandstone_normal',
+        images: [
+            './assets/img/blocks/sandstone_normal.png',
+            './assets/img/blocks/sandstone_top.png',
+            './assets/img/blocks/sandstone_bottom.png',
+        ],
+        imageSet: [0, 0, 1, 2, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    sandstone_smooth: {
+        key: 'sandstone_smooth',
+        images: [
+            './assets/img/blocks/sandstone_smooth.png',
+            './assets/img/blocks/sandstone_top.png',
+            './assets/img/blocks/sandstone_bottom.png',
+        ],
+        imageSet: [0, 0, 1, 2, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    sandstone_carved: {
+        key: 'sandstone_carved',
+        images: [
+            './assets/img/blocks/sandstone_carved.png',
+            './assets/img/blocks/sandstone_top.png',
+            './assets/img/blocks/sandstone_bottom.png',
+        ],
+        imageSet: [0, 0, 1, 2, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: true,
+                y: true,
+                z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    tnt: {
+        key: 'tnt',
+        images: [
+            './assets/img/blocks/tnt_side.png',
+            './assets/img/blocks/tnt_top.png',
+            './assets/img/blocks/tnt_bottom.png',
+        ],
+        imageSet: [0, 0, 1, 2, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_white: {
+        key: 'wool_colored_white',
+        images: [
+            './assets/img/blocks/wool_colored_white.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_black: {
+        key: 'wool_colored_black',
+        images: [
+            './assets/img/blocks/wool_colored_black.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_blue: {
+        key: 'wool_colored_blue',
+        images: [
+            './assets/img/blocks/wool_colored_blue.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_brown: {
+        key: 'wool_colored_brown',
+        images: [
+            './assets/img/blocks/wool_colored_brown.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_cyan: {
+        key: 'wool_colored_cyan',
+        images: [
+            './assets/img/blocks/wool_colored_cyan.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_gray: {
+        key: 'wool_colored_gray',
+        images: [
+            './assets/img/blocks/wool_colored_gray.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_green: {
+        key: 'wool_colored_green',
+        images: [
+            './assets/img/blocks/wool_colored_green.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_light_blue: {
+        key: 'wool_colored_light_blue',
+        images: [
+            './assets/img/blocks/wool_colored_light_blue.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_lime: {
+        key: 'wool_colored_lime',
+        images: [
+            './assets/img/blocks/wool_colored_lime.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_magenta: {
+        key: 'wool_colored_magenta',
+        images: [
+            './assets/img/blocks/wool_colored_magenta.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_orange: {
+        key: 'wool_colored_orange',
+        images: [
+            './assets/img/blocks/wool_colored_orange.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_pink: {
+        key: 'wool_colored_pink',
+        images: [
+            './assets/img/blocks/wool_colored_pink.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_purple: {
+        key: 'wool_colored_purple',
+        images: [
+            './assets/img/blocks/wool_colored_purple.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_red: {
+        key: 'wool_colored_red',
+        images: [
+            './assets/img/blocks/wool_colored_red.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_silver: {
+        key: 'wool_colored_silver',
+        images: [
+            './assets/img/blocks/wool_colored_silver.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    wool_colored_yellow: {
+        key: 'wool_colored_yellow',
+        images: [
+            './assets/img/blocks/wool_colored_yellow.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+
 }

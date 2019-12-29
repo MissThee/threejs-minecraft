@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import GlobalSetting from "../../setting/GlobalSetting";
 import GeometryType from "./GeometryType";
+import ImagePoint from "./ImagePoint";
+import {MeshLambertMaterial} from "three";
+import {MeshBasicMaterial} from "three";
+
 
 export default class CubeFactory {
     constructor(defaultCube) {
@@ -34,13 +38,19 @@ export default class CubeFactory {
         if (this.cubeOptions.cubeAttributes !== undefined && this.cubeOptions.cubeAttributes.geometryType !== undefined) {
             geometryType = this.cubeOptions.cubeAttributes.geometryType;
         }
+        let geom;
+        const imagePoint = ImagePoint;
+        const width = this._cubeSize;
+        const innerWidth = width / Math.sqrt(2);
         switch (geometryType) {
+            case GeometryType.Cube:
+                geom = new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize);
+                break;
             case GeometryType.HalfCube:
-                this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize / 2, this._cubeSize);
+                geom = new THREE.CubeGeometry(this._cubeSize, this._cubeSize / 2, this._cubeSize);
                 break;
             case GeometryType.StairsCube:
-                let geom = new THREE.Geometry();
-                let width = this._cubeSize;
+                geom = new THREE.Geometry();
                 geom.vertices = [//顶点
                     new THREE.Vector3(width / 2, -width / 2, width / 2),
                     new THREE.Vector3(width / 2, -width / 2, -width / 2),
@@ -87,23 +97,6 @@ export default class CubeFactory {
                     new THREE.Face3(6, 1, 2),
                     new THREE.Face3(6, 5, 1),
                 ];
-                const imagePoint = [//切图位置
-                    [
-                        new THREE.Vector2(0, 0),
-                        new THREE.Vector2(0.5, 0),
-                        new THREE.Vector2(1, 0),
-                    ],
-                    [
-                        new THREE.Vector2(0, 0.5),
-                        new THREE.Vector2(0.5, 0.5),
-                        new THREE.Vector2(1, 0.5),
-                    ],
-                    [
-                        new THREE.Vector2(0, 1),
-                        new THREE.Vector2(0.5, 1),
-                        new THREE.Vector2(1, 1),
-                    ]
-                ];
                 //底面
                 geom.faceVertexUvs[0][0] = ([imagePoint[0][0], imagePoint[2][2], imagePoint[0][2]]);
                 geom.faceVertexUvs[0][1] = ([imagePoint[0][0], imagePoint[2][0], imagePoint[2][2]]);
@@ -135,10 +128,71 @@ export default class CubeFactory {
                 geom.computeFaceNormals();//计算面的法向量。可以在点击时判断出face的法向量。不使用此方法，则点击时获得的face法向量xyz均为0,。
                 this._geometry = geom;
                 break;
-            default:
-                this._geometry = new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize);
+            case GeometryType.Flower1Cube:
+                geom = new THREE.Geometry();
+                geom.vertices = [//顶点
+                    new THREE.Vector3(innerWidth / 2, -width / 2, innerWidth / 2),
+                    new THREE.Vector3(innerWidth / 2, -width / 2, -innerWidth / 2),
+                    new THREE.Vector3(-innerWidth / 2, -width / 2, -innerWidth / 2),
+                    new THREE.Vector3(-innerWidth / 2, -width / 2, innerWidth / 2),
+
+                    new THREE.Vector3(innerWidth / 2, width / 2, innerWidth / 2),
+                    new THREE.Vector3(innerWidth / 2, width / 2, -innerWidth / 2),
+                    new THREE.Vector3(-innerWidth / 2, width / 2, -innerWidth / 2),
+                    new THREE.Vector3(-innerWidth / 2, width / 2, innerWidth / 2),
+
+                    new THREE.Vector3(width / 2, -width / 2, width / 2),
+                    new THREE.Vector3(width / 2, -width / 2, -width / 2),
+                    new THREE.Vector3(-width / 2, -width / 2, -width / 2),
+                    new THREE.Vector3(-width / 2, -width / 2, width / 2),
+
+                    new THREE.Vector3(width / 2, width / 2, width / 2),
+                    new THREE.Vector3(width / 2, width / 2, -width / 2),
+                    new THREE.Vector3(-width / 2, width / 2, -width / 2),
+                    new THREE.Vector3(-width / 2, width / 2, width / 2),
+
+                ];
+                geom.faces = [
+                    //内部交叉面
+                    new THREE.Face3(0, 2, 6),
+                    new THREE.Face3(0, 6, 4),
+                    new THREE.Face3(3, 1, 5),
+                    new THREE.Face3(3, 5, 7),
+                    //外部方块面
+                    new THREE.Face3(8, 11, 10),
+                    new THREE.Face3(8, 10, 9),
+                    new THREE.Face3(8, 15, 11),
+                    new THREE.Face3(8, 12, 15),
+                    new THREE.Face3(8, 9, 13),
+                    new THREE.Face3(8, 13, 12),
+                    new THREE.Face3(14, 12, 13),
+                    new THREE.Face3(14, 15, 12),
+                    new THREE.Face3(14, 13, 9),
+                    new THREE.Face3(14, 9, 10),
+                    new THREE.Face3(14, 11, 15),
+                    new THREE.Face3(14, 10, 11),
+                ];
+
+                for (let faceIndex in geom.faces) {
+                    if (faceIndex < 4) {
+                        geom.faces [faceIndex].materialIndex = 0;
+                    } else {
+                        geom.faces [faceIndex].materialIndex = 1;
+                    }
+                }
+                geom.faceVertexUvs[0][0] = [imagePoint[0][0], imagePoint[0][2], imagePoint[2][2]];
+                geom.faceVertexUvs[0][1] = [imagePoint[0][0], imagePoint[2][2], imagePoint[2][0]];
+                geom.faceVertexUvs[0][2] = geom.faceVertexUvs[0][0];
+                geom.faceVertexUvs[0][3] = geom.faceVertexUvs[0][1];
+                for (let i = 4; i < 16; i++) {
+                    geom.faceVertexUvs[0][i] = [new THREE.Vector2(), new THREE.Vector2(),  new THREE.Vector2() ]
+                }
+                geom.computeFaceNormals();
                 break;
+            default:
+                throw "unknow geometryType";
         }
+        this._geometry = geom;
         this._geometryMap[this.cubeOptions.cubeAttributes.geometryType] = this._geometry
     }
 
@@ -154,7 +208,7 @@ export default class CubeFactory {
         let textureLoader = new THREE.TextureLoader();
         let textureList = [];
         for (let imageUrlIndex in this.cubeOptions.images) {
-            let imageUrl = this.cubeOptions.images[imageUrlIndex]
+            let imageUrl = this.cubeOptions.images[imageUrlIndex];
             if (imageUrl === '' || imageUrl === undefined) {
                 textureList.push(undefined);
             } else {
@@ -182,34 +236,55 @@ export default class CubeFactory {
             );
         }
         //半高贴图
-        let isHalfCube = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.geometryType === GeometryType.HalfCube;
+        let geometryType = (this.cubeOptions.cubeAttributes !== undefined) && this.cubeOptions.cubeAttributes.geometryType;
 
         for (let keyIndex in this.cubeOptions.imageSet) {
             let key = this.cubeOptions.imageSet[keyIndex];
             let materialTmp = materialList[key];
-            if (isHalfCube) {
-                if ("0145".indexOf(keyIndex) >= 0) {
-                    if (!this._materialsHalfMap) {
-                        this._materialsHalfMap = {}
+            switch (geometryType) {
+                case GeometryType.HalfCube:
+                    if ("0145".indexOf(keyIndex) >= 0) {
+                        if (!this._materialsHalfMap) {
+                            this._materialsHalfMap = {}
+                        }
+                        if (this._materialsHalfMap[this.cubeOptions.key]) {
+                            materialTmp = this._materialsHalfMap[this.cubeOptions.key];
+                        } else if (materialTmp.map) {
+                            let materialNew = materialTmp.clone();
+                            materialNew.map = materialTmp.map.clone();
+                            let textureNew = textureLoader.load(this.cubeOptions.images[this.cubeOptions.imageSet[keyIndex]]);
+                            textureNew.generateMipmaps = true;
+                            textureNew.minFilter = THREE.NearestMipMapNearestFilter;
+                            textureNew.magFilter = THREE.NearestFilter;
+                            textureNew.wrapS = textureNew.wrapT = THREE.RepeatWrapping;
+                            textureNew.repeat.set(1, 0.5);
+                            materialNew.map = textureNew;
+                            materialTmp = materialNew;
+                            this._materialsHalfMap[this.cubeOptions.key] = materialTmp;
+                        }
                     }
-                    if (this._materialsHalfMap[this.cubeOptions.key]) {
-                        materialTmp = this._materialsHalfMap[this.cubeOptions.key];
-                    } else if (materialTmp.map) {
-                        let materialNew = materialTmp.clone();
-                        materialNew.map = materialTmp.map.clone();
-                        let textureNew = textureLoader.load(this.cubeOptions.images[this.cubeOptions.imageSet[keyIndex]]);
-                        textureNew.generateMipmaps = true;
-                        textureNew.minFilter = THREE.NearestMipMapNearestFilter;
-                        textureNew.magFilter = THREE.NearestFilter;
-                        textureNew.wrapS = textureNew.wrapT = THREE.RepeatWrapping;
-                        textureNew.repeat.set(1, 0.5);
-                        materialNew.map = textureNew;
-                        materialTmp = materialNew;
-                        this._materialsHalfMap[this.cubeOptions.key] = materialTmp;
+                    break;
+                case GeometryType.Flower1Cube:
+                    if (Number(keyIndex) === 0) {
+                        materialTmp.transparent = true;
+                        // materialTmp.depthTest=false;//穿所有平面，一直可见
+                        materialTmp.depthWrite = false;//交叉平面透明部分不互相遮挡
+                        materialTmp.side = THREE.DoubleSide;
+                    } else {
+                        materialTmp.transparent = true;
+                        materialTmp.opacity = 0;
                     }
-                }
+                    break;
             }
             this._materials.push(materialTmp);
+        }
+        if (geometryType === GeometryType.Flower1Cube) {
+            if (this._materials.length <= 1) {
+                this._materials.push(new MeshBasicMaterial({
+                    transparent: true,
+                    opacity: 0,
+                }));
+            }
         }
         this._materialsMap[this.cubeOptions.key] = this._materials;
     };
@@ -229,7 +304,7 @@ export default class CubeFactory {
         position.z = position.z || 0;
         let mesh = new THREE.Mesh(
             this._geometry,
-             this._materials
+            this._materials
         );
         mesh.receiveShadow = mesh.castShadow = GlobalSetting.enableShadow;
         //新方块中心位置
@@ -244,6 +319,7 @@ export default class CubeFactory {
                     z: mesh.position.z,
                 },
                 cubeTypeKey: this.cubeOptions.key,
+                cubeAttributes: this.cubeOptions.cubeAttributes
             };
         }
         if (rotation.rotateX && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.x)) {

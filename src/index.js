@@ -9,11 +9,11 @@ import {initScene} from "./utils/basic/Scene";
 import {initCamera} from "./utils/basic/Camera";
 import {initRenderer} from "./utils/basic/Renderer";
 import {initControls} from "./utils/controls/ControlBuilder";
-import {SceneUtils} from 'three/examples/jsm/utils/SceneUtils.js';
 import DefaultCube from "./utils/objects/cube/DefaultCube";
 import GlobalSetting from "./utils/setting/GlobalSetting";
 import device from "current-device";
 import GeometryType from "./utils/objects/cube/GeometryType";
+import {MeshLambertMaterial} from "three";
 
 
 // 检查设备
@@ -208,7 +208,6 @@ function changeLight() {
 })();
 
 let prevTime = performance.now();
-
 (function animate() {
     requestAnimationFrame(animate);
     let time = performance.now();

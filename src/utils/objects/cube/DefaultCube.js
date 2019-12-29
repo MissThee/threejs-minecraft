@@ -2248,5 +2248,235 @@ export default {
             geometryType: GeometryType.Cube,
         },
     },
-
+    flower_rose: {
+        key: 'flower_rose',
+        images: [
+            './assets/img/blocks/flower_rose.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_allium: {
+        key: 'flower_allium',
+        images: [
+            './assets/img/blocks/flower_allium.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_blue_orchid: {
+        key: 'flower_blue_orchid',
+        images: [
+            './assets/img/blocks/flower_blue_orchid.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_dandelion: {
+        key: 'flower_dandelion',
+        images: [
+            './assets/img/blocks/flower_dandelion.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_houstonia: {
+        key: 'flower_houstonia',
+        images: [
+            './assets/img/blocks/flower_houstonia.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_oxeye_daisy: {
+        key: 'flower_oxeye_daisy',
+        images: [
+            './assets/img/blocks/flower_oxeye_daisy.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_paeonia: {
+        key: 'flower_paeonia',
+        images: [
+            './assets/img/blocks/flower_paeonia.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_tulip_orange: {
+        key: 'flower_tulip_orange',
+        images: [
+            './assets/img/blocks/flower_tulip_orange.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_tulip_pink: {
+        key: 'flower_tulip_pink',
+        images: [
+            './assets/img/blocks/flower_tulip_pink.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_tulip_red: {
+        key: 'flower_tulip_red',
+        images: [
+            './assets/img/blocks/flower_tulip_red.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    flower_tulip_white: {
+        key: 'flower_tulip_white',
+        images: [
+            './assets/img/blocks/flower_tulip_white.png',
+        ],
+        imageSet: [0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
 }

@@ -179,6 +179,12 @@ export default class MCFirstPersonControl {
     }
 
     update(delta) {
+        let objectsImpenetrable = this.objects.filter(e =>
+            !(e.userData
+                && e.userData.cubeAttributes
+                && e.userData.cubeAttributes.isPenetrable
+            )
+        );
         // console.log(this.objects.length)
         delta = delta || 0.016;
         if (!this.controls.isLocked) {
@@ -245,7 +251,7 @@ export default class MCFirstPersonControl {
                         this.checkRay.Z0[i].ray.origin.x = positionBeforeX;//修正为移动前的x轴位置，防止使用位移后的位置检测墙壁
                         this.checkRay.Z0[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.Z0[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
-                        let intersections = this.checkRay.Z0[i].intersectObjects(this.objects);
+                        let intersections = this.checkRay.Z0[i].intersectObjects(objectsImpenetrable);
                         if (intersections.length > 0) {
                             Z0NearFlatTmp = intersections[0].point.z;
                             Z0Flat = Math.max(Z0Flat === undefined ? Z0NearFlatTmp : Z0Flat, Z0NearFlatTmp);
@@ -256,14 +262,14 @@ export default class MCFirstPersonControl {
                 let Z1NearFlatTmp;
                 {
                     for (let i = 0; i < 10; i++) {
-                        if (this.checkRay.Z1[i]===undefined) {
+                        if (this.checkRay.Z1[i] === undefined) {
                             this.checkRay.Z1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, 1), 0, 0));
                         }
                         this.checkRay.Z1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z1[i].ray.origin.x = positionBeforeX;
                         this.checkRay.Z1[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.Z1[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
-                        let intersections = this.checkRay.Z1[i].intersectObjects(this.objects);
+                        let intersections = this.checkRay.Z1[i].intersectObjects(objectsImpenetrable);
                         if (intersections.length > 0) {
                             Z1NearFlatTmp = intersections[0].point.z;
                             Z1Flat = Math.min(Z1Flat === undefined ? Z1NearFlatTmp : Z1Flat, Z1NearFlatTmp);
@@ -288,7 +294,7 @@ export default class MCFirstPersonControl {
                         this.checkRay.X0[i].ray.origin.z = positionBeforeZ;
                         this.checkRay.X0[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.X0[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
-                        let intersections = this.checkRay.X0[i].intersectObjects(this.objects);
+                        let intersections = this.checkRay.X0[i].intersectObjects(objectsImpenetrable);
                         if (intersections.length > 0) {
                             X0NearFlatTmp = intersections[0].point.x;
                             X0Flat = Math.max(X0Flat === undefined ? X0NearFlatTmp : X0Flat, X0NearFlatTmp);
@@ -306,7 +312,7 @@ export default class MCFirstPersonControl {
                         this.checkRay.X1[i].ray.origin.z = positionBeforeZ;
                         this.checkRay.X1[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.X1[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
-                        let intersections = this.checkRay.X1[i].intersectObjects(this.objects);
+                        let intersections = this.checkRay.X1[i].intersectObjects(objectsImpenetrable);
                         if (intersections.length > 0) {
                             X1NearFlatTmp = intersections[0].point.x;
                             X1Flat = Math.min(X1Flat === undefined ? X1NearFlatTmp : X1Flat, X1NearFlatTmp);
@@ -342,7 +348,7 @@ export default class MCFirstPersonControl {
                 this.checkRay.Y0[3].ray.origin.x -= rayMove;
                 this.checkRay.Y0[3].ray.origin.z -= rayMove;
                 for (let i = 0; i < 5; i++) {
-                    let intersections = this.checkRay.Y0[i].intersectObjects(this.objects);
+                    let intersections = this.checkRay.Y0[i].intersectObjects(objectsImpenetrable);
                     if (intersections.length > 0) {
                         let bottomFlatYTmp = intersections[0].point.y;
                         bottomFlatY = Math.max(bottomFlatY === undefined ? bottomFlatYTmp : bottomFlatY, bottomFlatYTmp);
@@ -353,7 +359,7 @@ export default class MCFirstPersonControl {
             let topFlatY = undefined;
             {
                 for (let i = 0; i < 5; i++) {
-                    if( this.checkRay.Y1[i]===undefined){
+                    if (this.checkRay.Y1[i] === undefined) {
                         this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 0));
                     }
                     this.checkRay.Y1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
@@ -368,7 +374,7 @@ export default class MCFirstPersonControl {
                 this.checkRay.Y1[3].ray.origin.x -= rayMove;
                 this.checkRay.Y1[3].ray.origin.z -= rayMove;
                 for (let i = 0; i < 5; i++) {
-                    let intersections = this.checkRay.Y1[i].intersectObjects(this.objects);
+                    let intersections = this.checkRay.Y1[i].intersectObjects(objectsImpenetrable);
                     if (intersections.length > 0) {
                         let topFlatYTmp = intersections[0].point.y;
                         topFlatY = Math.min(topFlatY === undefined ? topFlatYTmp : topFlatY, topFlatYTmp);
@@ -423,11 +429,7 @@ export default class MCFirstPersonControl {
                     if (event.button === 0) {//删除方块 左键
                         //TODO 改为长按同一方块时才删除
                         // console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name));
-                        let index = this.objects.findIndex(e => e.id === clickedObjects[0].object.id);
-                        if (index >= 0) {
-                            this.objects.splice(index, 1);
-                        }
-                        this.scene.remove(this.scene.getObjectById(clickedObjects[0].object.id));
+                        this.removeCube(clickedObjects[0].object);
                         return;
                     }
                     if (event.button === 2) {//添加方块 右键
@@ -438,6 +440,8 @@ export default class MCFirstPersonControl {
                         let point = clickedObjects[0].point;
 
                         let targetIsHalfCube = DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes && DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.geometryType === GeometryType.HalfCube;
+                        let targetIsFlower1Cube = DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes && DefaultCube[clickedObjects[0].object.userData.cubeTypeKey].cubeAttributes.geometryType === GeometryType.Flower1Cube;
+                        let newIsFlower1Cube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === GeometryType.Flower1Cube;
                         let newIsHalfCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === GeometryType.HalfCube;
                         let newIsStairsCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === GeometryType.StairsCube;
 
@@ -447,8 +451,14 @@ export default class MCFirstPersonControl {
                         newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(1, 0, 0), rotate.x);
                         newPositionVector.round();
 
-                        let yMove = newPositionVector.y;
-                        {
+                        let newPosition;
+                        if (!targetIsFlower1Cube && newIsFlower1Cube && newPositionVector.y !== 1) {//限制花只能放在顶面
+                            return;
+                        }
+                        if (targetIsFlower1Cube) {
+                            newPosition = position;//如果位置是花则花被顶替
+                        } else {
+                            let yMove = newPositionVector.y;
                             if (targetIsHalfCube) {
                                 if (newIsHalfCube) {
                                     if (newPositionVector.y !== 0) {
@@ -478,14 +488,21 @@ export default class MCFirstPersonControl {
                                     }
                                 }
                             }
-                        }
-                        let newPosition = {
-                            x: position.x + newPositionVector.x,
-                            y: position.y + yMove,
-                            z: position.z + newPositionVector.z,
-                        };
-                        if (!newIsHalfCube && checkPositionIsExistBlock(newPosition, this.objects)) {
-                            return;
+                            newPosition = {
+                                x: position.x + newPositionVector.x,
+                                y: position.y + yMove,
+                                z: position.z + newPositionVector.z,
+                            };
+                            //检查同位置重复方块
+                            let existObject = checkPositionIsExistBlock(newPosition, this.objects);
+                            if (existObject) {
+                                if (existObject.userData.cubeAttributes.geometryType === GeometryType.Flower1Cube) {
+                                    this.removeCube(existObject);
+                                } else if (!newIsHalfCube) {
+                                    return;
+                                }
+                            }
+
                         }
                         let newDirectionRotate = {
                             x: 0,
@@ -525,6 +542,9 @@ export default class MCFirstPersonControl {
                         }
                         let cubeFactory = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]);
                         let cube = cubeFactory.buildCube(newPosition.x, newPosition.y, newPosition.z, DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]], 0, newDirectionRotate.y, newDirectionRotate.z);
+                        if (targetIsFlower1Cube) {
+                            this.removeCube(clickedObjects[0].object);
+                        }
                         this.scene.add(cube);
                         this.objects.push(cube);
                     }
@@ -628,6 +648,14 @@ export default class MCFirstPersonControl {
             this.previewCube.rotateY(Math.PI / 4 + this.previewCubeRotation.y)
         }
     }
+
+    removeCube(object) {
+        let index = this.objects.findIndex(e => e.id === object.id);
+        if (index >= 0) {
+            this.objects.splice(index, 1);
+        }
+        this.scene.remove(this.scene.getObjectById(object.id));
+    }
 }
 
 function setAimStyle(aimEl) {
@@ -659,17 +687,17 @@ function getClickedObject(objects, camera) {
 }
 
 //检测新方块要放的位置是否已经有放快了
-function checkPositionIsExistBlock(position, positionArray) {
-    for (let positionTmp of positionArray) {
-        if (Math.round(positionTmp.position.x) === Math.round(position.x)
+function checkPositionIsExistBlock(checkObject, Objects) {
+    for (let object of Objects) {
+        if (Math.round(object.position.x) === Math.round(checkObject.x)
             &&
-            Math.round(positionTmp.position.y) === Math.round(position.y)
+            Math.round(object.position.y) === Math.round(checkObject.y)
             &&
-            Math.round(positionTmp.position.z) === Math.round(position.z)) {
-            return true;
+            Math.round(object.position.z) === Math.round(checkObject.z)) {
+            return object;
         }
     }
-    return false;
+    return undefined;
 }
 
 

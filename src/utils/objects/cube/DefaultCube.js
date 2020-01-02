@@ -98,6 +98,27 @@ export default {
             geometryType: GeometryType.Cube,
         },
     },
+    redstone_block: {
+        key: 'redstone_block',
+        images: [
+            './assets/img/blocks/redstone_block.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
     diamond_block: {
         key: 'diamond_block',
         images: [
@@ -2465,6 +2486,29 @@ export default {
         ],
         imageSet: [0],
         materialParameters: {},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: true,
+                z: false,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: true,
+            isIndestructible: false,
+            geometryType: GeometryType.Flower1Cube,
+        },
+    },
+    tallgrass: {
+        key: 'tallgrass',
+        images: [
+            './assets/img/blocks/tallgrass.png',
+        ],
+        imageSet: [0],
+        materialParameters: {
+            color:0xB1FB6C,
+        },
         materialParametersForOneList: [],
         meshParameters: {
             rotateEnable: {

@@ -4,6 +4,7 @@ import GeometryType from "./GeometryType";
 import ImagePoint from "./ImagePoint";
 import {MeshLambertMaterial} from "three";
 import {MeshBasicMaterial} from "three";
+import DefaultCube from "./DefaultCube";
 
 
 export default class CubeFactory {
@@ -185,7 +186,7 @@ export default class CubeFactory {
                 geom.faceVertexUvs[0][2] = geom.faceVertexUvs[0][0];
                 geom.faceVertexUvs[0][3] = geom.faceVertexUvs[0][1];
                 for (let i = 4; i < 16; i++) {
-                    geom.faceVertexUvs[0][i] = [new THREE.Vector2(), new THREE.Vector2(),  new THREE.Vector2() ]
+                    geom.faceVertexUvs[0][i] = [new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]
                 }
                 geom.computeFaceNormals();
                 break;
@@ -295,6 +296,9 @@ export default class CubeFactory {
         let position = {x: x, y: y, z: z};
         let rotation = {rotateX: rotateX, rotateY: rotateY, rotateZ: rotateZ};
         if (defaultCube) {
+            if (typeof (defaultCube) === "string") {
+                defaultCube = DefaultCube[defaultCube];
+            }
             this.cubeOptions = defaultCube;
             this.buildGeometry();
             this.buildMaterials();
@@ -313,6 +317,7 @@ export default class CubeFactory {
             mesh.position.y = position.y;
             mesh.position.z = position.z;
             mesh.userData = {
+                saveInfo: [x, y, z, this.cubeOptions.key, rotateX, rotateY, rotateZ],
                 fullCubePosition: {
                     x: mesh.position.x,
                     y: mesh.position.y,

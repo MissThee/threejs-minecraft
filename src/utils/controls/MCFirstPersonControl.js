@@ -36,6 +36,10 @@ export default class MCFirstPersonControl {
         this.preRuning = undefined;
         this.isRunning = false;
         this.canJump = false;
+        this.switchFly = undefined;
+        this.canFly = true;
+        this.switchFlyKeyUped = false;
+        this.isFlying = false;
         // this.prevTime = performance.now();
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
@@ -137,11 +141,37 @@ export default class MCFirstPersonControl {
 
                 case 32: // space
                     //7.74是60开平方
+                    if (!this.canJump && this.switchFlyKeyUped) {
+                        this.isFlying = this.canFly;
+                    }
                     if (this.canJump) this.velocity.y += Math.sqrt(2 * this.worldOption.g * 7.74 * this.personOption.jumpHeight);
                     this.canJump = false;
+                    if (this.isFlying) {
+                        {//取消飞行
+                            if (!this.switchFly) {
+                                this.switchFly = performance.now();
+                            } else {
+                                if (performance.now() - this.switchFly <= 200) {
+                                    this.isFlying = !this.switchFlyKeyUped;
+                                }
+                            }
+                        }
+                        if (this.moveUp) {
+                            break;
+                        }
+                        this.moveUp = true;
+                        this.switchFlyKeyUped = false;
+                    }
+                    this.switchFly = performance.now();
                     break;
-
+                case 16: // shift left
+                    if (this.moveDown) {
+                        break;
+                    }
+                    this.moveDown = true;
+                    break;
             }
+
 
         };
         let onKeyUp = (event) => {
@@ -167,6 +197,14 @@ export default class MCFirstPersonControl {
                     this.moveRight = false;
                     break;
 
+                case 16: // shift left
+                    this.moveDown = false;
+                    break;
+
+                case 32: // space
+                    this.moveUp = false;
+                    this.switchFlyKeyUped = true;
+                    break;
             }
 
         };
@@ -192,41 +230,41 @@ export default class MCFirstPersonControl {
             this.moveBackward = false;
             this.moveLeft = false;
             this.moveRight = false;
+            this.moveUp = false;
+            this.moveDown = false;
         }
         //水平方向移动+碰撞检测
         {
             this.direction.z = Number(this.moveForward) - Number(this.moveBackward);
             this.direction.x = Number(this.moveRight) - Number(this.moveLeft);
             this.direction.normalize(); // this ensures consistent movements in all directions
-            let velocityXZMax = this.isRunning ? this.personOption.speedRun : this.personOption.speedWalk;
+            let velocityMax = this.isRunning ? this.personOption.speedRun : this.personOption.speedWalk;
 
             if (this.moveForward || this.moveBackward) {
-                let velocityZTmp = this.velocity.z + this.direction.z * velocityXZMax * this.personOption.accelerateRateStart;
-                if (Math.abs(velocityZTmp) < velocityXZMax) {
+                let velocityZTmp = this.velocity.z + this.direction.z * velocityMax * this.personOption.accelerateRateStart;
+                if (Math.abs(velocityZTmp) < velocityMax) {
                     this.velocity.z = velocityZTmp;
                 } else {
-                    this.velocity.z = this.direction.z * velocityXZMax;
+                    this.velocity.z = this.direction.z * velocityMax;
                 }
             } else {
                 this.velocity.z = Math.abs(this.velocity.z) > 1 ? this.velocity.z * (this.personOption.accelerateRateStop) : 0;
             }
+            let positionBeforeX = this.controls.getObject().position.x;
+            this.controls.moveRight(this.velocity.x * delta);
 
             if (this.moveLeft || this.moveRight) {
-                let velocityXTmp = this.velocity.x + this.direction.x * velocityXZMax * this.personOption.accelerateRateStart;
-                if (Math.abs(velocityXTmp) < velocityXZMax) {
+                let velocityXTmp = this.velocity.x + this.direction.x * velocityMax * this.personOption.accelerateRateStart;
+                if (Math.abs(velocityXTmp) < velocityMax) {
                     this.velocity.x = velocityXTmp;
                 } else {
-                    this.velocity.x = this.direction.x * velocityXZMax;
+                    this.velocity.x = this.direction.x * velocityMax;
                 }
             } else {
                 this.velocity.x = Math.abs(this.velocity.x) > 1 ? this.velocity.x * (this.personOption.accelerateRateStop) : 0;
             }
-
-            let positionBeforeX = this.controls.getObject().position.x;
             let positionBeforeZ = this.controls.getObject().position.z;
-
             this.controls.moveForward(this.velocity.z * delta);
-            this.controls.moveRight(this.velocity.x * delta);
 
             //横向碰撞检测辅助参数
             const checkPositionOptions = [
@@ -329,6 +367,26 @@ export default class MCFirstPersonControl {
         }
         //垂直方向移动+碰撞检测
         {
+            let flyNextY = undefined;
+            if (this.isFlying) {
+                this.velocity.y = 0;
+                this.direction.y = Number(this.moveUp) - Number(this.moveDown);
+                this.direction.normalize();
+                let velocityMax = this.isRunning ? this.personOption.speedRun : this.personOption.speedWalk;
+                if (this.moveUp || this.moveDown) {
+                    let velocityYTmp = this.velocity.y + this.direction.y * velocityMax * this.personOption.accelerateRateStart;
+                    if (Math.abs(velocityYTmp) < velocityMax) {
+                        this.velocity.y = velocityYTmp;
+                    } else {
+                        this.velocity.y = this.direction.y * velocityMax;
+                    }
+                } else {
+                    this.velocity.y = Math.abs(this.velocity.y) > 1 ? this.velocity.y * (this.personOption.accelerateRateStop) : 0;
+                }
+                let positionBeforeY = this.controls.getObject().position.y;
+                flyNextY = positionBeforeY + this.velocity.y * delta * 2;
+            }
+
             let bottomFlatY = undefined;
             //坠落四角+中间 检测
             {
@@ -382,7 +440,7 @@ export default class MCFirstPersonControl {
                 }
             }
             //无碰撞时下次垂直位置(相机位置)
-            let nextY = this.controls.getObject().position.y + (this.velocity.y * delta);
+            let nextY = this.isFlying ? flyNextY : this.controls.getObject().position.y + (this.velocity.y * delta);
             if (topFlatY !== undefined) {
                 if (nextY > topFlatY - (this.personOption.height - this.personOption.sightHeight)) {
                     nextY = topFlatY - (this.personOption.height - this.personOption.sightHeight);
@@ -395,6 +453,7 @@ export default class MCFirstPersonControl {
                 if (nextY === bottomFlatY + this.personOption.sightHeight) {
                     this.velocity.y = 0;
                     this.canJump = true;
+                    this.isFlying = false;
                 } else {
                     this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
                 }
@@ -429,7 +488,9 @@ export default class MCFirstPersonControl {
                     if (event.button === 0) {//删除方块 左键
                         //TODO 改为长按同一方块时才删除
                         // console.log(clickedObjects[0].object, this.scene.getObjectByName(clickedObjects[0].object.name));
-                        this.removeCube(clickedObjects[0].object);
+                        if (this.controls.isLocked) {
+                            this.removeCube(clickedObjects[0].object);
+                        }
                         return;
                     }
                     if (event.button === 2) {//添加方块 右键

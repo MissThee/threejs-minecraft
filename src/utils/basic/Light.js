@@ -24,9 +24,9 @@ export function initDirectionalLight() {
     light.color = new THREE.Color().setHex(0xffffff);
     light.intensity = getDirectionalLightIntensity();
     light.shadow.radius = 512;
-    light.position.x = 10;
-    light.position.y = -10;
-    light.position.z = 10;
+    light.position.x = 100;
+    light.position.y = -100;
+    light.position.z = 100;
     return light;
 }
 

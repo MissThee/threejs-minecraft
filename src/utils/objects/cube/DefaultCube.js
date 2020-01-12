@@ -2,8 +2,8 @@
 import GeometryType from "./GeometryType";
 
 export default {
-    grass: {
-        key: 'grass',//设置和对象key一样
+    grassdirt: {
+        key: 'grassdirt',//设置和对象key一样
         images: [//贴图路径
             './assets/img/blocks/grass_side.png',
             './assets/img/blocks/grass_top.png',
@@ -46,6 +46,27 @@ export default {
                 x: true,
                 y: true,
                 z: true,
+            }
+        },
+        cubeAttributes: {
+            isPenetrable: false,
+            isIndestructible: false,
+            geometryType: GeometryType.Cube,
+        },
+    },
+    grass: {
+        key: 'grass',
+        images: [
+            './assets/img/blocks/grass_top.png',
+        ],
+        imageSet: [0, 0, 0, 0, 0, 0],
+        materialParameters: {color: 0xB1FB6C},
+        materialParametersForOneList: [],
+        meshParameters: {
+            rotateEnable: {
+                x: false,
+                y: false,
+                z: false,
             }
         },
         cubeAttributes: {
@@ -2507,7 +2528,7 @@ export default {
         ],
         imageSet: [0],
         materialParameters: {
-            color:0xB1FB6C,
+            color: 0xB1FB6C,
         },
         materialParametersForOneList: [],
         meshParameters: {

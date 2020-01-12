@@ -1,3 +1,3 @@
 export default {
-    enableShadow:false
+    enableShadow: false
 }

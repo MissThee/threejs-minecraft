@@ -25,7 +25,7 @@ export function initDirectionalLight() {
     light.intensity = getDirectionalLightIntensity();
     light.shadow.radius = 512;
     light.position.x = 100;
-    light.position.y = -100;
+    light.position.y = 100;
     light.position.z = 100;
     return light;
 }

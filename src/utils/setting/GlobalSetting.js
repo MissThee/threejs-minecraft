@@ -1,3 +1,4 @@
 export default {
-    enableShadow: false
+    enableShadow: false,
+    enableDirectionalLight: true
 }

@@ -289,7 +289,7 @@ let prevTime = performance.now();
     let delta = (time - prevTime) / 1000;
     prevTime = time;
     // TWEEN.update(delta);
-    controls.update();
+    controls.update(delta);
     renderer.render(scene, camera);
     new StatsWindow("canvas-frame").stats.update(delta);
     changeLight();

@@ -1,20 +1,5 @@
-import {WEBGL} from "three/examples/jsm/WebGL.js";
-// import TWEEN from "@tweenjs/tween.js";//动作库
-import CubeFactory from "./utils/objects/cube/CubeFactory.js";
-import StatsWindow from "./utils/stats/StatsWindow.js";
-import {initAmbientLight, getAmbientLightIntensity, lightHighIntensity, lightLowIntensity, lightCurrentIntensity, lightValueBecomeHigher, initDirectionalLight, getDirectionalLightIntensity} from "./utils/basic/Light";
-import {initBGMPlayer} from "./utils/sound/Bgm";
-import {initScene} from "./utils/basic/Scene";
-import {initCamera} from "./utils/basic/Camera";
-import {initRenderer} from "./utils/basic/Renderer";
-import {initControls} from "./utils/controls/ControlBuilder";
-import DefaultCube from "./utils/objects/cube/DefaultCube";
-import GlobalSetting from "./utils/setting/GlobalSetting";
-import device from "current-device";
-import GeometryType from "./utils/objects/cube/GeometryType";
-
-
 // 检查设备
+const device = require("current-device").default;
 if (device.type === 'mobile') {
     let divEl = document.createElement('div');
     divEl.style.position = "absolute";
@@ -39,6 +24,8 @@ if (device.type === 'mobile') {
     document.body.appendChild(divEl);
     throw "unsupport platform";
 }
+
+const {WEBGL} = require("three/examples/jsm/WebGL.js");
 //检查webgl兼容
 if (!WEBGL.isWebGLAvailable()) {
     let divEl = document.createElement('div');
@@ -65,14 +52,59 @@ if (!WEBGL.isWebGLAvailable()) {
     document.body.appendChild(WEBGL.getWebGLErrorMessage());
     throw "unsupport browser";
 }
-//添加左下角的按钮，测试用
+
+let loadingTextEl;
+let loadingDivEl;
 {
+    loadingDivEl = document.createElement('div');
+    loadingDivEl.style.position = "absolute";
+    loadingDivEl.style.backgroundColor = "white";
+    loadingDivEl.style.top = "0";
+    loadingDivEl.style.bottom = "0";
+    loadingDivEl.style.width = "100%";
+    loadingDivEl.style.zIndex = "10001";
+    loadingDivEl.style.textAlign = 'center';
+    loadingDivEl.style.fontWeight = 'bold';
+    loadingDivEl.style.color = 'gray';
+    loadingDivEl.style.fontSize = '1em';
+    loadingTextEl = document.createElement('span');
+    loadingTextEl.style.fontSize = '1.5em';
+    loadingTextEl.style.position = "absolute";
+    loadingTextEl.style.top = "35%";
+    loadingDivEl.append(loadingTextEl);
+    document.body.appendChild(loadingDivEl);
+}
+let loadingCurrentIndex = 0;
+let loadingTotal = 11;
+// import TWEEN from "@tweenjs/tween.js";//动作库
+loadingTextEl.innerText = "加载方块配置" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const DefaultCube = require("./utils/objects/cube/DefaultCube").default;
+loadingTextEl.innerText = "加载方块配置" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const GlobalSetting = require("./utils/setting/GlobalSetting").default;
+loadingTextEl.innerText = "加载方块制造器" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const CubeFactory = require("./utils/objects/cube/CubeFactory.js").default;
+loadingTextEl.innerText = "加载性能监控器" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const StatsWindow = require("./utils/stats/StatsWindow.js").default;
+loadingTextEl.innerText = "初始化场景" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const {initScene} = require("./utils/basic/Scene");
+loadingTextEl.innerText = "初始化光源" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const {initAmbientLight, getAmbientLightIntensity, lightHighIntensity, lightLowIntensity, lightCurrentIntensity, lightValueBecomeHigher, initDirectionalLight, getDirectionalLightIntensity} = require("./utils/basic/Light");
+loadingTextEl.innerText = "初始化摄像机" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const {initCamera} = require("./utils/basic/Camera");
+loadingTextEl.innerText = "初始化渲染器" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const {initRenderer} = require("./utils/basic/Renderer");
+loadingTextEl.innerText = "初始化背景音乐" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const {initBGMPlayer} = require("./utils/sound/Bgm");
+loadingTextEl.innerText = "初始化控制器" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+const {initControls} = require("./utils/controls/ControlBuilder");
+loadingTextEl.innerText = "加载测试按钮" + "[" + loadingCurrentIndex++ + "/" + loadingTotal + "]";
+{//添加左下角的按钮，测试用
     let divEl = document.createElement('div');
     divEl.style.position = "absolute";
     divEl.style.bottom = "0";
     divEl.style.left = "0";
     divEl.style.width = "10px";
-    divEl.style.zIndex = "1000";
+    divEl.style.zIndex = "10000";
     let inputEl = document.createElement('input');
     inputEl.value = 'PrintCubeInfo';
     inputEl.type = 'button';
@@ -83,6 +115,24 @@ if (!WEBGL.isWebGLAvailable()) {
     divEl.appendChild(inputEl);
     document.body.appendChild(divEl);
 }
+loadingTextEl.innerText = "完毕";
+setTimeout(function () {
+    let loadingStyleInterval = setInterval(function () {
+        if (loadingDivEl.style.opacity === undefined || loadingDivEl.style.opacity.length === 0) {
+            console.log('loadingDivEl.style.opacity', loadingDivEl.style.opacity, loadingDivEl.style.opacity, loadingDivEl.style.opacity.length === 0);
+            loadingDivEl.style.opacity = '1'
+        } else {
+            console.log('loadingDivEl.style.opacity1', loadingDivEl.style.opacity);
+            let loadingOpacityValue = Number.parseFloat(loadingDivEl.style.opacity) - 0.1;
+            loadingDivEl.style.opacity = (loadingOpacityValue).toString();
+            if (loadingOpacityValue <= 0) {
+                clearInterval(loadingStyleInterval);
+                loadingDivEl.style.display = "none";
+            }
+        }
+    }, 16);
+}, 1000);
+
 
 //------------------------------------初始化基本对象-结束------------------------------------------------
 

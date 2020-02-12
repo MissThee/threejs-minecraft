@@ -90,6 +90,30 @@
             throw "unsupport browser";
         }
     })();
+    {//加载中遮罩
+        let loadingDivEl = document.createElement('div');
+        loadingDivEl.id = 'loadingDivEl';
+        loadingDivEl.style.position = "absolute";
+        loadingDivEl.style.backgroundColor = "white";
+        loadingDivEl.style.top = "0";
+        loadingDivEl.style.bottom = "0";
+        loadingDivEl.style.width = "100%";
+        loadingDivEl.style.zIndex = "10001";
+        loadingDivEl.style.textAlign = 'center';
+        loadingDivEl.style.fontWeight = 'bold';
+        loadingDivEl.style.color = 'gray';
+        loadingDivEl.style.fontSize = '1em';
+        let loadingTextEl = document.createElement('div');
+        loadingTextEl.id = 'loadingTextEl';
+        loadingTextEl.style.fontSize = '1.5em';
+        loadingTextEl.style.position = "absolute";
+        loadingTextEl.style.textAlign = 'center';
+        loadingTextEl.style.top = "35%";
+        loadingTextEl.style.width = "100%";
+        loadingTextEl.innerText = "加载中";
+        loadingDivEl.append(loadingTextEl);
+        document.body.appendChild(loadingDivEl);
+    }
 </script>
 <div id="canvas-frame" style="height: 100%;width: 100%;cursor: pointer;"></div>
 <a href="https://github.com/MissThee/threejs-minecraft" target="_blank" class="github-corner" style="position: absolute;top:0;right: 0;z-index: 10002;" title="前往github" aria-label="View source on GitHub">

@@ -3,7 +3,7 @@ export function initScene() {
     let scene = new THREE.Scene();
     let backgroundColor= 0x87CEEB;
     scene.name = 'SCENE';
-    scene.fog = new THREE.FogExp2(backgroundColor, 0.005);//雾效果
+    scene.fog = new THREE.FogExp2(backgroundColor, 0.003);//雾效果
     //增加天空盒
     (function skyBox(backgroundType) {
         backgroundType = backgroundType || 1;

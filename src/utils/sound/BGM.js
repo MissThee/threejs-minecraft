@@ -2,7 +2,7 @@
 export  function initBGMPlayer() {
     let audioBGM;
     let currentIndex = 0;
-    let arr = [//把需要播放的歌曲从后往前排，这里已添加两首音乐，可继续添加多个音乐
+    let arr = [//把需要播放的歌曲从后往前排，这里已添加一些音乐，可继续添加多个音乐
         "./assets/sound/calm1.ogg",
         "./assets/sound/calm2.ogg",
         "./assets/sound/calm3.ogg",
@@ -12,6 +12,7 @@ export  function initBGMPlayer() {
         "./assets/sound/hal4.ogg",
     ];
     audioBGM = new Audio();
+    audioBGM.volume=0.6;
     audioBGM.preload = "true";
     audioBGM.controls = true;
     audioBGM.autoplay = true;

@@ -10,6 +10,7 @@ export default class StatsWindow {
         stats.domElement.style.position = 'absolute';
         stats.domElement.style.left = '0px';
         stats.domElement.style.top = '0px';
+        stats.domElement.style.zIndex = '1000';
         document.getElementById(canvasElId).appendChild(stats.domElement);
         StatsWindow._instance = this;
         this.stats=stats;

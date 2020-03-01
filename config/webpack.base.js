@@ -9,10 +9,7 @@ module.exports = {
     },
     //报错在源码位置显示，定位错误代码
     // devtool: 'inline-source-map',//改为在dev配置中启用
-    //webpack-dev-server服务的根目录
-    devServer: {
-        contentBase: '../dist'
-    },
+
     plugins: [
 
         //生成index。html并添加所有入口文件的引用
@@ -44,9 +41,7 @@ module.exports = {
         // 引用静态资源文件路径。相对路径从index目录为起始，即打开的html所在目录;绝对路径从根目录起始即/
         publicPath: ''
     },
-    externals: {
-
-    },
+    externals: {},
     mode: "production",//也可以在命令行接口中使用 --optimize-minimize 标记，来使用 UglifyJSPlugin
     module: {
         rules: [

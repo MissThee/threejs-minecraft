@@ -8,7 +8,7 @@
     "build": "webpack --config config/webpack.prod.js",
     "watch-help": "echo 服务不停，修改文件，实时构建，手动刷新服务器",
     "watch": "webpack --watch --config config/webpack.dev.js",
-    "start-help": "echo 安装npm install --save-dev webpack-dev-server \\ webpack.config.js 添加devServer: {contentBase: './dist'} ",
+    "start-help": "echo 安装npm install --save-dev webpack-dev-server \\ webpack.config.js 添加devServer: {contentBase: '../dist'} ",
     "start": "webpack-dev-server --open --config config/webpack.dev.js",
     "server-help": "echo 安装npm install --save-dev express webpack-dev-middleware ",
     "server": "node config/server.js",
@@ -32,18 +32,19 @@
     "three": "^0.111.0"
   },
   "devDependencies": {
-    "express": "^4.17.1",
-    "webpack-dev-middleware": "^3.7.2",
-    "copy-webpack-plugin": "^5.1.1",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.0.0",
+    "express": "^4.17.1",
     "file-loader": "^4.0.0",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.23.1",
     "uglifyjs-webpack-plugin": "^2.1.3",
+    "webpack": "^4.41.2",
     "webpack-cli": "^3.3.5",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.10.3",
     "webpack-manifest-plugin": "^2.0.4",
-    "webpack-merge": "^4.2.1",
-    "webpack": "^4.41.2"
+    "webpack-merge": "^4.2.1"
   }
 }

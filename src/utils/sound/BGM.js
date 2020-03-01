@@ -12,7 +12,7 @@ export  function initBGMPlayer() {
         "./assets/sound/hal4.ogg",
     ];
     audioBGM = new Audio();
-    audioBGM.volume=0.6;
+    audioBGM.volume=0.5;
     audioBGM.preload = "true";
     audioBGM.controls = true;
     audioBGM.autoplay = true;

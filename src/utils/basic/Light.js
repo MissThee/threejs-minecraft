@@ -1,10 +1,6 @@
 import * as THREE from "three";
 import GlobalSetting from "../setting/GlobalSetting";
 
-export const lightHighIntensity = 1;
-export const lightLowIntensity = 0.3;
-export const lightCurrentIntensity = 1;
-export const lightValueBecomeHigher = true;
 
 export function initAmbientLight() {
     let light = new THREE.AmbientLight();//环境光

@@ -464,11 +464,11 @@ export default class MCFirstPersonControl {
             this.controls.getObject().position.y = nextY;
         }
         //掉落位置重置
-        if (this.controls.getObject().position.y < -500) {
+        if (this.controls.getObject().position.y < -800) {
             this.velocity.y = 0;
-            this.controls.getObject().position.y = 500;
-            this.controls.getObject().position.x = 0;
-            this.controls.getObject().position.z = 0;
+            this.controls.getObject().position.y = 800;
+            this.controls.getObject().position.x = 10;
+            this.controls.getObject().position.z = 11;
         }
         this.updatePreviewCube();
     }

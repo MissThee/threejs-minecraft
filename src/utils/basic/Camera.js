@@ -10,6 +10,6 @@ export function initCamera() {
     camera.position.x = 10;
     camera.position.y = 21;
     camera.position.z = 11;
-    camera.lookAt(new THREE.Vector3(7,22,2));
+    camera.lookAt(new THREE.Vector3(0,22,2));
     return camera;
 }

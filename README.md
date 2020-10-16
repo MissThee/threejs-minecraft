@@ -1,5 +1,5 @@
 # threejs minecraft
-预览地址 [http://mc.missthee.ink/](http://mc.missthee.ink/)
+预览地址 [http://mc.missthee.com/](http://mc.missthee.com/)
 
 + 操作提示：
   + `视角` 点击页面进入鼠标控制视角模式，按 Esc 解除鼠标锁定

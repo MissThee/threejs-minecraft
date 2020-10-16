@@ -1,16 +1,16 @@
 {
   "name": "threejs-minecraft",
   "version": "1.0.0",
-  "description": "threejs,test",
-  "main": "src/index.js",
+  "description": "threejs-minecraft-demo",
+  "main": "src/index/FirstPage.js",
   "private": true,
   "scripts": {
-    "build": "webpack --config config/webpack.prod.js",
-    "watch-help": "echo 服务不停，修改文件，实时构建，手动刷新服务器",
+    "prod": "webpack --config config/webpack.prod.js",
+    "watch-help": "echo 服务不停，修改文件，实时构建，手动刷新浏览器",
     "watch": "webpack --watch --config config/webpack.dev.js",
-    "start-help": "echo 安装npm install --save-dev webpack-dev-server \\ webpack.config.js 添加devServer: {contentBase: '../dist'} ",
-    "start": "webpack-dev-server --open --config config/webpack.dev.js",
-    "server-help": "echo 安装npm install --save-dev express webpack-dev-middleware ",
+    "dev-help": "echo 安装npm install --save-dev webpack-dev-server \\ webpack.config.js 添加devServer: {contentBase: '../dist'} ",
+    "dev": "webpack-dev-server --open --config config/webpack.dev.js",
+    "server-help": "echo 安装npm install --save-dev express, 使用express作为文件服务发布内容",
     "server": "node config/server.js",
     "package": "webpack --config config/webpack.package.js"
   },
@@ -32,19 +32,23 @@
     "three": "^0.111.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.1",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/runtime": "^7.12.1",
+    "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.0.0",
     "express": "^4.17.1",
     "file-loader": "^4.0.0",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.23.1",
-    "uglifyjs-webpack-plugin": "^2.1.3",
+    "url-loader": "^4.1.1",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.5",
     "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.10.3",
-    "webpack-manifest-plugin": "^2.0.4",
+    "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.1"
   }
 }

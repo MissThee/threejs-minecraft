@@ -1,17 +1,15 @@
 const merge = require('webpack-merge');//npm install --save-dev webpack-merge
 const base = require('./webpack.base.js');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const path = require('path');
+
 module.exports = merge(base, {
     devtool: 'inline-source-map',
-    plugins: [
-        //清理输出目录(服务型启动方式不需要清理)
-        // new CleanWebpackPlugin(),//npm install clean-webpack-plugin --save-dev
-    ],
-    //webpack-dev-server服务的根目录
+    mode: "development",
+    //webpack-dev-server服务的配置，仅在使用webpack-dev-server有实际作用
     devServer: {
-        contentBase: '../dist',
+        contentBase: path.join(__dirname,'../dist') ,
         open: process.platform === 'darwin',
-        host: '0.0.0.0',
+        host: 'localhost',
         port: 8080,
         https: false,
         hotOnly: false,

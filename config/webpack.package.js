@@ -2,7 +2,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const path = require('path');
 //打包成插件用的
 module.exports = {
-    entry: './src/package/index.js',
+    entry: './src/package/FirstPage.js',
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: 'webpack-numbers.js',

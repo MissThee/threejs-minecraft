@@ -230,7 +230,7 @@ export default class CubeFactory {
                     // side: THREE.DoubleSide,
                     map: texture,
                     // vertexColors: THREE.VertexColors,
-                    fog: true,//当前材质是否受到全局雾化效果器影响
+                    fog: 1,//当前材质是否受到全局雾化效果器影响
                     ...(this.cubeOptions.materialParameters ? this.cubeOptions.materialParameters : {}),
                     ...(this.cubeOptions.materialParametersForOneList && this.cubeOptions.materialParametersForOneList[textureIndex] ? this.cubeOptions.materialParametersForOneList[textureIndex] : {}),
                 })
@@ -281,7 +281,7 @@ export default class CubeFactory {
         }
         if (geometryType === GeometryType.Flower1Cube) {
             if (this._materials.length <= 1) {
-                this._materials.push(new MeshBasicMaterial({
+                this._materials.push(new THREE.MeshBasicMaterial({
                     transparent: true,
                     opacity: 0,
                 }));

@@ -41,26 +41,7 @@ import {initControls} from "./controls/ControlBuilder" ;
 //     divEl.appendChild(inputEl);
 //     document.body.appendChild(divEl);
 // }
-//移除加载提示遮罩层
-{
-    let loadingDivEl = document.getElementById('loadingDivEl');
-    let loadingTextEl = document.getElementById('loadingTextEl');
-    loadingTextEl.innerText = "完毕";
-    setTimeout(function () {
-        let loadingStyleInterval = setInterval(function () {
-            if (loadingDivEl.style.opacity === undefined || loadingDivEl.style.opacity.length === 0) {
-                loadingDivEl.style.opacity = '1'
-            } else {
-                let loadingOpacityValue = Number.parseFloat(loadingDivEl.style.opacity) - 0.1;
-                loadingDivEl.style.opacity = (loadingOpacityValue).toString();
-                if (loadingOpacityValue <= 0) {
-                    clearInterval(loadingStyleInterval);
-                    loadingDivEl.style.display = "none";
-                }
-            }
-        }, 16);
-    }, 1000);
-}
+
 // 获取canvas节点
 let canvasEL = document.getElementById("canvas-frame");
     if(!canvasEL){

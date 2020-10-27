@@ -30,6 +30,8 @@ export default function (el, ...nodeArr) {
             }
         }
     }
-    divEl.append(...spanElArr);
+    for(let spanEl of spanElArr){
+        divEl.appendChild(spanEl);
+    }
     return divEl;
 }

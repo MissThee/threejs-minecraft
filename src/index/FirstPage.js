@@ -1,5 +1,7 @@
 import textBoard from "./util/TextBoard";
+import removeEl from "./util/RemoveEl";
 import {checkEnvironment} from './util/CheckTool'
+
 window.onload = function () {
     document.addEventListener('touchstart', function (event) {
         if (event.touches.length > 1) {
@@ -20,12 +22,14 @@ window.onload = function () {
 };
 
 let tipEL = textBoard(undefined, "Loading...");
+let CanPlay;
 /*禁止ios缩放，双击和双指*/
 try {
-    checkEnvironment()
+    checkEnvironment();
+    CanPlay = true;
 } catch (e) {
-    console.log(Object.prototype.toString.call(e))
-    if(Object.prototype.toString.call(e)==="[object Array]"){
+    CanPlay = false;
+    if (Object.prototype.toString.call(e) === "[object Array]") {
         textBoard(tipEL, ...e);
     }
 }
@@ -35,31 +39,13 @@ try {
         不自定名称：打包分割，个人代码叫2，依赖包代码叫3。
         自定义名称后，打包分割，个人代码叫mc，依赖包叫vendor~mc（vendor~xx这种格式是webpack默认配置）*/
     import(/*webpackChunkName:'mc'*/'../mc/mc').then(() => {
-        removeEl();
+        if (CanPlay) {
+            textBoard(tipEL, "Done :)")
+            removeEl(tipEL);
+        }
     });
 } catch (e) {
     textBoard(tipEL, "error :(")
     console.log('try chrome');
 }
-
-//移除加载提示遮罩层
-function removeEl() {
-    textBoard(tipEL, "Done :)")
-    let loadingDivEl = tipEL;
-    setTimeout(function () {
-        let loadingStyleInterval = setInterval(function () {
-            if (loadingDivEl.style.opacity === undefined || loadingDivEl.style.opacity.length === 0) {
-                loadingDivEl.style.opacity = '1'
-            } else {
-                let loadingOpacityValue = Number.parseFloat(loadingDivEl.style.opacity) - 0.1;
-                loadingDivEl.style.opacity = (loadingOpacityValue).toString();
-                if (loadingOpacityValue <= 0) {
-                    clearInterval(loadingStyleInterval);
-                    loadingDivEl.style.display = "none";
-                }
-            }
-        }, 16);
-    }, 1000);
-};
-
 

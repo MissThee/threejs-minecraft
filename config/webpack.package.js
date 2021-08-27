@@ -1,4 +1,3 @@
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const path = require('path');
 //打包成插件用的
 module.exports = {
@@ -22,8 +21,4 @@ module.exports = {
         //     root: '_'
         // }
     },
-    plugins: [
-        //清理输出目录
-        new CleanWebpackPlugin(),//npm install clean-webpack-plugin --save-dev
-    ]
 };

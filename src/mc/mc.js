@@ -161,17 +161,17 @@ function changeLight() {
         color: 0xFFFFFF,
         side: THREE.DoubleSide
     });
-    let cloudGeo = new THREE.CubeGeometry(0, 0, 0);
+    let cloudGeo = new THREE.BoxGeometry(0, 0, 0);
     for (let x = -10; x <= 10; x++) {
         for (let z = -10; z <= 10; z++) {
             if (Math.random() > 0.6) {
                 let cloudMesh = new THREE.Mesh(
-                    new THREE.CubeGeometry(Math.round(Math.random() * 5 + 2) * 12, 4, Math.round(Math.random() * 5 + 2) * 12),
+                    new THREE.BoxGeometry(Math.round(Math.random() * 5 + 2) * 12, 4, Math.round(Math.random() * 5 + 2) * 12),
                     material);
                 cloudMesh.position.x += (x * 8 - Math.round(Math.random() * 4)) * 12;
                 cloudMesh.position.z += (z * 8 - Math.round(Math.random() * 4)) * 12;
                 cloudMesh.position.y = 80;
-                cloudGeo.mergeMesh(cloudMesh);
+                cloudGeo.merge(cloudMesh);
             }
         }
     }

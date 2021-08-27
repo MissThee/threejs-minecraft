@@ -1,15 +1,10 @@
 import Sound from "./Sound";
+
 export function initBGMPlayer() {
     let audioBGM;
     let currentIndex = 0;
     let arr = [//把需要播放的歌曲从后往前排，这里已添加一些音乐，可继续添加多个音乐
-        Sound.calm1,
-        Sound.calm2,
-        Sound.calm3,
-        Sound.hal1,
-        Sound.hal2,
-        Sound.hal3,
-        Sound.hal4,
+        Sound.bgmPart,
     ];
     audioBGM = new Audio();
     audioBGM.volume = 0.5;
@@ -32,11 +27,20 @@ export function initBGMPlayer() {
 
     function playEndedHandler() {
         currentIndex++;
+        let delay;
+        if (currentIndex === arr.length) {
+            delay = Math.random() * 50000 + 10000;
+        } else {
+            delay = 0;
+        }
         if (currentIndex >= arr.length) {
             currentIndex = 0;
         }
-        audioBGM.src = arr[currentIndex];
-        audioBGM.play();
+
+        setTimeout(() => {
+            audioBGM.src = arr[currentIndex];
+            audioBGM.play();
+        }, delay)
         // myAudio.removeEventListener('ended', playEndedHandler, false);
     }
 

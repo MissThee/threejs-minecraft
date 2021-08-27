@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const terserWebpackPlugin=require('terser-webpack-plugin')
+const terserWebpackPlugin = require('terser-webpack-plugin')
 // const ManifestPlugin = require('webpack-manifest-plugin');
 // const copyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
         chunkFilename: 'package/js/[name].[contenthash].bundle.js',//非入口文件 chunk 的名称
         path: path.resolve(__dirname, '../dist'),//输出文件夹
         // 引用静态资源文件路径。相对路径从index目录为起始，即打开的html所在目录;绝对路径从根目录起始即/
-        publicPath: './'
+        publicPath: './',
     },
     //报错在源码位置显示，定位错误代码
     // devtool: 'inline-source-map',//改为在dev配置中启用
@@ -41,7 +41,7 @@ module.exports = {
     ],
     resolve: {
         alias: {
-             //路径别名
+            //路径别名
             'src': path.join(__dirname, '../src')
         },
     },
@@ -61,7 +61,7 @@ module.exports = {
         splitChunks: {
             chunks: 'async',
             minSize: 30000,
-            // maxSize: 100000,//个人编码部分打包后每个文件的最大尺寸，大于此尺寸要分出更多文件，vendor~xx文件
+            maxSize: 100000,//个人编码部分打包后每个文件的最大尺寸，大于此尺寸要分出更多文件，vendor~xx文件
             minChunks: 1,//当一个组件被共享次数大于此值，则会被拆分到单文件
             maxAsyncRequests: 5,//打包后，按需加载的模块最多能拆分成几个文件
             maxInitialRequests: 3,//限制打包后动态加载的包个数，入口算一个，如现在还有三个组件需要打成vendor~xx，此时只会打包出有两个（按依赖的大小，大的会被单独打包）

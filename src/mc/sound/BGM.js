@@ -27,12 +27,7 @@ export function initBGMPlayer() {
 
     function playEndedHandler() {
         currentIndex++;
-        let delay;
-        if (currentIndex === arr.length) {
-            delay = Math.random() * 50000 + 10000;
-        } else {
-            delay = 0;
-        }
+        let delay = Math.random() * 50000 + 10000;
         if (currentIndex >= arr.length) {
             currentIndex = 0;
         }

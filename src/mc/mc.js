@@ -5,7 +5,7 @@ import GlobalSetting from "./setting/GlobalSetting";
 import CubeFactory from "./objects/cube/CubeFactory.js";
 import StatsWindow from "./stats/StatsWindow.js";
 import {initScene} from "./basic/Scene" ;
-import {initAmbientLight, getAmbientLightIntensity, initDirectionalLight, getDirectionalLightIntensity}  from "./basic/Light";
+import {initAmbientLight, getAmbientLightIntensity, initDirectionalLight, getDirectionalLightIntensity} from "./basic/Light";
 import {initCamera} from "./basic/Camera" ;
 import {initRenderer} from "./basic/Renderer" ;
 import {initBGMPlayer} from "./sound/BGM" ;
@@ -21,7 +21,6 @@ import {initControls} from "./controls/ControlBuilder" ;
 // const {initRenderer} = require("./mc/basic/Renderer");
 // const {initBGMPlayer} = require("./mc/sound/Bgm");
 // const {initControls} = require("./mc/controls/ControlBuilder");
-
 
 
 // {//添加左下角的按钮，测试用
@@ -44,14 +43,14 @@ import {initControls} from "./controls/ControlBuilder" ;
 
 // 获取canvas节点
 let canvasEL = document.getElementById("canvas-frame");
-    if(!canvasEL){
-        canvasEL=document.createElement('div');
-        canvasEL.id='canvas-frame';
-        canvasEL.style.height='100%';
-        canvasEL.style.width='100%';
-        canvasEL.style.cursor='pointer';
-        document.body.appendChild(canvasEL);
-    }
+if (!canvasEL) {
+    canvasEL = document.createElement('div');
+    canvasEL.id = 'canvas-frame';
+    canvasEL.style.height = '100%';
+    canvasEL.style.width = '100%';
+    canvasEL.style.cursor = 'pointer';
+    document.body.appendChild(canvasEL);
+}
 // 舞台*
 let scene = initScene();
 // 光源*
@@ -151,35 +150,33 @@ function changeLight() {
         scene.add(cube);
         objects.push(cube);
     }
-    //场景四个飞着的东西，从网上图片看来的，感觉不错就加上了，不知道是啥
-})();
-//添加云
-{
-    let material = new THREE.MeshLambertMaterial({
-        transparent: true,
-        opacity: 0.8,
-        color: 0xFFFFFF,
-        side: THREE.DoubleSide
-    });
-    let cloudGeo = new THREE.BoxGeometry(0, 0, 0);
-    for (let x = -10; x <= 10; x++) {
-        for (let z = -10; z <= 10; z++) {
-            if (Math.random() > 0.6) {
-                let cloudMesh = new THREE.Mesh(
-                    new THREE.BoxGeometry(Math.round(Math.random() * 5 + 2) * 12, 4, Math.round(Math.random() * 5 + 2) * 12),
-                    material);
-                cloudMesh.position.x += (x * 8 - Math.round(Math.random() * 4)) * 12;
-                cloudMesh.position.z += (z * 8 - Math.round(Math.random() * 4)) * 12;
-                cloudMesh.position.y = 80;
-                cloudGeo.merge(cloudMesh);
+    //添加云
+    {
+        let material = new THREE.MeshLambertMaterial({
+            transparent: true,
+            opacity: 0.3,
+            color: 0xFFFFFF,
+            side: THREE.DoubleSide
+        });
+        for (let i = 0; i <= 50; i++) {
+            const width = Math.round(Math.random() * 10 + 4)
+            const height = 4
+            const depth = Math.round(Math.random() * 10 + 4)
+            let cloudMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(width, height, depth),
+                material);
+            cloudMesh.position.x = 5 + (Math.random() > 0.5 ? -1 : 1) * (Math.round(Math.random() * 60)) + width / 2;
+            cloudMesh.position.z = (Math.random() > 0.5 ? -1 : 1) * (Math.round(Math.random() * 60)) + depth / 2;
+            cloudMesh.position.y = Math.round(Math.random() * 60) - 10;
+            if (cloudMesh.position.y > 2 && cloudMesh.position.y < 15 && Math.abs(cloudMesh.position.x) < 20 && Math.abs(cloudMesh.position.z) < 20) {
+                i--;
+                continue;
             }
+            scene.add(cloudMesh);
         }
     }
-    let cloudMesh = new THREE.Mesh(cloudGeo, material);
-    scene.add(cloudMesh);
-}
-controls.selectObjectsImpenetrable();//不是通过鼠标添加的方块，添加完后，手动更新一下可碰撞物体集合
-
+    controls.selectObjectsImpenetrable();//不是通过鼠标添加的方块，添加完后，手动更新一下可碰撞物体集合
+})();
 //刷新渲染
 let prevTime = performance.now();
 (function animate() {

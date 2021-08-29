@@ -1,13 +1,19 @@
 import * as THREE from 'three';
 import CubeImage from "../image/CubeImage";
+
 export function initScene() {
     let scene = new THREE.Scene();
-    let backgroundColor= 0x87CEEB;
+    let backgroundColor = 0x87CEEB;
+    // let backgroundColor= 0xFFFFFF;
     scene.name = 'SCENE';
-    scene.fog = new THREE.FogExp2(backgroundColor, 0.003);//雾效果
-    //增加天空盒
+    scene.fog = new THREE.FogExp2(backgroundColor, 0.03);//雾效果
+    // 增加天空盒
     (function skyBox(backgroundType) {
         backgroundType = backgroundType || 1;
+        if (backgroundType === 1) {//使用场景背景添加
+            scene.background = new THREE.Color(backgroundColor);
+            return;
+        }
         let textureCube = new THREE.CubeTextureLoader().load([
             CubeImage.test1,
             CubeImage.test2,
@@ -16,9 +22,7 @@ export function initScene() {
             CubeImage.test5,
             CubeImage.test6
         ]);
-        if (backgroundType === 1) {//使用场景背景添加
-            scene.background = new THREE.Color(backgroundColor);
-        } else if (backgroundType === 2) {
+        if (backgroundType === 2) {
             scene.background = textureCube
         } else {//使用盒子添加
             //着色器
@@ -32,7 +36,7 @@ export function initScene() {
                 side: THREE.BackSide,  //侧面：反面
             });
             //创建方盒子
-            let cubeWithPic = new THREE.Mesh(new THREE.CubeGeometry(1000000, 1000000, 1000000), material);
+            let cubeWithPic = new THREE.Mesh(new THREE.BoxGeometry(1000000, 1000000, 1000000), material);
             scene.add(cubeWithPic);
         }
     })(1);

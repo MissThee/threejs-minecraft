@@ -9,8 +9,6 @@
     "build:dev": "webpack --config config/webpack.base.js",
     "watch-help": "echo 服务不停，修改文件，实时构建，手动刷新浏览器",
     "watch": "webpack --watch --config config/webpack.dev.js",
-    "dev-help": "echo 安装npm install --save-dev webpack-dev-server \\ webpack.config.js 添加devServer: {contentBase: '../dist'} ",
-    "dev": "webpack-dev-server --open --config config/webpack.dev.js",
     "server-help": "echo 安装npm install --save-dev express, 使用express作为文件服务发布内容",
     "server": "node config/server.js",
     "package": "webpack --config config/webpack.package.js"
@@ -41,8 +39,6 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.51.1",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-middleware": "^5.0.0",
-    "webpack-dev-server": "^4.0.0",
     "webpack-merge": "^5.8.0"
   }
 }

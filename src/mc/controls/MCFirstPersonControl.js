@@ -2,8 +2,8 @@ import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockContro
 import CubeFactory from "../objects/cube/CubeFactory";
 import * as THREE from 'three';
 import DefaultCube from '../objects/cube/DefaultCube'
-import {Vector3} from "three";
 import GeometryType from "../objects/cube/GeometryType";
+import {Vector3} from "three";
 
 export default class MCFirstPersonControl {
 
@@ -47,7 +47,7 @@ export default class MCFirstPersonControl {
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
         this.worldOption = {
-            g: 9.0
+            g: 8.0
         };
         this.personOption = {
             height: 1.8,//人物总高度。现有配置不能让人物高于2
@@ -356,7 +356,7 @@ export default class MCFirstPersonControl {
                             y: 0,
                         }
                     } else {
-                        this.previewCubeRotation.y += (Math.PI / 180 * 60 * delta) %Math.PI;
+                        this.previewCubeRotation.y += (Math.PI / 180 * 60 * delta) % Math.PI;
                     }
                 }
                 this.previewCube.rotation.copy(this.camera.rotation);
@@ -372,6 +372,8 @@ export default class MCFirstPersonControl {
     }
 
     updateCameraPosition(delta) {
+        const controlPrePosition=new Vector3()
+        controlPrePosition.copy(this.controls.getObject().position)
         //水平方向移动+碰撞检测
         {
             this.direction.z = Number(this.moveForward) - Number(this.moveBackward);
@@ -381,11 +383,7 @@ export default class MCFirstPersonControl {
 
             if (this.moveForward || this.moveBackward) {
                 let velocityZTmp = this.velocity.z + this.direction.z * velocityMax * this.personOption.accelerateRateStart;
-                if (Math.abs(velocityZTmp) < velocityMax) {
-                    this.velocity.z = velocityZTmp;
-                } else {
-                    this.velocity.z = this.direction.z * velocityMax;
-                }
+                this.velocity.z = Math.abs(velocityZTmp) < velocityMax ? velocityZTmp : this.direction.z * velocityMax;
             } else {
                 this.velocity.z = Math.abs(this.velocity.z) > 1 ? this.velocity.z * (this.personOption.accelerateRateStop) : 0;
             }
@@ -394,11 +392,7 @@ export default class MCFirstPersonControl {
 
             if (this.moveLeft || this.moveRight) {
                 let velocityXTmp = this.velocity.x + this.direction.x * velocityMax * this.personOption.accelerateRateStart;
-                if (Math.abs(velocityXTmp) < velocityMax) {
-                    this.velocity.x = velocityXTmp;
-                } else {
-                    this.velocity.x = this.direction.x * velocityMax;
-                }
+                this.velocity.x = Math.abs(velocityXTmp) < velocityMax ? velocityXTmp : this.direction.x * velocityMax;
             } else {
                 this.velocity.x = Math.abs(this.velocity.x) > 1 ? this.velocity.x * (this.personOption.accelerateRateStop) : 0;
             }
@@ -424,7 +418,7 @@ export default class MCFirstPersonControl {
                         if (this.checkRay.Z0[i] === undefined) {
                             this.checkRay.Z0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0, 0));
                         }
-                        this.checkRay.Z0[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
+                        this.checkRay.Z0[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z0[i].ray.origin.x = positionBeforeX;//修正为移动前的x轴位置，防止使用位移后的位置检测墙壁
                         this.checkRay.Z0[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.Z0[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
@@ -442,7 +436,7 @@ export default class MCFirstPersonControl {
                         if (this.checkRay.Z1[i] === undefined) {
                             this.checkRay.Z1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, 1), 0, 0));
                         }
-                        this.checkRay.Z1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
+                        this.checkRay.Z1[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z1[i].ray.origin.x = positionBeforeX;
                         this.checkRay.Z1[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.Z1[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
@@ -467,7 +461,7 @@ export default class MCFirstPersonControl {
                         if (this.checkRay.X0[i] === undefined) {
                             this.checkRay.X0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(-1, 0, 0), 0, 0));
                         }
-                        this.checkRay.X0[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
+                        this.checkRay.X0[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.X0[i].ray.origin.z = positionBeforeZ;
                         this.checkRay.X0[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.X0[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
@@ -485,7 +479,7 @@ export default class MCFirstPersonControl {
                         if (this.checkRay.X1[i] === undefined) {
                             this.checkRay.X1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(1, 0, 0), 0, 0));
                         }
-                        this.checkRay.X1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
+                        this.checkRay.X1[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.X1[i].ray.origin.z = positionBeforeZ;
                         this.checkRay.X1[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.X1[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
@@ -533,7 +527,7 @@ export default class MCFirstPersonControl {
                     if (this.checkRay.Y0[i] === undefined) {
                         this.checkRay.Y0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 0));
                     }
-                    this.checkRay.Y0[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
+                    this.checkRay.Y0[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                 }
                 let rayMove = this.personOption.thickness / 2;
                 this.checkRay.Y0[0].ray.origin.x += rayMove;
@@ -559,7 +553,7 @@ export default class MCFirstPersonControl {
                     if (this.checkRay.Y1[i] === undefined) {
                         this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 0));
                     }
-                    this.checkRay.Y1[i].ray.origin.copy(this.controls.getObject().position);//设置射线原点在摄像机位置，即人物眼睛位置
+                    this.checkRay.Y1[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                 }
                 let rayMove = this.personOption.thickness / 2 - 0.001;
                 this.checkRay.Y1[0].ray.origin.x += rayMove;
@@ -603,9 +597,9 @@ export default class MCFirstPersonControl {
             this.controls.getObject().position.y = nextY;
         }
         //掉落位置重置
-        if (this.controls.getObject().position.y < -700) {
+        if (this.controls.getObject().position.y < -200) {
             this.velocity.y = 0;
-            this.controls.getObject().position.y = 700;
+            this.controls.getObject().position.y = 100;
             this.controls.getObject().position.x = 10;
             this.controls.getObject().position.z = 11;
         }

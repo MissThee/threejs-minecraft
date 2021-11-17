@@ -1,9 +1,9 @@
 // import TWEEN from "@tweenjs/tween.js";//动作库
 import * as THREE from "three";
+import StatsWindow from "./stats/StatsWindow";
 import DefaultCube from "./objects/cube/DefaultCube"
 import CubeFactory from "./objects/cube/CubeFactory";
 import GlobalSetting from "./setting/GlobalSetting";
-import StatsWindow from "./stats/StatsWindow";
 import {initCanvasEl} from "./basic/Element" ;
 import {initScene} from "./basic/Scene" ;
 import {initAmbientLight, getAmbientLightIntensity, initDirectionalLight, getDirectionalLightIntensity} from "./basic/Light";
@@ -13,18 +13,6 @@ import {initBGMPlayer} from "./sound/BGM" ;
 import {ControlsType, initControls} from "./controls/ControlBuilder" ;
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import MCFirstPersonControl from "./controls/MCFirstPersonControl";
-
-//运行时加载依赖
-// const DefaultCube = require( "./mc/objects/cube/DefaultCube").default;
-// const GlobalSetting = require("./mc/setting/GlobalSetting").default;
-// const CubeFactory = require("./mc/objects/cube/CubeFactory.js").default;
-// const StatsWindow = require("./mc/stats/StatsWindow.js").default;
-// const {initScene} = require("./mc/basic/Scene");
-// const {initAmbientLight, getAmbientLightIntensity, initDirectionalLight, getDirectionalLightIntensity} = require("./mc/basic/Light");
-// const {initCamera} = require("./mc/basic/Camera");
-// const {initRenderer} = require("./mc/basic/Renderer");
-// const {initBGMPlayer} = require("./mc/sound/Bgm");
-// const {initControls} = require("./mc/controls/ControlBuilder");
 
 // {//添加左下角的按钮，测试用
 //     let divEl = document.createElement('div');
@@ -56,7 +44,7 @@ export default class MC {
     bgmPlayer: HTMLAudioElement
     prevTime: number = performance.now()
     changeLight: () => void
-    statsWindow: StatsWindow
+    statsWindow: StatsWindow | undefined
 
     init(elementId: string = 'canvas-wrapper') {
         // 获取canvas节点
@@ -92,7 +80,7 @@ export default class MC {
         // 预方块添加
         this.addBlocks()
         // 监控窗口
-        this.statsWindow = new StatsWindow(elementId)
+        // this.statsWindow = new StatsWindow(elementId)
 
         this.startAnimate()
     }
@@ -108,7 +96,7 @@ export default class MC {
     }
 
     private animate() {
-        this.statsWindow.stats?.update();
+        this.statsWindow?.stats?.update();
         let time = performance.now();
         let delta = (time - this.prevTime) / 1000;
         this.prevTime = time;

@@ -6,7 +6,7 @@ const terserWebpackPlugin = require('terser-webpack-plugin')
 module.exports = {
     mode: "development",
     entry: {
-        index: './src/index/FirstPage.js'
+        index: './src/index/FirstPage.ts'
     },
     output: {
         filename: 'package/js/[name].[contenthash].entry.js',//入口文件输出名称，默认name为manifest
@@ -29,7 +29,7 @@ module.exports = {
             filename: "index.html",//输出的html名称，默认index.html
             minify: {
                 // 压缩选项
-                collapseWhitespace: false
+                collapseWhitespace: true
             }
         }),
         //静态资源拷贝打包（已改为对象引用，使用loader处理，不再直接拷贝）
@@ -42,6 +42,7 @@ module.exports = {
         // new ManifestPlugin(),// npm install --save-dev webpack-manifest-plugin
     ],
     resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
         alias: {
             //路径别名
             'src': path.join(__dirname, '../src')
@@ -49,7 +50,17 @@ module.exports = {
     },
     externals: {},
     optimization: {//将所有入口js中重复的引用，提取出公共js文件使用。动态引入和直接引入都会提取，会覆盖动态引入时指定的webpackchunk名称
-        chunkIds: "deterministic",
+        // deterministic 短数字ID不会在编译之间更改。适合长期缓存。默认为生产模式启用。
+        // named 使用webpackChunkName命名
+        // natural 顺序的数字ID
+        // size 数字ID专注于最小初始下载大小。
+        // total-size 数字ID专注于最小的总下载大小。
+        // chunkIds: "deterministic",
+        // deterministic 短数字ID不会在编译之间更改。适合长期缓存。默认为生产模式启用。
+        // named 使用webpackChunkName命名
+        // natural 顺序的数字ID
+        // size 数字ID专注于最小初始下载大小。
+        // moduleIds:"deterministic",
         // minimize: false,//是否使用压缩，默认mode为development为false，为production为true
         minimizer: [
             new terserWebpackPlugin({//此处只是定义，并不是启用
@@ -68,18 +79,34 @@ module.exports = {
             // minChunks: 2,//当一个组件被共享次数大于此值，则会被拆分到单文件
             // maxAsyncRequests: 3,//打包后，按需加载的模块最多能拆分成几个文件
             // maxInitialRequests: 3,//限制打包后动态加载的包个数，入口算一个，如现在还有三个组件需要打成vendor~xx，此时只会打包出有两个（按依赖的大小，大的会被单独打包）
-            automaticNameDelimiter: '__',
-            name: 'chunk',
-            // name: (entrypoint) => `runtime~${entrypoint.name}`,//false时，打包后的js，依赖包代码文件，不会有名称，使用数字编号。如本项目中vendor~mc名字会变为数字
+            // automaticNameDelimiter: '__',
+            // name: 'pack',
+            // name: (entrypoint) => `pack___${entrypoint.name}`,//false时，打包后的js，依赖包代码文件，不会有名称，使用数字编号。如本项目中vendor~mc名字会变为数字
             cacheGroups: {//设置缓存组用来抽取满足不同规则的chunk
                 //将基本不会改变的代码提取出来（如引用的组件，工具类库等），输出为一个文件，可利于浏览器缓存
                 vendor: {
+                    // name(module, chunks, cacheGroupKey) {
+                    //     const moduleFileName = module
+                    //         .identifier()
+                    //         .split('/')
+                    //         .reduceRight((item) => item);
+                    //     const allChunksNames = chunks.map((item) => item.name).join('___');
+                    //     return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+                    // },
                     //name:'aaaa',//不设置名称，且以上name配置为true时，则会以[本对象key][automaticNameDelimiter][引用此模块的模块]。此处设置name则直接叫name名
                     test: /[\\/]node_modules[\\/]/,
                     priority: -10//优先级，一个chunk很可能满足多个缓存组，会被抽取到优先级高的缓存组中
                 },
                 default: {
-                    minChunks: 10, // webpack会尽量将打包后js的数量打成此值。数值较大时可能实际打包后文件比此值小；数值较小时会选择性不拆分包，使结果文件数为此值。如此项目中为1时，mc.js会直接合并到index.js中
+                    // name(module, chunks, cacheGroupKey) {
+                    //     const moduleFileName = module
+                    //         .identifier()
+                    //         .split('/')
+                    //         .reduceRight((item) => item);
+                    //     const allChunksNames = chunks.map((item) => item.name).join('___');
+                    //     return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+                    // },
+                    minChunks: 3, // webpack会尽量将打包后js的数量打成此值。数值较大时可能实际打包后文件比此值小；数值较小时会选择性不拆分包，使结果文件数为此值。如此项目中为1时，mc.js会直接合并到index.js中
                     priority: -20,
                     reuseExistingChunk: true
                 }
@@ -99,6 +126,11 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/
+            },
             {//npm install style-loader css-loader -D
                 test: /\.css$/,
                 use: [
@@ -114,7 +146,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             name: 'package/images/[name].[hash].[ext]?',
-                            limit: 100,
+                            limit: 10,
                         }
                     }
                 ],
@@ -132,6 +164,7 @@ module.exports = {
                     }
                 ],
             },
+
             // {//npm install @babel/core @babel/plugin-proposal-class-properties @babel/plugin-transform-runtime @babel/preset-env babel-loader -D
             //     test: /\.js$/,
             //     exclude: /node_modules/,

@@ -1,24 +1,21 @@
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import * as THREE from 'three';
-export default class ShowOrbitControl {
+import {Object3D} from "three";
 
-    constructor(camera, domElement) {
-        // ShowOrbitControl._instance;
-        // this.controls;
+export default class ShowOrbitControl {
+    camera: THREE.Camera
+    controls: OrbitControls | undefined;
+
+    constructor(camera: THREE.Camera, domElement: HTMLElement | undefined) {
         this.camera = camera;
-        if (ShowOrbitControl._instance) {
-            return ShowOrbitControl._instance;
-        }
         this.controls = new OrbitControls(camera, domElement);
         //动态阻尼系数 就是鼠标拖拽旋转灵敏度
         this.controls.dampingFactor = 1;
         //是否允许平移
         this.controls.enablePan = false;
-        ShowOrbitControl._instance = this;
-        return ShowOrbitControl._instance;
     }
 
-    initClickFunction(objects, camera) {
+    initClickFunction(objects: Object3D[]) {
         window.addEventListener('mousedown', (event) => {
             let clickedObjects = getClickedObject(event, objects, this.camera);
             if (clickedObjects.length > 0) {
@@ -30,7 +27,7 @@ export default class ShowOrbitControl {
 }
 
 //获取点击的对象
-function getClickedObject(event, objects, camera) {
+function getClickedObject(event: MouseEvent, objects: THREE.Object3D[], camera: THREE.Camera) {
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.

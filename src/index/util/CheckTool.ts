@@ -10,7 +10,7 @@ export function checkEnvironment() {
 // 检查浏览器
 function checkBrowser() {
     let explorer = window.navigator.userAgent,
-        compare = function (s) {
+        compare = function (s: string) {
             return (explorer.indexOf(s) >= 0);
         },
         ie11 = (function () {

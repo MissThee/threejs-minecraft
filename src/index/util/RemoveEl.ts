@@ -1,6 +1,6 @@
 
 //移除dom
-export default function (dom) {
+export default function (dom:HTMLElement) {
     setTimeout(()=>{
         let loadingStyleInterval = setInterval(function () {
             if (dom.style.opacity === undefined || dom.style.opacity.length === 0) {
@@ -11,7 +11,7 @@ export default function (dom) {
                 if (loadingOpacityValue <= 0) {
                     clearInterval(loadingStyleInterval);
                     dom.style.display = "none";
-                    dom.parentNode.removeChild(dom);
+                    dom.parentNode?.removeChild(dom);
                 }
             }
         }, 16);

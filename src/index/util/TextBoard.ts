@@ -1,6 +1,6 @@
-export default function (el, ...nodeArr) {
+export default function (el: HTMLElement|undefined, ...nodeArr: (HTMLElement|string)[]) {
     let divEl = el;
-    if (!divEl||!divEl.getAttribute("tip-el")) {
+    if (!divEl || !divEl.getAttribute("tip-el")) {
         divEl = document.createElement('div');
         divEl.style.position = "absolute";
         divEl.style.top = "35%";
@@ -11,7 +11,7 @@ export default function (el, ...nodeArr) {
         divEl.style.color = 'white';
         divEl.style.fontSize = '1em';
         divEl.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-        divEl.setAttribute('tip-el','1');
+        divEl.setAttribute('tip-el', '1');
         document.body.appendChild(divEl);
     }
     divEl.innerHTML = '';
@@ -30,7 +30,7 @@ export default function (el, ...nodeArr) {
             }
         }
     }
-    for(let spanEl of spanElArr){
+    for (let spanEl of spanElArr) {
         divEl.appendChild(spanEl);
     }
     return divEl;

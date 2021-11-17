@@ -2,13 +2,20 @@ import * as THREE from 'three';
 import GlobalSetting from "../../setting/GlobalSetting";
 import GeometryType from "./GeometryType";
 import ImagePoint from "./ImagePoint";
-import {MeshLambertMaterial} from "three";
-import {MeshBasicMaterial} from "three";
-import DefaultCube from "./DefaultCube";
-
+import DefaultCube, {CubeOption} from "./DefaultCube";
+import {Geometry} from "three";
 
 export default class CubeFactory {
-    constructor(defaultCube) {
+    private static _instanceObj: Record<string, CubeFactory>;
+    cubeOptions: CubeOption;
+    _materials: THREE.Material[];
+    _materialsMap: Record<string, THREE.Material[]>;
+    _materialsHalfMap: Record<string, THREE.MeshLambertMaterial>;
+    _geometry: Geometry | undefined;
+    _geometryMap: Record<string, Geometry>;
+    _cubeSize: number;
+
+    constructor(defaultCube: CubeOption) {
         if (CubeFactory._instanceObj && CubeFactory._instanceObj[defaultCube.key]) {
             return CubeFactory._instanceObj[defaultCube.key];
         }
@@ -45,10 +52,10 @@ export default class CubeFactory {
         const innerWidth = width / Math.sqrt(2);
         switch (geometryType) {
             case GeometryType.Cube:
-                geom = new THREE.CubeGeometry(this._cubeSize, this._cubeSize, this._cubeSize);
+                geom = new THREE.BoxGeometry(this._cubeSize, this._cubeSize, this._cubeSize);
                 break;
             case GeometryType.HalfCube:
-                geom = new THREE.CubeGeometry(this._cubeSize, this._cubeSize / 2, this._cubeSize);
+                geom = new THREE.BoxGeometry(this._cubeSize, this._cubeSize / 2, this._cubeSize);
                 break;
             case GeometryType.StairsCube:
                 geom = new THREE.Geometry();
@@ -174,7 +181,7 @@ export default class CubeFactory {
                     new THREE.Face3(14, 10, 11),
                 ];
 
-                for (let faceIndex in geom.faces) {
+                for (let faceIndex = 0; faceIndex < geom.faces.length; faceIndex++) {
                     if (faceIndex < 4) {
                         geom.faces [faceIndex].materialIndex = 0;
                     } else {
@@ -223,14 +230,13 @@ export default class CubeFactory {
         let materialList = [];
         for (let textureIndex in textureList) {
             let texture = textureList[textureIndex];
-
             materialList.push(
                 new THREE.MeshLambertMaterial({
                     // color:0x4F9C1A,
                     // side: THREE.DoubleSide,
                     map: texture,
                     // vertexColors: THREE.VertexColors,
-                    fog: 1,//当前材质是否受到全局雾化效果器影响
+                    fog: true,//当前材质是否受到全局雾化效果器影响
                     ...(this.cubeOptions.materialParameters ? this.cubeOptions.materialParameters : {}),
                     ...(this.cubeOptions.materialParametersForOneList && this.cubeOptions.materialParametersForOneList[textureIndex] ? this.cubeOptions.materialParametersForOneList[textureIndex] : {}),
                 })
@@ -292,7 +298,7 @@ export default class CubeFactory {
 
 
     //构造方块
-    buildCube(x, y, z, defaultCube, rotateX, rotateY, rotateZ) {
+    buildCube(x?: number, y?: number, z?: number, defaultCube?: string | CubeOption, rotateX?: number, rotateY?: number, rotateZ?: number) {
         let position = {x: x, y: y, z: z};
         let rotation = {rotateX: rotateX, rotateY: rotateY, rotateZ: rotateZ};
         if (defaultCube) {
@@ -303,6 +309,7 @@ export default class CubeFactory {
             this.buildGeometry();
             this.buildMaterials();
         }
+        defaultCube = defaultCube as CubeOption
         position.x = position.x || 0;
         position.y = position.y || 0;
         position.z = position.z || 0;
@@ -327,13 +334,13 @@ export default class CubeFactory {
                 cubeAttributes: this.cubeOptions.cubeAttributes
             };
         }
-        if (rotation.rotateX && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.x)) {
+        if (rotation.rotateX && defaultCube?.meshParameters?.rotateEnable?.x) {
             mesh.rotateX(rotation.rotateX * Math.PI / 180);
         }
-        if (rotation.rotateY && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.y)) {
+        if (rotation.rotateY && defaultCube?.meshParameters?.rotateEnable?.y) {
             mesh.rotateY(rotation.rotateY * Math.PI / 180);
         }
-        if (rotation.rotateZ && (defaultCube.meshParameters && defaultCube.meshParameters.rotateEnable && defaultCube.meshParameters.rotateEnable.z)) {
+        if (rotation.rotateZ && defaultCube?.meshParameters?.rotateEnable?.z) {
             mesh.rotateZ(rotation.rotateZ * Math.PI / 180);
         }
         mesh.name = this.cubeOptions.key + "(" + position.x + "," + position.y + "," + position.z + ")";

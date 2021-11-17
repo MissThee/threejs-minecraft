@@ -22,30 +22,30 @@ window.onload = function () {
 };
 
 let tipEL = textBoard(undefined, "Loading...");
-let CanPlay;
+let canPlay: boolean;
 /*禁止ios缩放，双击和双指*/
 try {
     checkEnvironment();
-    CanPlay = true;
-} catch (e) {
-    CanPlay = false;
+    canPlay = true;
+} catch (e: any) {
+    canPlay = false;
     if (Object.prototype.toString.call(e) === "[object Array]") {
         textBoard(tipEL, ...e);
     }
 }
-try {
-    /*  非入口，第一个模块打包后名称name默认为index
-        import()引入的懒加载模块引入时
-        不自定名称：打包分割，个人代码叫2，依赖包代码叫3。
-        自定义名称后，打包分割，个人代码叫mc，依赖包叫vendor~mc（vendor~xx这种格式是webpack默认配置）*/
-    import(/*webpackChunkName:'mc'*/'../mc/mc').then(() => {
-        if (CanPlay) {
+/*  非入口，第一个模块打包后名称name默认为index
+    import()引入的懒加载模块引入时
+    不自定名称：打包分割，个人代码叫2，依赖包代码叫3。
+    自定义名称后，打包分割，个人代码叫mc，依赖包叫vendor~mc（vendor~xx这种格式是webpack默认配置）*/
+if (canPlay) {
+    import(/* webpackChunkName : "mc" */'../mc/mc')
+        .then(({default: MC}) => {
+            new MC().init()
             textBoard(tipEL, "Done :)")
             removeEl(tipEL);
-        }
-    });
-} catch (e) {
-    textBoard(tipEL, "error :(")
-    console.log('try chrome');
+        })
+        .catch((e) => {
+            textBoard(tipEL, "Error :(")
+            console.log('Error Info', e);
+        })
 }
-

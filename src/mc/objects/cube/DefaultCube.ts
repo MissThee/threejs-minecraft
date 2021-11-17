@@ -2,7 +2,27 @@
 import GeometryType from "./GeometryType";
 import CubeImage from '../../image/CubeImage';
 
-export default {
+export interface CubeOption {
+    key: string,
+    images: string[],
+    imageSet: number[],
+    materialParameters: Record<string, any>,
+    materialParametersForOneList: Record<string, any>[]
+    meshParameters?: {
+        rotateEnable: {
+            x: boolean,
+            y: boolean,
+            z: boolean,
+        }
+    }
+    cubeAttributes: {
+        isPenetrable: boolean,
+        isIndestructible: boolean,
+        geometryType: GeometryType,
+    }
+}
+
+const defaultCubes: Record<string, CubeOption> = {
     grassdirt: {
         key: 'grassdirt',//设置和对象key一样
         images: [//贴图路径
@@ -123,7 +143,7 @@ export default {
     redstone_block: {
         key: 'redstone_block',
         images: [
-            GeometryType.redstone_block,
+            CubeImage.redstone_block,
         ],
         imageSet: [0, 0, 0, 0, 0, 0],
         materialParameters: {},
@@ -809,7 +829,7 @@ export default {
     glass_brown: {
         key: 'glass_brown',
         images: [
-           CubeImage.glass_brown
+            CubeImage.glass_brown
         ],
         imageSet: [0, 0, 0, 0, 0, 0],
         materialParameters: {
@@ -2540,3 +2560,4 @@ export default {
         },
     },
 }
+export default defaultCubes;

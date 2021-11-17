@@ -5,13 +5,43 @@ import DefaultCube from '../objects/cube/DefaultCube'
 import GeometryType from "../objects/cube/GeometryType";
 import {Vector3} from "three";
 
-export default class MCFirstPersonControl {
+interface PreviewCube extends THREE.Mesh {
+    geometryMap?: Record<string, THREE.Geometry>
+}
 
-    constructor(camera, domElement, objects, scene) {
-        if (MCFirstPersonControl._instance) {
-            return MCFirstPersonControl._instance;
-        }
-        // MCFirstPersonControl._instance;
+export default class MCFirstPersonControl {
+    camera: THREE.Camera;
+    private previewCube: PreviewCube | undefined;
+    private domElement: HTMLCanvasElement;
+    private objects: THREE.Mesh[];
+    objectsImpenetrable: THREE.Mesh[] | undefined;
+    scene: THREE.Scene;
+    private currentCubeTypeIndex: number;
+    private sightRay: THREE.Raycaster;
+    private checkRay: { Z0: any[]; Z1: any[]; Y0: any[]; X0: any[]; Y1: any[]; X1: any[] };
+    private moveForward: boolean;
+    private moveBackward: boolean;
+    private moveLeft: boolean;
+    private moveRight: boolean;
+    private moveUp: boolean;
+    private moveDown: boolean;
+    private preRunning: number | undefined;
+    private isRunning: boolean;
+    private canJump: boolean;
+    private switchFly: number | undefined;
+    private canFly: boolean;
+    private switchFlyKeyUped: boolean;
+    private isFlying: boolean;
+    private velocity: Vector3;
+    private direction: Vector3;
+    private worldOption: { g: number };
+    private personOption: { jumpHeight: number; thickness: number; accelerateRateStart: number; sightHeight: number; speedWalk: number; accelerateRateStop: number; speedRun: number; height: number };
+    private controls: PointerLockControls;
+    private previewCubeType: string;
+    private previewCubeRotation: { x?: number, y?: number, z?: number };
+
+
+    constructor(camera: THREE.Camera, domElement: HTMLCanvasElement, objects: THREE.Mesh[], scene: THREE.Scene) {
         // this.controls;
         // this.removeBlockTimer;//移除方块计时
         this.previewCube = undefined;//预览方块
@@ -27,7 +57,6 @@ export default class MCFirstPersonControl {
             X1: [],
             Z0: [],
             Z1: [],
-
             Y0: [],
             Y1: [],
         };
@@ -36,7 +65,9 @@ export default class MCFirstPersonControl {
         this.moveBackward = false;
         this.moveLeft = false;
         this.moveRight = false;
-        this.preRuning = undefined;
+        this.moveUp = false;
+        this.moveDown = false;
+        this.preRunning = undefined;
         this.isRunning = false;
         this.canJump = false;
         this.switchFly = undefined;
@@ -70,11 +101,9 @@ export default class MCFirstPersonControl {
         //初始化点击功能
         this.initMouseFunction();
         this.selectObjectsImpenetrable()
-        MCFirstPersonControl._instance = this;
-        return MCFirstPersonControl._instance;
     }
 
-    update(delta) {
+    update(delta: number | undefined) {
         delta = delta || 0.016;
         if (!this.controls.isLocked) {
             this.moveForward = false;
@@ -115,7 +144,7 @@ export default class MCFirstPersonControl {
     }
 
     initAim() {
-        let setAimStyle = aimEl => {
+        let setAimStyle = (aimEl: HTMLElement) => {
             aimEl.style.position = "fixed";
             aimEl.style.left = "50%";
             aimEl.style.top = "50%";
@@ -142,18 +171,18 @@ export default class MCFirstPersonControl {
     }
 
     initKeyboardFunction() {
-        let onKeyDown = (event) => {
+        let onKeyDown = (event: KeyboardEvent) => {
             switch (event.keyCode) {
                 case 38: // up
                 case 87: // w
                     if (this.moveForward) {
                         break;
                     }
-                    if (!this.preRuning) {
-                        this.preRuning = performance.now();
+                    if (!this.preRunning) {
+                        this.preRunning = performance.now();
                     } else {
-                        this.isRunning = performance.now() - this.preRuning <= 200;
-                        this.preRuning = performance.now();
+                        this.isRunning = performance.now() - this.preRunning <= 200;
+                        this.preRunning = performance.now();
                     }
                     this.moveForward = true;
                     break;
@@ -217,7 +246,7 @@ export default class MCFirstPersonControl {
 
 
         };
-        let onKeyUp = (event) => {
+        let onKeyUp = (event: KeyboardEvent) => {
             switch (event.keyCode) {
                 case 38: // up
                 case 87: // w
@@ -256,7 +285,7 @@ export default class MCFirstPersonControl {
     }
 
     initMouseFunction() {
-        let changeCurrentCubeTypeIndex = isNext => {
+        let changeCurrentCubeTypeIndex = (isNext: boolean) => {
             if (isNext) {
                 this.currentCubeTypeIndex++;
                 if (this.currentCubeTypeIndex === Object.keys(DefaultCube).length) {
@@ -301,14 +330,15 @@ export default class MCFirstPersonControl {
             if (document.addEventListener) {//firefox
                 document.addEventListener('DOMMouseScroll', (e) => {
                     e = e || window.event;
-                    if (e.wheelDelta) { //第一步：先判断浏览器IE，谷歌滑轮事件
-                        changeCurrentCubeTypeIndex(e.wheelDelta < 0);
-                    } else if (e.detail) { //Firefox滑轮事件
-                        changeCurrentCubeTypeIndex(e.detail < 0);
+                    if ((e as any).wheelDelta) { //第一步：先判断浏览器IE，谷歌滑轮事件
+                        changeCurrentCubeTypeIndex((e as any).wheelDelta < 0);
+                    } else if ((e as any).detail) { //Firefox滑轮事件
+                        changeCurrentCubeTypeIndex((e as any).detail < 0);
                     }
                 }, false);
             }
             //滚动滑轮触发scrollFunc方法 //ie 谷歌
+            // @ts-ignore
             window.onmousewheel = (e) => {
                 console.log('滑轮', this.currentCubeTypeIndex);
                 e = e || window.event;
@@ -321,7 +351,7 @@ export default class MCFirstPersonControl {
         }
     }
 
-    updatePreviewCube(delta) {
+    updatePreviewCube(delta: number) {
         if (!this.previewCube) {
             this.previewCube = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]).buildCube();
             this.scene.add(this.previewCube);
@@ -337,10 +367,12 @@ export default class MCFirstPersonControl {
                     if (this.previewCube.geometryMap[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]) {
                         this.previewCube.geometry = this.previewCube.geometryMap[Object.keys(DefaultCube)[this.currentCubeTypeIndex]]
                     } else {
-                        let previewGeometry = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]])._geometry.clone();
-                        previewGeometry.scale(0.01, 0.01, 0.01);
-                        this.previewCube.geometry = previewGeometry;
-                        this.previewCube.geometryMap[Object.keys(DefaultCube)[this.currentCubeTypeIndex]] = previewGeometry;
+                        let previewGeometry = new CubeFactory(DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]])?._geometry?.clone();
+                        if (previewGeometry) {
+                            previewGeometry.scale(0.01, 0.01, 0.01);
+                            this.previewCube.geometry = previewGeometry;
+                            this.previewCube.geometryMap[Object.keys(DefaultCube)[this.currentCubeTypeIndex]] = previewGeometry;
+                        }
                     }
                 }
             }
@@ -356,7 +388,9 @@ export default class MCFirstPersonControl {
                             y: 0,
                         }
                     } else {
-                        this.previewCubeRotation.y += (Math.PI / 180 * 60 * delta) % Math.PI;
+                        if (this.previewCubeRotation.y !== undefined) {
+                            this.previewCubeRotation.y += (Math.PI / 180 * 60 * delta) % Math.PI;
+                        }
                     }
                 }
                 this.previewCube.rotation.copy(this.camera.rotation);
@@ -366,13 +400,13 @@ export default class MCFirstPersonControl {
                         .applyAxisAngle(new Vector3(0, 1, 0), this.camera.rotation.y)
                         .applyAxisAngle(new Vector3(1, 0, 0), this.camera.rotation.x)
                 );
-                this.previewCube.rotateY(Math.PI / 4 + this.previewCubeRotation.y)
+                this.previewCube.rotateY(Math.PI / 4 + (this.previewCubeRotation.y || 0))
             }
         }
     }
 
-    updateCameraPosition(delta) {
-        const controlPrePosition=new Vector3()
+    updateCameraPosition(delta: number) {
+        const controlPrePosition = new Vector3()
         controlPrePosition.copy(this.controls.getObject().position)
         //水平方向移动+碰撞检测
         {
@@ -574,6 +608,9 @@ export default class MCFirstPersonControl {
             }
             //无碰撞时下次垂直位置(相机位置)
             let nextY = this.isFlying ? flyNextY : this.controls.getObject().position.y + (this.velocity.y * delta);
+            if (nextY === undefined) {
+                return
+            }
             if (topFlatY !== undefined) {
                 if (nextY > topFlatY - (this.personOption.height - this.personOption.sightHeight)) {
                     nextY = topFlatY - (this.personOption.height - this.personOption.sightHeight);
@@ -605,17 +642,20 @@ export default class MCFirstPersonControl {
         }
     }
 
-    removeCube(clickedObject) {
+    removeCube(clickedObject: THREE.Object3D) {
         let index = this.objects.findIndex(e => e.id === clickedObject.id);
         if (index >= 0) {
             this.objects.splice(index, 1);
         }
-        this.scene.remove(this.scene.getObjectById(clickedObject.id));
-        this.selectObjectsImpenetrable();
+        const objTmp = this.scene.getObjectById(clickedObject.id)
+        if (objTmp) {
+            this.scene.remove(objTmp);
+            this.selectObjectsImpenetrable();
+        }
     }
 
-    addCube(clickedObj) {
-        let normal = clickedObj.face.normal;
+    addCube(clickedObj: THREE.Intersection) {
+        let normal = clickedObj.face?.normal;
         let rotate = clickedObj.object.rotation;
         let position = clickedObj.object.position;
         let point = clickedObj.point;
@@ -626,7 +666,7 @@ export default class MCFirstPersonControl {
         let newIsHalfCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === GeometryType.HalfCube;
         let newIsStairsCube = DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes && DefaultCube[Object.keys(DefaultCube)[this.currentCubeTypeIndex]].cubeAttributes.geometryType === GeometryType.StairsCube;
 
-        let newPositionVector = new THREE.Vector3(normal.x, normal.y, normal.z);
+        let newPositionVector = new THREE.Vector3(normal?.x, normal?.y, normal?.z);
         newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 0, 1), rotate.z);
         newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotate.y);
         newPositionVector = newPositionVector.applyAxisAngle(new THREE.Vector3(1, 0, 0), rotate.x);

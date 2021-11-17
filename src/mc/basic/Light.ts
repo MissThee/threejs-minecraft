@@ -10,8 +10,8 @@ export function initAmbientLight() {
     return light;
 }
 
-export function getAmbientLightIntensity(lightCurrentIntensity, lightHighIntensity, lightLowIntensity) {
-    return Math.min(Math.max(lightLowIntensity, lightCurrentIntensity), lightHighIntensity);
+export function getAmbientLightIntensity(lightCurrentIntensity?: number, lightHighIntensity?: number, lightLowIntensity?: number) {
+    return Math.min(Math.max(lightLowIntensity || 0, lightCurrentIntensity || 0), lightHighIntensity || 0);
 }
 
 export function initDirectionalLight() {
@@ -26,6 +26,6 @@ export function initDirectionalLight() {
     return light;
 }
 
-export function getDirectionalLightIntensity(lightCurrentIntensity, lightHighIntensity, lightLowIntensity) {
-    return Math.min(Math.max(lightLowIntensity, lightCurrentIntensity), lightHighIntensity) / 4;
+export function getDirectionalLightIntensity(lightCurrentIntensity?: number, lightHighIntensity?: number, lightLowIntensity?: number) {
+    return Math.min(Math.max(lightLowIntensity || 0, lightCurrentIntensity || 0), lightHighIntensity || 0) / 4;
 }

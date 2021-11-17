@@ -2,7 +2,7 @@
   "name": "threejs-minecraft",
   "version": "1.0.0",
   "description": "threejs-minecraft-demo",
-  "main": "src/index/FirstPage.js",
+  "main": "src/index/FirstPage.ts",
   "private": true,
   "scripts": {
     "build:prod": "webpack --config config/webpack.prod.js",
@@ -27,18 +27,22 @@
     "@tweenjs/tween.js": "^18.5.0",
     "babel-polyfill": "^6.26.0",
     "current-device": "^0.10.0",
-    "stats-js": "^1.0.1",
-    "three": "^0.123.0"
+    "stats.js": "^0.17.0",
+    "three": "^0.123.0",
+    "typescript": "^4.4.4"
   },
   "devDependencies": {
-    "css-loader": "^6.2.0",
+    "@types/stats.js": "^0.17.0",
+    "@types/three": "0.93.31",
+    "css-loader": "^6.5.1",
     "express": "^4.17.1",
-    "file-loader": "^4.0.0",
-    "html-webpack-plugin": "^5.3.2",
-    "style-loader": "^3.2.1",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.6",
     "url-loader": "^4.1.1",
-    "webpack": "^5.51.1",
-    "webpack-cli": "^4.8.0",
+    "webpack": "^5.64.1",
+    "webpack-cli": "^4.9.1",
     "webpack-merge": "^5.8.0"
   }
 }

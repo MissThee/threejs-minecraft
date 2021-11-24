@@ -1,8 +1,9 @@
 import textBoard from "./util/TextBoard";
 import removeEl from "./util/RemoveEl";
-import {checkEnvironment} from './util/CheckTool'
+import {checkBrowser, checkWebGL, checkDevice} from './util/CheckTool'
+import MC from '../mc/mc'
 
-window.onload = function () {
+window.addEventListener('load', () => {
     document.addEventListener('touchstart', function (event) {
         if (event.touches.length > 1) {
             event.preventDefault();
@@ -19,13 +20,14 @@ window.onload = function () {
     document.addEventListener('gesturestart', function (event) {
         event.preventDefault();
     });
-};
+})
 
 let tipEL = textBoard(undefined, "Loading...");
 let canPlay: boolean;
 /*禁止ios缩放，双击和双指*/
 try {
-    checkEnvironment();
+    checkBrowser();
+    checkWebGL();
     canPlay = true;
 } catch (e: any) {
     canPlay = false;
@@ -33,19 +35,21 @@ try {
         textBoard(tipEL, ...e);
     }
 }
-/*  非入口，第一个模块打包后名称name默认为index
-    import()引入的懒加载模块引入时
-    不自定名称：打包分割，个人代码叫2，依赖包代码叫3。
-    自定义名称后，打包分割，个人代码叫mc，依赖包叫vendor~mc（vendor~xx这种格式是webpack默认配置）*/
+
 if (canPlay) {
-    import(/* webpackChunkName : "mc" */'../mc/mc')
-        .then(({default: MC}) => {
-            new MC().init()
+    import(/* webpackChunkName: "mc" */ '../mc/mc').then(({default: MC}) => {
+        new MC().init()
+        try {
+            checkDevice()
             textBoard(tipEL, "Done :)")
             removeEl(tipEL);
-        })
-        .catch((e) => {
-            textBoard(tipEL, "Error :(")
-            console.log('Error Info', e);
-        })
+        } catch (e: any) {
+            if (Object.prototype.toString.call(e) === "[object Array]") {
+                textBoard(tipEL, ...e);
+            }
+        }
+    }).catch((e) => {
+        textBoard(tipEL, "Error :(")
+        console.log('Error Info', e);
+    })
 }

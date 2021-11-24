@@ -87,12 +87,12 @@ export default class MC {
 
     private startAnimate() {
         this.animate()
-        window.onresize = () => {
+        window.addEventListener('resize', () => {
             //更新相机视角比例
             this.camera.aspect = this.canvasEl.offsetWidth / this.canvasEl.offsetHeight;
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(this.canvasEl.offsetWidth, this.canvasEl.offsetHeight);
-        };
+        })
     }
 
     private animate() {

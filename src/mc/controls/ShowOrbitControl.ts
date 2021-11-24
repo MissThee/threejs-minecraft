@@ -1,6 +1,6 @@
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import * as THREE from 'three';
-import {Object3D} from "three";
+import {Object3D, Vector3} from "three";
 
 export default class ShowOrbitControl {
     camera: THREE.Camera
@@ -8,11 +8,19 @@ export default class ShowOrbitControl {
 
     constructor(camera: THREE.Camera, domElement: HTMLElement | undefined) {
         this.camera = camera;
-        this.controls = new OrbitControls(camera, domElement);
+        camera.lookAt(10,40,10)
+        const orbitControls = new OrbitControls(camera, domElement)
+        orbitControls.enableZoom = false
+        // orbitControls.minPolarAngle = 10
+        // orbitControls.maxPolarAngle = 10
+        orbitControls.enableRotate=false
         //动态阻尼系数 就是鼠标拖拽旋转灵敏度
-        this.controls.dampingFactor = 1;
+        orbitControls.dampingFactor = 1;
         //是否允许平移
-        this.controls.enablePan = false;
+        orbitControls.enablePan = false;
+        orbitControls.autoRotate = true
+        orbitControls.autoRotateSpeed = 2
+        this.controls = orbitControls;
     }
 
     initClickFunction(objects: Object3D[]) {

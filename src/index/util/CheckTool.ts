@@ -1,14 +1,7 @@
 import {WEBGL} from "./WebGL";
 
 // 检查浏览器
-export function checkEnvironment() {
-    checkBrowser();
-    checkDevice();
-    checkWebGL();
-}
-
-// 检查浏览器
-function checkBrowser() {
+export function checkBrowser() {
     let explorer = window.navigator.userAgent,
         compare = function (s: string) {
             return (explorer.indexOf(s) >= 0);
@@ -17,19 +10,19 @@ function checkBrowser() {
             return ("ActiveXObject" in window)
         })();
     if (compare("MSIE") || ie11) {
-        throw ["不要用IE或浏览器的兼容模式 :(", "IE or browser compatibility mode is not OK :("];
+        throw ["不支持IE或浏览器的兼容模式 :(", "IE or browser compatibility mode is not OK :("];
     }
-};
+}
 
 // 检查设备
-function checkDevice() {
+export function checkDevice() {
     if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
         throw ["手机尚不支持 :(", "Mobile phone is not supported :(", "还是用电脑打开试试吧 :)", "Let's try it with computer :)"]
     }
-};
+}
 
 // 检查webgl支持
-function checkWebGL() {
+export function checkWebGL() {
     let isWebGLAvailable = false;
     try {
         var canvas = document.createElement('canvas');
@@ -45,4 +38,4 @@ function checkWebGL() {
             '',
             "ERROR: " + WEBGL.getWebGLErrorMessage().innerText]
     }
-};
+}

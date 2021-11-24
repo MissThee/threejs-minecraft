@@ -327,27 +327,13 @@ export default class MCFirstPersonControl {
         }, false);
         //滑轮功能
         {
-            if (document.addEventListener) {//firefox
-                document.addEventListener('DOMMouseScroll', (e) => {
-                    e = e || window.event;
-                    if ((e as any).wheelDelta) { //第一步：先判断浏览器IE，谷歌滑轮事件
-                        changeCurrentCubeTypeIndex((e as any).wheelDelta < 0);
-                    } else if ((e as any).detail) { //Firefox滑轮事件
-                        changeCurrentCubeTypeIndex((e as any).detail < 0);
-                    }
-                }, false);
-            }
-            //滚动滑轮触发scrollFunc方法 //ie 谷歌
-            // @ts-ignore
-            window.onmousewheel = (e) => {
-                console.log('滑轮', this.currentCubeTypeIndex);
+            window.addEventListener('wheel',(e) => {
+                console.log('滑轮',e, this.currentCubeTypeIndex);
                 e = e || window.event;
-                if (e.wheelDelta) { //第一步：先判断浏览器IE，谷歌滑轮事件
-                    changeCurrentCubeTypeIndex(e.wheelDelta < 0);
-                } else if (e.detail) { //Firefox滑轮事件
-                    changeCurrentCubeTypeIndex(e.detail < 0);
+               if (e instanceof WheelEvent) { //Firefox滑轮事件
+                    changeCurrentCubeTypeIndex(e.deltaY < 0);
                 }
-            };
+            })
         }
     }
 

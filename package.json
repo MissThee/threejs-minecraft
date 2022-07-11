@@ -20,30 +20,15 @@
   "homepage": "https://github.com/MissThee/threejs-minecraft#readme",
   "dependencies": {
     "@tweenjs/tween.js": "^18.5.0",
-    "babel-polyfill": "^6.26.0",
     "current-device": "^0.10.0",
     "stats.js": "^0.17.0",
-    "three": "^0.123.0",
-    "typescript": "^4.4.4"
+    "three": "^0.123.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
+    "typescript": "^4.5.4",
     "@types/stats.js": "^0.17.0",
     "@types/three": "0.93.31",
-    "babel-loader": "^8.2.3",
-    "css-loader": "^6.5.1",
     "express": "^4.17.1",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.5.0",
-    "style-loader": "^3.3.1",
-    "terser": "^5.14.1",
-    "terser-webpack-plugin": "^5.2.5",
-    "ts-loader": "^9.2.6",
-    "url-loader": "^4.1.1",
-    "vite": "^2.9.13",
-    "webpack": "^5.64.2",
-    "webpack-cli": "^4.9.1",
-    "webpack-merge": "^5.8.0"
+    "vite": "^2.9.13"
   }
 }

@@ -7,7 +7,7 @@ export function initBGMPlayer() {
     ];
     const audioBGM = new Audio();
     audioBGM.volume = 0.5;
-    audioBGM.preload = "true";
+    audioBGM.preload = "auto";
     audioBGM.controls = true;
     audioBGM.autoplay = true;
     // audioBGM.muted = true;

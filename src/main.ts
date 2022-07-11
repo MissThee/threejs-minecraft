@@ -1,7 +1,6 @@
 import textBoard from "./util/TextBoard";
 import removeEl from "./util/RemoveEl";
 import {checkBrowser, checkWebGL, checkDevice} from './util/CheckTool'
-import MC from '../mc/mc'
 
 window.addEventListener('load', () => {
     document.addEventListener('touchstart', function (event) {
@@ -37,7 +36,7 @@ try {
 }
 
 if (canPlay) {
-    import(/* webpackChunkName: "mc" */ '../mc/mc').then(({default: MC}) => {
+    import(/* webpackChunkName: "mc" */ './mc/mc').then(({default: MC}) => {
         new MC().init()
         try {
             checkDevice()

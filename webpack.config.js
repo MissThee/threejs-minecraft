@@ -3,30 +3,32 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const terserWebpackPlugin = require('terser-webpack-plugin')
 // const ManifestPlugin = require('webpack-manifest-plugin');
 // const copyWebpackPlugin = require('copy-webpack-plugin');
+const isDevelopment = process.env.NODE_ENV === 'production'
+
 module.exports = {
-    mode: "development",
+    // mode: 'none',
     entry: {
-        index: './src/index/FirstPage.ts'
+        index: './src/main.ts'
     },
     output: {
         filename: 'package/js/[name].[contenthash].entry.js',//入口文件输出名称，默认name为manifest
         chunkFilename: 'package/js/[name].[contenthash].bundle.js',//非入口文件 chunk 的名称
-        path: path.resolve(__dirname, '../dist'),//输出文件夹
+        path: path.resolve(__dirname, './dist'),//输出文件夹
         // 引用静态资源文件路径。相对路径从index目录为起始，即打开的html所在目录;绝对路径从根目录起始即/
         publicPath: './',
         clean: true
     },
     //报错在源码位置显示，定位错误代码
-    devtool: 'inline-source-map',
+    devtool: isDevelopment ? 'inline-source-map' : false,
     plugins: [
         //生成index.html并添加所有入口文件的引用
         new HtmlWebpackPlugin({//npm install --save-dev html-webpack-plugin
             title: 'MC',//标题，需要模板中title为<%= htmlWebpackPlugin.options.title%>
             inject: 'body',//入口资源引用，插入到新的文件中
             // filename: "FirstPage.html",//输出文件名
-            template: "./src/index/FirstPage.html",//可指定自己的html文件
-            favicon: "./src/index/favicon.ico",
-            filename: "index.html",//输出的html名称，默认index.html
+            template: "./public/index.html",//可指定自己的html文件
+            favicon: "./public/favicon.ico",
+            // filename: "index.html",//输出的html名称，默认index.html
             minify: {
                 // 压缩选项
                 collapseWhitespace: true
@@ -45,7 +47,7 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js'],
         alias: {
             //路径别名
-            'src': path.join(__dirname, '../src')
+            'src': path.join(__dirname, './src')
         },
     },
     externals: {},
@@ -60,7 +62,7 @@ module.exports = {
         // named 使用webpackChunkName命名
         // natural 顺序的数字ID
         // size 数字ID专注于最小初始下载大小。
-        moduleIds:"named",
+        moduleIds: "named",
         // minimize: false,//是否使用压缩，默认mode: development为false; production为true
         minimizer: [
             new terserWebpackPlugin({//此处只是定义，并不是启用

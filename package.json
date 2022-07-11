@@ -5,13 +5,11 @@
   "main": "src/index/FirstPage.ts",
   "private": true,
   "scripts": {
-    "build:prod": "webpack --config config/webpack.prod.js",
-    "build:dev": "webpack --config config/webpack.base.js",
+    "build": "webpack --mode=production",
     "watch-help": "echo 服务不停，修改文件，实时构建，手动刷新浏览器",
-    "watch": "webpack --watch --config config/webpack.dev.js",
+    "watch": "webpack --watch --mode=development",
     "server-help": "echo 安装npm install --save-dev express, 使用express作为文件服务发布内容",
-    "server": "node config/server.js",
-    "package": "webpack --config config/webpack.package.js"
+    "server": "node server.js"
   },
   "repository": {
     "type": "git",

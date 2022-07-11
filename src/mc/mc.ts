@@ -1,6 +1,6 @@
 // import TWEEN from "@tweenjs/tween.js";//动作库
 import * as THREE from "three";
-import StatsWindow from "./stats/StatsWindow";
+import type StatsWindow from "./stats/StatsWindow";
 import DefaultCube from "./objects/cube/DefaultCube"
 import CubeFactory from "./objects/cube/CubeFactory";
 import GlobalSetting from "./setting/GlobalSetting";
@@ -80,7 +80,9 @@ export default class MC {
         // 预方块添加
         this.addBlocks()
         // 监控窗口
-        // this.statsWindow = new StatsWindow(elementId)
+        // import("./stats/StatsWindow").then(value => {
+        //     this.statsWindow = new value.default(elementId)
+        // })
 
         this.startAnimate()
     }

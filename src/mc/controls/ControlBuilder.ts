@@ -1,7 +1,7 @@
 import ShowOrbitControl from "./ShowOrbitControl";
 import MCFirstPersonControl from "./MCFirstPersonControl";
-import {Mesh, PerspectiveCamera, Scene, WebGLRenderer} from "three";
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import type * as THREE from "three";
+import type {OrbitControls} from "./expControl/OrbitControls";
 
 export enum ControlsType {
     ShowOrbitControl = 'ShowOrbitControl',
@@ -10,10 +10,10 @@ export enum ControlsType {
 
 type InitControls = (
     controlsType: ControlsType,
-    scene: Scene,
-    camera: PerspectiveCamera,
-    renderer: WebGLRenderer,
-    objects: Mesh<any, any[]>[]
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    renderer: THREE.WebGLRenderer,
+    objects:THREE. Mesh<any, any[]>[]
 ) => OrbitControls | MCFirstPersonControl | undefined
 
 export const initControls: InitControls = (controlsType, scene, camera, renderer, objects) => {

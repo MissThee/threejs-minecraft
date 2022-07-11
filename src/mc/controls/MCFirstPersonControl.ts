@@ -1,4 +1,4 @@
-import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls'
+import {PointerLockControls} from './expControl/PointerLockControls'
 import CubeFactory from "../objects/cube/CubeFactory";
 import * as THREE from 'three';
 import DefaultCube from '../objects/cube/DefaultCube'

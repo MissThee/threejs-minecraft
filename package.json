@@ -2,13 +2,10 @@
   "name": "threejs-minecraft",
   "version": "1.0.0",
   "description": "threejs-minecraft-demo",
-  "main": "src/index/FirstPage.ts",
   "private": true,
   "scripts": {
-    "build": "webpack --mode=production",
-    "watch-help": "echo 服务不停，修改文件，实时构建，手动刷新浏览器",
-    "watch": "webpack --watch --mode=development",
-    "server-help": "echo 安装npm install --save-dev express, 使用express作为文件服务发布内容",
+    "dev": "vite",
+    "build": "tsc && vite build",
     "server": "node server.js"
   },
   "repository": {
@@ -40,9 +37,11 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "style-loader": "^3.3.1",
+    "terser": "^5.14.1",
     "terser-webpack-plugin": "^5.2.5",
     "ts-loader": "^9.2.6",
     "url-loader": "^4.1.1",
+    "vite": "^2.9.13",
     "webpack": "^5.64.2",
     "webpack-cli": "^4.9.1",
     "webpack-merge": "^5.8.0"

@@ -1,6 +1,6 @@
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import * as THREE from 'three';
-import {Object3D, Vector3} from "three";
+import {Object3D} from "three";
 
 export default class ShowOrbitControl {
     camera: THREE.Camera

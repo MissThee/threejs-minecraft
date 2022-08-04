@@ -2,30 +2,28 @@ import {OrbitControls} from './expControl/OrbitControls'
 import * as THREE from 'three';
 import {Object3D} from "three";
 
-export default class ShowOrbitControl {
-    camera: THREE.Camera
-    controls: OrbitControls | undefined;
+export default class ShowOrbitControl extends OrbitControls {
 
     constructor(camera: THREE.Camera, domElement: HTMLElement | undefined) {
-        this.camera = camera;
-        camera.lookAt(10,40,10)
-        const orbitControls = new OrbitControls(camera, domElement)
-        orbitControls.enableZoom = false
+        super(camera, domElement)
+
+        camera.lookAt(10, 40, 10)
+
+        this.enableZoom = false
         // orbitControls.minPolarAngle = 10
         // orbitControls.maxPolarAngle = 10
-        orbitControls.enableRotate=false
+        this.enableRotate = false
         //动态阻尼系数 就是鼠标拖拽旋转灵敏度
-        orbitControls.dampingFactor = 1;
+        this.dampingFactor = 1;
         //是否允许平移
-        orbitControls.enablePan = false;
-        orbitControls.autoRotate = true
-        orbitControls.autoRotateSpeed = 2
-        this.controls = orbitControls;
+        this.enablePan = false;
+        this.autoRotate = true
+        this.autoRotateSpeed = 2
     }
 
     initClickFunction(objects: Object3D[]) {
         window.addEventListener('mousedown', (event) => {
-            let clickedObjects = getClickedObject(event, objects, this.camera);
+            let clickedObjects = getClickedObject(event, objects, this.object);
             if (clickedObjects.length > 0) {
                 let obj = clickedObjects[0].object;
                 console.log("点击的对象：" + obj.name);

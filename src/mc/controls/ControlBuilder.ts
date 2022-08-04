@@ -14,7 +14,7 @@ type InitControls = (
     camera: THREE.PerspectiveCamera,
     renderer: THREE.WebGLRenderer,
     objects:THREE.Mesh<any, any[]>[]
-) => OrbitControls | MCFirstPersonControl | undefined
+) => ShowOrbitControl | MCFirstPersonControl | undefined
 
 export const initControls: InitControls = (controlsType, scene, camera, renderer, objects) => {
     let controls;
@@ -22,7 +22,7 @@ export const initControls: InitControls = (controlsType, scene, camera, renderer
         case ControlsType.ShowOrbitControl:
             let showOrbitControl = new ShowOrbitControl(camera, renderer.domElement);
             showOrbitControl.initClickFunction(scene.children);
-            controls = showOrbitControl.controls;
+            controls = showOrbitControl;
             break;
         case ControlsType.MCFirstPersonControl:
             let mcFirstPersonControl = new MCFirstPersonControl(camera, renderer.domElement, objects, scene);

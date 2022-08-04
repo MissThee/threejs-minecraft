@@ -78,12 +78,12 @@ export default class MCFirstPersonControl {
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
         this.worldOption = {
-            g: 8.0
+            g: 7.5
         };
         this.personOption = {
             height: 1.8,//人物总高度。现有配置不能让人物高于2
             sightHeight: 1.5,//眼部高度。现有配置不能让人物高于2
-            jumpHeight: 1.3,    //最大跳跃高度(并非砖块高度)
+            jumpHeight: 1.33,    //最大跳跃高度(并非砖块高度)
             speedWalk: 5.7,     //最大行走速度
             speedRun: 10,       //最大奔跑速度，连按w两次
             accelerateRateStart: 0.3,//加速时加速比率。正数向前；负数反向；0不会加速；绝对值大于等于1可立即到最大速度

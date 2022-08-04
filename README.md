@@ -1,9 +1,22 @@
 # threejs minecraft
 预览地址 [http://mc.missthee.com/](http://mc.missthee.com/)
 
-+ 操作提示：
+## 简介
+three.js + vite + ts 构建的网页端仿我的世界demo
+
+## 本地运行
+  + 开发
+    1. clone项目到本地
+    2. 项目根目录执行 `npm install`
+    3. 项目根目录执行 `npm run dev`，根据控制台提示访问网页
+  + 打包 与 预览打包文件
+    1. 项目根目录执行 `npm run build`（现打包后文件位于`/docs`仅为方便部署白github page）
+    1. 架设本地服务预览打包后文件效果 `npm run server`，根据控制台提示访问网页
+
+
+## 操作提示：
   + `视角` 点击页面进入鼠标控制视角模式，按 Esc 解除鼠标锁定
-  + `移动` W A S D 
+  + `移动` W A S D 或 上 下 左 右
   + `跳` 空格
   + `跑` 双击 W 并按住
   + `飞行` 跳起来在空中时再按跳；飞行时空格垂直升高； shift 垂直降低

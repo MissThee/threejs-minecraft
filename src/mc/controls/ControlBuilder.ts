@@ -13,7 +13,7 @@ type InitControls = (
     scene: THREE.Scene,
     camera: THREE.PerspectiveCamera,
     renderer: THREE.WebGLRenderer,
-    objects:THREE. Mesh<any, any[]>[]
+    objects:THREE.Mesh<any, any[]>[]
 ) => OrbitControls | MCFirstPersonControl | undefined
 
 export const initControls: InitControls = (controlsType, scene, camera, renderer, objects) => {

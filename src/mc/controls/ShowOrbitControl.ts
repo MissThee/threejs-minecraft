@@ -1,4 +1,4 @@
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import {OrbitControls} from './expControl/OrbitControls'
 import * as THREE from 'three';
 import {Object3D} from "three";
 

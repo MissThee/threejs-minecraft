@@ -3,7 +3,6 @@ import GlobalSetting from "../../setting/GlobalSetting";
 import GeometryType from "./GeometryType";
 import ImagePoint from "./ImagePoint";
 import DefaultCube, {CubeOption} from "./DefaultCube";
-import type {BufferGeometry} from "three";
 
 export default class CubeFactory {
     private static _instanceObj: Record<string, CubeFactory>;
@@ -11,8 +10,8 @@ export default class CubeFactory {
     _materials: THREE.Material[];
     _materialsMap: Record<string, THREE.Material[]>;
     _materialsHalfMap: Record<string, THREE.MeshLambertMaterial>;
-    _geometry: BufferGeometry | undefined;
-    _geometryMap: Record<string, BufferGeometry>;
+    _geometry: THREE.BufferGeometry | undefined;
+    _geometryMap: Record<string, THREE.BufferGeometry>;
     _cubeSize: number;
 
     constructor(defaultCube: CubeOption) {

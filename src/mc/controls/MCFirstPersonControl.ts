@@ -6,15 +6,15 @@ import GeometryType from "../objects/cube/GeometryType";
 import {Vector3} from "three";
 
 interface PreviewCube extends THREE.Mesh {
-    geometryMap?: Record<string, THREE.Geometry>
+    geometryMap?: Record<string, THREE.BufferGeometry>
 }
 
 export default class MCFirstPersonControl {
     camera: THREE.Camera;
     private previewCube: PreviewCube | undefined;
-    private domElement: HTMLCanvasElement;
-    private objects: THREE.Mesh[];
-    objectsImpenetrable: THREE.Mesh[] | undefined;
+    private readonly domElement: HTMLCanvasElement;
+    private readonly objects: THREE.Mesh[];
+    objectsImpenetrable: THREE.Mesh[];
     scene: THREE.Scene;
     private currentCubeTypeIndex: number;
     private sightRay: THREE.Raycaster;
@@ -29,8 +29,8 @@ export default class MCFirstPersonControl {
     private isRunning: boolean;
     private canJump: boolean;
     private switchFly: number | undefined;
-    private canFly: boolean;
-    private switchFlyKeyUped: boolean;
+    private readonly canFly: boolean;
+    private switchFlyKeyUpped: boolean;
     private isFlying: boolean;
     private velocity: Vector3;
     private direction: Vector3;
@@ -48,7 +48,7 @@ export default class MCFirstPersonControl {
         this.camera = camera;
         this.domElement = domElement;
         this.objects = objects;
-        this.objectsImpenetrable = undefined;
+        this.objectsImpenetrable = [];
         this.scene = scene;
         this.currentCubeTypeIndex = 0;
 
@@ -72,7 +72,7 @@ export default class MCFirstPersonControl {
         this.canJump = false;
         this.switchFly = undefined;
         this.canFly = true;
-        this.switchFlyKeyUped = false;
+        this.switchFlyKeyUpped = false;
         this.isFlying = false;
         // this.prevTime = performance.now();
         this.velocity = new THREE.Vector3();
@@ -172,9 +172,10 @@ export default class MCFirstPersonControl {
 
     initKeyboardFunction() {
         let onKeyDown = (event: KeyboardEvent) => {
-            switch (event.keyCode) {
-                case 38: // up
-                case 87: // w
+            switch (event.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
                     if (this.moveForward) {
                         break;
                     }
@@ -187,33 +188,37 @@ export default class MCFirstPersonControl {
                     this.moveForward = true;
                     break;
 
-                case 37: // left
-                case 65: // a
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
                     if (this.moveLeft) {
                         break;
                     }
                     this.moveLeft = true;
                     break;
 
-                case 40: // down
-                case 83: // s
+                case 'ArrowDown':
+                case 's':
+                case 'S':
                     if (this.moveBackward) {
                         break;
                     }
                     this.moveBackward = true;
                     break;
 
-                case 39: // right
-                case 68: // d
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
                     if (this.moveRight) {
                         break;
                     }
                     this.moveRight = true;
                     break;
 
-                case 32: // space
+                case ' ':
+                case 'Spacebar':
                     //7.74是60开平方
-                    if (!this.canJump && this.switchFlyKeyUped) {
+                    if (!this.canJump && this.switchFlyKeyUpped) {
                         this.isFlying = this.canFly;
                     }
                     if (this.canJump) this.velocity.y += Math.sqrt(2 * this.worldOption.g * 7.74 * this.personOption.jumpHeight);
@@ -224,7 +229,7 @@ export default class MCFirstPersonControl {
                                 this.switchFly = performance.now();
                             } else {
                                 if (performance.now() - this.switchFly <= 200) {
-                                    this.isFlying = !this.switchFlyKeyUped;
+                                    this.isFlying = !this.switchFlyKeyUpped;
                                 }
                             }
                         }
@@ -232,11 +237,11 @@ export default class MCFirstPersonControl {
                             break;
                         }
                         this.moveUp = true;
-                        this.switchFlyKeyUped = false;
+                        this.switchFlyKeyUpped = false;
                     }
                     this.switchFly = performance.now();
                     break;
-                case 16: // shift left
+                case 'Shift':
                     if (this.moveDown) {
                         break;
                     }
@@ -247,35 +252,40 @@ export default class MCFirstPersonControl {
 
         };
         let onKeyUp = (event: KeyboardEvent) => {
-            switch (event.keyCode) {
-                case 38: // up
-                case 87: // w
+            switch (event.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
                     this.isRunning = false;
                     this.moveForward = false;
                     break;
 
-                case 37: // left
-                case 65: // a
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
                     this.moveLeft = false;
                     break;
 
-                case 40: // down
-                case 83: // s
+                case 'ArrowDown':
+                case 's':
+                case 'S':
                     this.moveBackward = false;
                     break;
 
-                case 39: // right
-                case 68: // d
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
                     this.moveRight = false;
                     break;
 
-                case 16: // shift left
+                case 'Shift':
                     this.moveDown = false;
                     break;
 
-                case 32: // space
+                case ' ':
+                case 'Spacebar':
                     this.moveUp = false;
-                    this.switchFlyKeyUped = true;
+                    this.switchFlyKeyUpped = true;
                     break;
             }
 
@@ -327,10 +337,9 @@ export default class MCFirstPersonControl {
         }, false);
         //滑轮功能
         {
-            window.addEventListener('wheel',(e) => {
-                console.log('滑轮',e, this.currentCubeTypeIndex);
-                e = e || window.event;
-               if (e instanceof WheelEvent) { //Firefox滑轮事件
+            window.addEventListener('wheel', (e) => {
+                // console.log('滑轮', e, this.currentCubeTypeIndex);
+                if (e instanceof WheelEvent) { //Firefox滑轮事件
                     changeCurrentCubeTypeIndex(e.deltaY < 0);
                 }
             })
@@ -436,7 +445,7 @@ export default class MCFirstPersonControl {
                 {
                     for (let i = 0; i < 10; i++) {
                         if (this.checkRay.Z0[i] === undefined) {
-                            this.checkRay.Z0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0, 0));
+                            this.checkRay.Z0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0));
                         }
                         this.checkRay.Z0[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z0[i].ray.origin.x = positionBeforeX;//修正为移动前的x轴位置，防止使用位移后的位置检测墙壁
@@ -454,7 +463,7 @@ export default class MCFirstPersonControl {
                 {
                     for (let i = 0; i < 10; i++) {
                         if (this.checkRay.Z1[i] === undefined) {
-                            this.checkRay.Z1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, 1), 0, 0));
+                            this.checkRay.Z1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, 1), 0));
                         }
                         this.checkRay.Z1[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.Z1[i].ray.origin.x = positionBeforeX;
@@ -479,7 +488,7 @@ export default class MCFirstPersonControl {
                 {
                     for (let i = 0; i < 10; i++) {
                         if (this.checkRay.X0[i] === undefined) {
-                            this.checkRay.X0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(-1, 0, 0), 0, 0));
+                            this.checkRay.X0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(-1, 0, 0), 0));
                         }
                         this.checkRay.X0[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.X0[i].ray.origin.z = positionBeforeZ;
@@ -497,7 +506,7 @@ export default class MCFirstPersonControl {
                 {
                     for (let i = 0; i < 10; i++) {
                         if (this.checkRay.X1[i] === undefined) {
-                            this.checkRay.X1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(1, 0, 0), 0, 0));
+                            this.checkRay.X1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(1, 0, 0), 0));
                         }
                         this.checkRay.X1[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                         this.checkRay.X1[i].ray.origin.z = positionBeforeZ;
@@ -545,7 +554,7 @@ export default class MCFirstPersonControl {
             {
                 for (let i = 0; i < 5; i++) {
                     if (this.checkRay.Y0[i] === undefined) {
-                        this.checkRay.Y0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 0));
+                        this.checkRay.Y0.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0));
                     }
                     this.checkRay.Y0[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                 }
@@ -571,7 +580,7 @@ export default class MCFirstPersonControl {
             {
                 for (let i = 0; i < 5; i++) {
                     if (this.checkRay.Y1[i] === undefined) {
-                        this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 0));
+                        this.checkRay.Y1.push(new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0));
                     }
                     this.checkRay.Y1[i].ray.origin.copy(controlPrePosition);//设置射线原点在摄像机位置，即人物眼睛位置
                 }
@@ -769,12 +778,7 @@ export default class MCFirstPersonControl {
 
     selectObjectsImpenetrable() {
         //过滤出有体积碰撞的对象
-        this.objectsImpenetrable = this.objects.filter(e =>
-            !(e.userData
-                && e.userData.cubeAttributes
-                && e.userData.cubeAttributes.isPenetrable
-            )
-        );
+        this.objectsImpenetrable = this.objects.filter(e => !(e.userData && e.userData.cubeAttributes && e.userData.cubeAttributes.isPenetrable));
     }
 }
 

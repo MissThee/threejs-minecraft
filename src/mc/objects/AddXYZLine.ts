@@ -8,11 +8,8 @@ function buildLine(x1: number, y1: number, z1: number, x2: number, y2: number, z
     y2 = y2 || 0;
     z2 = z2 || 0;
     color = color || 0xff0000;
-    let startPoint = new THREE.Vector3(x1, y1, z1);
-    let endPoint = new THREE.Vector3(x2, y2, z2);
-    let geometry = new THREE.Geometry();
-    geometry.vertices.push(startPoint);
-    geometry.vertices.push(endPoint);
+    let geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([x1, y1, z1,x2, y2, z2]),3,false))
     let material = new THREE.MeshBasicMaterial({color: color});
     return new THREE.LineSegments(geometry, material);
 }

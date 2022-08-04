@@ -25,7 +25,7 @@ export function checkDevice() {
 export function checkWebGL() {
     let isWebGLAvailable = false;
     try {
-        var canvas = document.createElement('canvas');
+        const canvas = document.createElement('canvas');
         isWebGLAvailable = !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
     } catch (e) {
     }

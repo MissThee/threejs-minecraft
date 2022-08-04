@@ -11,8 +11,8 @@ import {initCamera} from "./basic/Camera" ;
 import {initRenderer} from "./basic/Renderer" ;
 import {initBGMPlayer} from "./sound/BGM" ;
 import {ControlsType, initControls} from "./controls/ControlBuilder" ;
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import MCFirstPersonControl from "./controls/MCFirstPersonControl";
+import ShowOrbitControl from "./controls/ShowOrbitControl";
 
 // {//添加左下角的按钮，测试用
 //     let divEl = document.createElement('div');
@@ -40,7 +40,7 @@ export default class MC {
     camera: THREE.PerspectiveCamera
     renderer: THREE.WebGLRenderer
     objects: THREE.Mesh<any, any[]>[] = []// 收集所欲加入到场景的方块对象
-    controls: OrbitControls | MCFirstPersonControl | undefined
+    controls: ShowOrbitControl | MCFirstPersonControl | undefined
     bgmPlayer: HTMLAudioElement
     prevTime: number = performance.now()
     changeLight: () => void

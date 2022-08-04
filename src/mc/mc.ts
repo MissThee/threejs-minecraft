@@ -1,4 +1,3 @@
-// import TWEEN from "@tweenjs/tween.js";//动作库
 import * as THREE from "three";
 import type StatsWindow from "./stats/StatsWindow";
 import DefaultCube from "./objects/cube/DefaultCube"

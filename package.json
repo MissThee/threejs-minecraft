@@ -19,16 +19,14 @@
   },
   "homepage": "https://github.com/MissThee/threejs-minecraft#readme",
   "dependencies": {
-    "@tweenjs/tween.js": "^18.5.0",
-    "current-device": "^0.10.0",
     "stats.js": "^0.17.0",
     "three": "^0.143.0"
   },
   "devDependencies": {
     "@types/stats.js": "^0.17.0",
-    "@types/three":  "^0.143.0",
-    "express": "^4.17.1",
-    "typescript": "^4.5.4",
-    "vite": "^2.9.13"
+    "@types/three": "^0.143.0",
+    "express": "^4.18.1",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.4"
   }
 }

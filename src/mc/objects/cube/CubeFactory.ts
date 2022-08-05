@@ -6,15 +6,13 @@ import DefaultCube, {CubeOption} from "./DefaultCube";
 const computeFaceNormalsViaPosition = (positionData: number[]) => {
     const normal = []
     for (let i = 0; i < positionData.length; i += 9) {
-        const vA = new THREE.Vector3(positionData[i], positionData[i + 1], positionData[i + 2])
-        const vB = new THREE.Vector3(positionData[i + 3], positionData[i + 4], positionData[i + 5])
-        const vC = new THREE.Vector3(positionData[i + 6], positionData[i + 7], positionData[i + 8])
+        const vA = new THREE.Vector3(...positionData.slice(i, i + 3))
+        const vB = new THREE.Vector3(...positionData.slice(i + 3, i + 6))
+        const vC = new THREE.Vector3(...positionData.slice(i + 6, i + 9))
         const cb = new THREE.Vector3(), ab = new THREE.Vector3();
         cb.subVectors(vC, vB);
         ab.subVectors(vA, vB);
-        cb.cross(ab);
-        cb.normalize();
-        const cbArr = cb.toArray()
+        const cbArr = cb.cross(ab).normalize().toArray();
         normal.push(...cbArr, ...cbArr, ...cbArr)
     }
     return normal

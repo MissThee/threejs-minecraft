@@ -3,6 +3,22 @@ import GlobalSetting from "../../setting/GlobalSetting";
 import GeometryType from "./GeometryType";
 import DefaultCube, {CubeOption} from "./DefaultCube";
 
+const computeFaceNormalsViaPosition = (positionData: number[]) => {
+    const normal = []
+    for (let i = 0; i < positionData.length; i += 9) {
+        const vA = new THREE.Vector3(positionData[i], positionData[i + 1], positionData[i + 2])
+        const vB = new THREE.Vector3(positionData[i + 3], positionData[i + 4], positionData[i + 5])
+        const vC = new THREE.Vector3(positionData[i + 6], positionData[i + 7], positionData[i + 8])
+        const cb = new THREE.Vector3(), ab = new THREE.Vector3();
+        cb.subVectors(vC, vB);
+        ab.subVectors(vA, vB);
+        cb.cross(ab);
+        cb.normalize();
+        const cbArr = cb.toArray()
+        normal.push(...cbArr, ...cbArr, ...cbArr)
+    }
+    return normal
+}
 export default class CubeFactory {
     private static _instanceObj: Record<string, CubeFactory>;
     cubeOptions: CubeOption;
@@ -48,288 +64,94 @@ export default class CubeFactory {
         const width = this._cubeSize;
         const innerWidth = width / Math.sqrt(2);
         switch (geometryType) {
-            case GeometryType.Cube:
+            case GeometryType.Cube: {
                 geom = new THREE.BoxGeometry(this._cubeSize, this._cubeSize, this._cubeSize);
                 break;
-            case GeometryType.HalfCube:
+            }
+            case GeometryType.HalfCube: {
                 geom = new THREE.BoxGeometry(this._cubeSize, this._cubeSize / 2, this._cubeSize);
                 break;
-            case GeometryType.StairsCube:
+            }
+            case GeometryType.StairsCube: {
                 geom = new THREE.BufferGeometry();
                 // 阶梯面冲向x轴正向
                 const stairsPoints = [
-                    // 底面4个点
-                    [width / 2, -width / 2, width / 2,],
+                    [width / 2, -width / 2, width / 2,], // 底面4个点
                     [-width / 2, -width / 2, width / 2,],
                     [-width / 2, -width / 2, -width / 2,],
                     [width / 2, -width / 2, -width / 2,],
-                    // 中间4个点,
-                    [width / 2, 0, width / 2,],
+                    [width / 2, 0, width / 2,], // 中间4个点,
                     [0, 0, width / 2,],
                     [0, 0, -width / 2,],
                     [width / 2, 0, -width / 2,],
-                    // 顶面4个点,
-                    [0, width / 2, width / 2,],
+                    [0, width / 2, width / 2,], // 顶面4个点,
                     [-width / 2, width / 2, width / 2,],
                     [-width / 2, width / 2, -width / 2,],
                     [0, width / 2, -width / 2,],
                 ]
-                geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
-                    stairsPoints[0], // 底面1
-                    stairsPoints[2],
-                    stairsPoints[3],
-                    stairsPoints[0],// 底面2
-                    stairsPoints[1],
-                    stairsPoints[2],
-                    stairsPoints[0], // 右侧下 下1
-                    stairsPoints[3],
-                    stairsPoints[7],
-                    stairsPoints[0], // 右侧下 下2
-                    stairsPoints[7],
-                    stairsPoints[4],
-                    stairsPoints[5],// 阶梯上半 中侧面下
-                    stairsPoints[6],
-                    stairsPoints[11],
-                    stairsPoints[5],  // 阶梯上半 中侧面上
-                    stairsPoints[11],
-                    stairsPoints[8],
-                    stairsPoints[4],// 阶梯下阶上面
-                    stairsPoints[7],
-                    stairsPoints[6],
-                    stairsPoints[4], // 阶梯下阶上面
-                    stairsPoints[6],
-                    stairsPoints[5],
-                    stairsPoints[8],
-                    stairsPoints[11],
-                    stairsPoints[10],
-                    stairsPoints[8],
-                    stairsPoints[10],
-                    stairsPoints[9],
-                    stairsPoints[2],
-                    stairsPoints[1],
-                    stairsPoints[9],
-                    stairsPoints[2],
-                    stairsPoints[9],
-                    stairsPoints[10],
-                    stairsPoints[5],
-                    stairsPoints[8],
-                    stairsPoints[9],
-                    stairsPoints[5],
-                    stairsPoints[9],
-                    stairsPoints[1],
-                    stairsPoints[5],
-                    stairsPoints[1],
-                    stairsPoints[0],
-                    stairsPoints[5],
-                    stairsPoints[0],
-                    stairsPoints[4],
-                    stairsPoints[6],
-                    stairsPoints[10],
-                    stairsPoints[11],
-                    stairsPoints[6],
-                    stairsPoints[2],
-                    stairsPoints[10],
-                    stairsPoints[6],
-                    stairsPoints[3],
-                    stairsPoints[2],
-                    stairsPoints[6],
-                    stairsPoints[7],
-                    stairsPoints[3],
-                ].flatMap(e => e)), 3, false));
-                geom.setAttribute('normal', new THREE.BufferAttribute(new Float32Array([
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, -1, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1
-                ]), 3, true));
+                const position = [
+                    stairsPoints[0], stairsPoints[2], stairsPoints[3],// 底面1
+                    stairsPoints[0], stairsPoints[1], stairsPoints[2],// 底面2
+                    stairsPoints[0], stairsPoints[3], stairsPoints[7],// 右侧下 下1
+                    stairsPoints[0], stairsPoints[7], stairsPoints[4],// 右侧下 下2
+                    stairsPoints[5], stairsPoints[6], stairsPoints[11],// 阶梯上半 中侧面下
+                    stairsPoints[5], stairsPoints[11], stairsPoints[8],// 阶梯上半 中侧面上
+                    stairsPoints[4], stairsPoints[7], stairsPoints[6],// 阶梯下阶上面
+                    stairsPoints[4], stairsPoints[6], stairsPoints[5],// 阶梯下阶上面
+                    stairsPoints[8], stairsPoints[11], stairsPoints[10],// 阶梯上阶上面
+                    stairsPoints[8], stairsPoints[10], stairsPoints[9],// 阶梯上阶上面
+                    stairsPoints[2], stairsPoints[1], stairsPoints[9],// 左侧
+                    stairsPoints[2], stairsPoints[9], stairsPoints[10],// 左侧
+                    stairsPoints[5], stairsPoints[8], stairsPoints[9],// 上阶 背面
+                    stairsPoints[5], stairsPoints[9], stairsPoints[1],// 上阶 背面
+                    stairsPoints[5], stairsPoints[1], stairsPoints[0],// 下阶 背面
+                    stairsPoints[5], stairsPoints[0], stairsPoints[4],// 下阶 背面
+                    stairsPoints[6], stairsPoints[10], stairsPoints[11],// 上阶 前面
+                    stairsPoints[6], stairsPoints[2], stairsPoints[10],// 上阶 前面
+                    stairsPoints[6], stairsPoints[3], stairsPoints[2],// 下阶 前面
+                    stairsPoints[6], stairsPoints[7], stairsPoints[3],// 下阶 前面
+                ].flatMap(e => e)
+                geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(position), 3, false));
+                geom.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(computeFaceNormalsViaPosition(position)), 3, true));
                 geom.setAttribute('uv', new THREE.BufferAttribute(new Float32Array([
-                    0, 0,
-                    1, 1,
-                    1, 0,
-                    0, 0,
-                    0, 1,
-                    1, 1,
-                    0, 0,
-                    1, 0,
-                    1, 0.5,
-                    0, 0,
-                    1, 0.5,
-                    0, 0.5,
-                    0, 0,
-                    1, 0,
-                    1, 0.5,
-                    0, 0,
-                    1, 0.5,
-                    0, 0.5,
-                    0, 0,
-                    1, 0,
-                    1, 0.5,
-                    0, 0,
-                    1, 0.5,
-                    0, 0.5,
-                    0, 0,
-                    1, 0,
-                    1, 0.5,
-                    0, 0,
-                    1, 0.5,
-                    0, 0.5,
-                    0, 0,
-                    1, 0,
-                    1, 1,
-                    0, 0,
-                    1, 1,
-                    0, 1,
-                    0.5, 0.5,
-                    0.5, 1,
-                    0, 1,
-                    0.5, 0.5,
-                    0, 1,
-                    0, 0,
-                    0.5, 0.5,
-                    0, 0,
-                    1, 0,
-                    0.5, 0.5,
-                    1, 0,
-                    1, 0.5,
-                    0.5, 0.5,
-                    0, 1,
-                    0.5, 1,
-                    0.5, 0.5,
-                    0, 0,
-                    0, 1,
-                    0.5, 0.5,
-                    1, 0,
-                    0, 0,
-                    0.5, 0.5,
-                    1, 0.5,
-                    1, 0
-                ]), 2, false));
-
+                    [0, 0], [1, 1], [1, 0], // 单个面的uv
+                    [0, 0], [0, 1], [1, 1],
+                    [0, 0], [1, 0], [1, 0.5],
+                    [0, 0], [1, 0.5], [0, 0.5],
+                    [0, 0], [1, 0], [1, 0.5],
+                    [0, 0], [1, 0.5], [0, 0.5],
+                    [0, 0], [1, 0], [1, 0.5],
+                    [0, 0], [1, 0.5], [0, 0.5],
+                    [0, 0], [1, 0], [1, 0.5],
+                    [0, 0], [1, 0.5], [0, 0.5],
+                    [0, 0], [1, 0], [1, 1],
+                    [0, 0], [1, 1], [0, 1],
+                    [0.5, 0.5], [0.5, 1], [0, 1],
+                    [0.5, 0.5], [0, 1], [0, 0],
+                    [0.5, 0.5], [0, 0], [1, 0],
+                    [0.5, 0.5], [1, 0], [1, 0.5],
+                    [0.5, 0.5], [0, 1], [0.5, 1],
+                    [0.5, 0.5], [0, 0], [0, 1],
+                    [0.5, 0.5], [1, 0], [0, 0],
+                    [0.5, 0.5], [1, 0.5], [1, 0],
+                ].flatMap(e => e)), 2, false));
                 geom.groups.push({start: 0, materialIndex: 0, count: 60})
-                // geom.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 0.8660254037844386)
                 break;
-            case GeometryType.Flower1Cube:
+            }
+            case GeometryType.Flower1Cube: {
                 geom = new THREE.BufferGeometry();
-                geom.setAttribute('normal', new THREE.BufferAttribute(new Float32Array([
-                    1, 0, -1,
-                    1, 0, -1,
-                    1, 0, -1,
-                    1, 0, -1,
-                    1, 0, -1,
-                    1, 0, -1,
-                    1, 0, 1,
-                    1, 0, 1,
-                    1, 0, 1,
-                    1, 0, 1,
-                    1, 0, 1,
-                    1, 0, 1,
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, -1, 0,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    0, 0, 1,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    0, 0, -1,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    -1, 0, 0,
-                    -1, 0, 0
-                ]), 3, false));
                 const flower1Points = {
                     block: [
-                        // 底面4个点
-                        [width / 2, -width / 2, width / 2,],
+                        [width / 2, -width / 2, width / 2,], // 底面4个点
                         [-width / 2, -width / 2, width / 2,],
                         [-width / 2, -width / 2, -width / 2,],
                         [width / 2, -width / 2, -width / 2,],
-                        // 顶面4个点,
-                        [width / 2, width / 2, width / 2,],
+                        [width / 2, width / 2, width / 2,], // 顶面4个点,
                         [-width / 2, width / 2, width / 2,],
                         [-width / 2, width / 2, -width / 2,],
                         [width / 2, width / 2, -width / 2,],
                     ],
-                    cross: [    // 中间8个点,
+                    cross: [ // 中间8个点,
                         [innerWidth, -width / 2, innerWidth,],
                         [-innerWidth, -width / 2, -innerWidth,],
                         [-innerWidth, width / 2, -innerWidth,],
@@ -340,114 +162,38 @@ export default class CubeFactory {
                         [-innerWidth, width / 2, innerWidth,],
                     ]
                 }
-                geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
-                    flower1Points.cross[0],
-                    flower1Points.cross[1],
-                    flower1Points.cross[2],
-
-                    flower1Points.cross[0],
-                    flower1Points.cross[2],
-                    flower1Points.cross[3],
-
-                    flower1Points.cross[4],
-                    flower1Points.cross[5],
-                    flower1Points.cross[6],
-
-                    flower1Points.cross[4],
-                    flower1Points.cross[6],
-                    flower1Points.cross[7],
-
-                    flower1Points.block[0],
-                    flower1Points.block[1],
-                    flower1Points.block[2],
-                    flower1Points.block[0],
-                    flower1Points.block[2],
-                    flower1Points.block[3],
-                    flower1Points.block[0],
-                    flower1Points.block[5],
-                    flower1Points.block[1],
-                    flower1Points.block[0],
-                    flower1Points.block[4],
-                    flower1Points.block[5],
-                    flower1Points.block[0],
-                    flower1Points.block[3],
-                    flower1Points.block[7],
-                    flower1Points.block[0],
-                    flower1Points.block[7],
-                    flower1Points.block[4],
-                    flower1Points.block[6],
-                    flower1Points.block[4],
-                    flower1Points.block[7],
-                    flower1Points.block[6],
-                    flower1Points.block[5],
-                    flower1Points.block[4],
-                    flower1Points.block[6],
-                    flower1Points.block[7],
-                    flower1Points.block[3],
-                    flower1Points.block[6],
-                    flower1Points.block[3],
-                    flower1Points.block[2],
-                    flower1Points.block[6],
-                    flower1Points.block[1],
-                    flower1Points.block[5],
-                    flower1Points.block[6],
-                    flower1Points.block[2],
-                    flower1Points.block[1],
-                ].flatMap(e => e)), 3, false));
+                const position = [
+                    flower1Points.cross[0], flower1Points.cross[1], flower1Points.cross[2], // 内部交叉贴图面
+                    flower1Points.cross[0], flower1Points.cross[2], flower1Points.cross[3],
+                    flower1Points.cross[4], flower1Points.cross[5], flower1Points.cross[6],
+                    flower1Points.cross[4], flower1Points.cross[6], flower1Points.cross[7],
+                    flower1Points.block[0], flower1Points.block[1], flower1Points.block[2], // 外部空间占位面
+                    flower1Points.block[0], flower1Points.block[2], flower1Points.block[3],
+                    flower1Points.block[0], flower1Points.block[5], flower1Points.block[1],
+                    flower1Points.block[0], flower1Points.block[4], flower1Points.block[5],
+                    flower1Points.block[0], flower1Points.block[3], flower1Points.block[7],
+                    flower1Points.block[0], flower1Points.block[7], flower1Points.block[4],
+                    flower1Points.block[6], flower1Points.block[4], flower1Points.block[7],
+                    flower1Points.block[6], flower1Points.block[5], flower1Points.block[4],
+                    flower1Points.block[6], flower1Points.block[7], flower1Points.block[3],
+                    flower1Points.block[6], flower1Points.block[3], flower1Points.block[2],
+                    flower1Points.block[6], flower1Points.block[1], flower1Points.block[5],
+                    flower1Points.block[6], flower1Points.block[2], flower1Points.block[1],
+                ].flatMap(e => e)
+                geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(position), 3, false));
+                // 外部占位面无需贴图
+                geom.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(computeFaceNormalsViaPosition(position.slice(0, 36))), 3, false));
                 geom.setAttribute('uv', new THREE.BufferAttribute(new Float32Array([
-                    0, 0,
-                    1, 0,
-                    1, 1,
-                    0, 0,
-                    1, 1,
-                    0, 1,
-                    0, 0,
-                    1, 0,
-                    1, 1,
-                    0, 0,
-                    1, 1,
-                    0, 1,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                    0, 0
-                ]), 2, false));
+                    [0, 0], [1, 0], [1, 1],
+                    [0, 0], [1, 1], [0, 1],
+                    [0, 0], [1, 0], [1, 1],
+                    [0, 0], [1, 1], [0, 1],
+                    // 外部占位面无需贴图（此处省略72个0）
+                ].flatMap(e => e)), 2, false));
                 geom.groups.push({start: 0, materialIndex: 0, count: 12})
-                geom.groups.push({start: 12, materialIndex: 1, count: 36})
-                // geom.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 0.8660254037844386)
+                // geom.groups.push({start: 12, materialIndex: 1, count: 36}) // 外部占位面无需贴图
                 break;
+            }
             default:
                 throw "unknown geometryType";
         }

@@ -314,7 +314,7 @@ export default class MCFirstPersonControl {
             //通过鼠标点击的位置与相机矩阵，计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
             this.sightRay.setFromCamera(new THREE.Vector2(0, 0), this.camera);
             // 获取raycaster直线和所有模型相交的数组集合
-            let clickedObjects = this.sightRay.intersectObjects(this.objects);
+            let clickedObjects = this.sightRay.intersectObjects(this.objects, false);
             if (clickedObjects.length > 0) {
                 // console.log("点击对象【" + clickedObjects[0].object.name + "】", clickedObjects[0]);
                 if (
@@ -452,7 +452,7 @@ export default class MCFirstPersonControl {
                         this.checkRay.Z0[i].ray.origin.x = positionBeforeX;//修正为移动前的x轴位置，防止使用位移后的位置检测墙壁
                         this.checkRay.Z0[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.Z0[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
-                        let intersections = this.checkRay.Z0[i].intersectObjects(this.objectsImpenetrable);
+                        let intersections = this.checkRay.Z0[i].intersectObjects(this.objectsImpenetrable, false);
                         if (intersections.length > 0) {
                             Z0NearFlatTmp = intersections[0].point.z;
                             Z0Flat = Math.max(Z0Flat === undefined ? Z0NearFlatTmp : Z0Flat, Z0NearFlatTmp);
@@ -470,7 +470,7 @@ export default class MCFirstPersonControl {
                         this.checkRay.Z1[i].ray.origin.x = positionBeforeX;
                         this.checkRay.Z1[i].ray.origin.x += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.Z1[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
-                        let intersections = this.checkRay.Z1[i].intersectObjects(this.objectsImpenetrable);
+                        let intersections = this.checkRay.Z1[i].intersectObjects(this.objectsImpenetrable, false);
                         if (intersections.length > 0) {
                             Z1NearFlatTmp = intersections[0].point.z;
                             Z1Flat = Math.min(Z1Flat === undefined ? Z1NearFlatTmp : Z1Flat, Z1NearFlatTmp);
@@ -495,7 +495,7 @@ export default class MCFirstPersonControl {
                         this.checkRay.X0[i].ray.origin.z = positionBeforeZ;
                         this.checkRay.X0[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.X0[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
-                        let intersections = this.checkRay.X0[i].intersectObjects(this.objectsImpenetrable);
+                        let intersections = this.checkRay.X0[i].intersectObjects(this.objectsImpenetrable, false);
                         if (intersections.length > 0) {
                             X0NearFlatTmp = intersections[0].point.x;
                             X0Flat = Math.max(X0Flat === undefined ? X0NearFlatTmp : X0Flat, X0NearFlatTmp);
@@ -513,7 +513,7 @@ export default class MCFirstPersonControl {
                         this.checkRay.X1[i].ray.origin.z = positionBeforeZ;
                         this.checkRay.X1[i].ray.origin.z += (i % 2 === 0 ? 1 : -1) * rayMove;
                         this.checkRay.X1[i].ray.origin.y += checkPositionOptions[Math.floor(i / 2)];
-                        let intersections = this.checkRay.X1[i].intersectObjects(this.objectsImpenetrable);
+                        let intersections = this.checkRay.X1[i].intersectObjects(this.objectsImpenetrable, false);
                         if (intersections.length > 0) {
                             X1NearFlatTmp = intersections[0].point.x;
                             X1Flat = Math.min(X1Flat === undefined ? X1NearFlatTmp : X1Flat, X1NearFlatTmp);
@@ -569,7 +569,7 @@ export default class MCFirstPersonControl {
                 this.checkRay.Y0[3].ray.origin.x -= rayMove;
                 this.checkRay.Y0[3].ray.origin.z -= rayMove;
                 for (let i = 0; i < 5; i++) {
-                    let intersections = this.checkRay.Y0[i].intersectObjects(this.objectsImpenetrable);
+                    let intersections = this.checkRay.Y0[i].intersectObjects(this.objectsImpenetrable, false);
                     if (intersections.length > 0) {
                         let bottomFlatYTmp = intersections[0].point.y;
                         bottomFlatY = Math.max(bottomFlatY === undefined ? bottomFlatYTmp : bottomFlatY, bottomFlatYTmp);
@@ -595,7 +595,7 @@ export default class MCFirstPersonControl {
                 this.checkRay.Y1[3].ray.origin.x -= rayMove;
                 this.checkRay.Y1[3].ray.origin.z -= rayMove;
                 for (let i = 0; i < 5; i++) {
-                    let intersections = this.checkRay.Y1[i].intersectObjects(this.objectsImpenetrable);
+                    let intersections = this.checkRay.Y1[i].intersectObjects(this.objectsImpenetrable, false);
                     if (intersections.length > 0) {
                         let topFlatYTmp = intersections[0].point.y;
                         topFlatY = Math.min(topFlatY === undefined ? topFlatYTmp : topFlatY, topFlatYTmp);
@@ -639,7 +639,7 @@ export default class MCFirstPersonControl {
             this.controls.getObject().position.y = 50;
             this.controls.getObject().position.x = 10;
             this.controls.getObject().position.z = 11;
-            this.camera.lookAt(new THREE.Vector3(0,50,0))
+            this.camera.lookAt(new THREE.Vector3(0, 50, 0))
         }
     }
 

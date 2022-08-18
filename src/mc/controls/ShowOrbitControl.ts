@@ -42,7 +42,7 @@ function getClickedObject(event: MouseEvent, objects: THREE.Object3D[], camera: 
     // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
     raycaster.setFromCamera(mouse, camera);
     // 获取raycaster直线和所有模型相交的数组集合
-    return raycaster.intersectObjects(objects);
+    return raycaster.intersectObjects(objects, false);
 }
 
 

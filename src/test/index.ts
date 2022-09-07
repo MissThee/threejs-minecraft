@@ -30,6 +30,11 @@ import StatsSingle from "./utils/StatsSingle";
 import GlobalProgress from "./utils/GlobalProgress";
 import './style/style.css'
 
+import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+
 const divEl = document.createElement('div')
 divEl.style.width = '100%'
 divEl.style.height = '100%'
@@ -44,6 +49,7 @@ let renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
     antialias: true,
     // alpha:true
 });
+
 
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -126,21 +132,39 @@ componentAll.forEach(e => {
     e.add?.(scene)
 })
 
+// 泛光效果
+const composer = new EffectComposer(renderer);
+{
+    renderer.toneMappingExposure = 1; // 整体曝光度
+    renderer.toneMapping = THREE.ReinhardToneMapping; // 色调映射
+    composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(new UnrealBloomPass(
+            new THREE.Vector2(divEl.clientWidth, divEl.clientHeight),
+            0.8, // 泛光强度
+            0.6, // 泛光范围
+            0.6 // 泛光生效亮度门槛
+        )
+    );
+}
+// 渲染
 const render = () => {
     GlobalProgress.update()
-    requestAnimationFrame(render);
-    renderer.render(scene, camera);
-    TWEEN.update();
-    StatsSingle.update();
     componentAll.forEach(e => {
         e.update?.()
     })
+    TWEEN.update();
+    // renderer.render(scene, camera);
+    composer.render()
+    StatsSingle.update();
+    requestAnimationFrame(render);
+
 }
 window.addEventListener('load', render)  //循环渲染动作
 
 const resize = () => {
     //更新相机视角比例
     renderer.setSize(divEl.clientWidth, divEl.clientHeight);
+    composer.setSize(divEl.clientWidth, divEl.clientHeight);
     camera.aspect = canvasEl.clientWidth / canvasEl.clientHeight;
     camera.updateProjectionMatrix();
 }

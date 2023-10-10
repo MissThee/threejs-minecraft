@@ -39,7 +39,7 @@ export default class MCFirstPersonControl {
     private controls: PointerLockControls;
     private previewCubeType: string;
     private previewCubeRotation: { x?: number, y?: number, z?: number };
-
+    private delta: number
 
     constructor(camera: THREE.Camera, domElement: HTMLCanvasElement, objects: THREE.Mesh[], scene: THREE.Scene) {
         // this.controls;
@@ -103,8 +103,8 @@ export default class MCFirstPersonControl {
         this.selectObjectsImpenetrable()
     }
 
-    update(delta: number | undefined) {
-        delta = delta || 0.016;
+    update(delta: number = 0.016) {
+        this.delta = delta;
         if (!this.controls.isLocked) {
             this.moveForward = false;
             this.moveBackward = false;
@@ -222,7 +222,7 @@ export default class MCFirstPersonControl {
                     if (!this.canJump && this.switchFlyKeyUpped) {
                         this.isFlying = this.canFly;
                     }
-                    if (this.canJump) this.velocity.y += Math.sqrt(2 * this.worldOption.g * 7.74 * this.personOption.jumpHeight);
+                    if (this.canJump) this.velocity.y += Math.sqrt(2 * this.worldOption.g / Math.sqrt(this.delta) * this.personOption.jumpHeight);
                     this.canJump = false;
                     if (this.isFlying) {
                         {//取消飞行
@@ -621,11 +621,12 @@ export default class MCFirstPersonControl {
                     this.canJump = true;
                     this.isFlying = false;
                 } else {
-                    this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
+                    // console.log('临时的高帧率下速度修正',Math.sqrt(Math.sqrt(Math.sqrt(1 / delta) / this.worldOption.g)))
+                    this.velocity.y -= this.worldOption.g * Math.sqrt(delta) / Math.sqrt(Math.sqrt(Math.sqrt(1 / delta) / this.worldOption.g));
                 }
             } else {
                 //下方未检测到平台时
-                this.velocity.y -= this.worldOption.g * Math.sqrt(delta);
+                this.velocity.y -= this.worldOption.g * Math.sqrt(delta) / Math.sqrt(Math.sqrt(Math.sqrt(1 / delta) / this.worldOption.g));
             }
             this.controls.getObject().position.y = nextY;
         }

@@ -79,9 +79,9 @@ export default class MC {
         // 预方块添加
         this.addBlocks()
         // 监控窗口
-        // import("./stats/StatsWindow").then(value => {
-        //     this.statsWindow = new value.default(elementId)
-        // })
+        import("./stats/StatsWindow").then(value => {
+            this.statsWindow = new value.default(elementId)
+        })
 
         this.startAnimate()
     }
@@ -104,6 +104,9 @@ export default class MC {
         this.controls?.update(delta);
         this.renderer.render(this.scene, this.camera);
         this.changeLight();
+        // setTimeout(()=>{
+        //     this.animate()
+        // },16)
         requestAnimationFrame(() => {
             this.animate()
         });

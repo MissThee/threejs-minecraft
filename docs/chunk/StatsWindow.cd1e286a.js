@@ -1,0 +1,1 @@
+import{S as e}from"./stats.9efecb03.js";class l{constructor(s){let t;t=new e,t.dom.style.position="absolute",t.dom.style.left="0px",t.dom.style.top="0px",t.dom.style.zIndex="1000",document.getElementById(s).appendChild(t.dom),this.stats=t}}export{l as default};
